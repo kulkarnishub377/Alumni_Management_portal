@@ -16,19 +16,19 @@ document.addEventListener('DOMContentLoaded', () => {
     let bookmarkedAlumni = new Set();
     let notifications = [...APP_DATA.activities];
 
+    // Identify current page
+    const currentPage = viewContainer.dataset.page || 'overview';
+
     // Init
-    renderView('overview');
+    renderView(currentPage);
     setupLogout();
 
     // ===== NAV CLICK HANDLER =====
     navLinks.forEach(link => {
         link.addEventListener('click', (e) => {
-            e.preventDefault();
-            const view = e.currentTarget.dataset.view;
-            setActiveNav(view);
-            renderView(view);
             // Close sidebar on mobile
             document.getElementById('dashSidebar')?.classList.remove('open');
+            // Standard navigation handles the rest (href="xyz.html")
         });
     });
 
@@ -40,8 +40,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // ===== GLOBAL NAV FUNCTION =====
     window.navigateTo = function(view) {
-        setActiveNav(view);
-        renderView(view);
+        window.location.href = view + '.html';
     };
 
     // ===== RENDER VIEW =====
@@ -50,6 +49,7 @@ document.addEventListener('DOMContentLoaded', () => {
         viewContainer.style.transform = 'translateY(10px)';
         setTimeout(() => {
             const renderers = {
+                dashboard: renderOverview,
                 overview: renderOverview,
                 profile: renderProfile,
                 network: renderNetwork,
