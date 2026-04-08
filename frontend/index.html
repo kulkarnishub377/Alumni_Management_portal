@@ -10,6 +10,12 @@
 </head>
 <body>
 
+    <!-- ========== PRELOADER ========== -->
+    <div class="preloader" id="preloader">
+        <div class="preloader-spinner"></div>
+        <span class="preloader-text">AlumniPortal</span>
+    </div>
+
     <!-- ========== NAVBAR ========== -->
     <nav class="navbar" id="navbar">
         <div class="container">
@@ -37,6 +43,8 @@
 
     <!-- ========== HERO SECTION ========== -->
     <section class="hero" id="home">
+        <!-- Particle Background -->
+        <div class="hero-particles" id="heroParticles"></div>
         <div class="container">
             <div class="hero-content animate-fadeInUp">
                 <div class="hero-badge">
@@ -99,6 +107,13 @@
         </div>
     </section>
 
+    <!-- ========== MARQUEE TICKER ========== -->
+    <div class="marquee-section">
+        <div class="marquee-content" id="marqueeContent">
+            <!-- Rendered by JS -->
+        </div>
+    </div>
+
     <!-- ========== ABOUT SECTION ========== -->
     <section class="about-section" id="about">
         <div class="container">
@@ -146,6 +161,20 @@
                         </div>
                     </div>
                 </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ========== WHY JOIN SECTION ========== -->
+    <section class="why-join-section" id="why-join">
+        <div class="container">
+            <div class="section-header animate-fadeInUp">
+                <span class="badge badge-primary">💡 Why Join</span>
+                <h2 class="section-title">Why Join the Alumni Network?</h2>
+                <p class="section-subtitle">Discover the benefits of being part of a thriving alumni community.</p>
+            </div>
+            <div class="why-join-grid" id="whyJoinGrid">
+                <!-- Rendered by JS -->
             </div>
         </div>
     </section>
@@ -198,6 +227,24 @@
         </div>
     </section>
 
+    <!-- ========== TESTIMONIALS SECTION ========== -->
+    <section class="testimonials-section" id="testimonials">
+        <div class="container">
+            <div class="section-header animate-fadeInUp">
+                <span class="badge badge-primary">💬 Testimonials</span>
+                <h2 class="section-title">What Our Alumni Say</h2>
+                <p class="section-subtitle">Hear from alumni who have benefited from this platform.</p>
+            </div>
+            <div class="testimonials-track" id="testimonialsTrack">
+                <!-- Rendered by JS -->
+            </div>
+            <div class="testimonial-controls">
+                <button class="testi-btn" onclick="scrollTestimonials(-1)"><i class='bx bx-chevron-left'></i></button>
+                <button class="testi-btn" onclick="scrollTestimonials(1)"><i class='bx bx-chevron-right'></i></button>
+            </div>
+        </div>
+    </section>
+
     <!-- ========== STATS SECTION ========== -->
     <section class="stats-section">
         <div class="container">
@@ -232,6 +279,22 @@
                     <p>All alumni from batch 2010-2025 are encouraged to register on the portal. Access exclusive events, job board, and mentorship programs.</p>
                 </div>
                 <a href="register.html" class="btn btn-primary" style="margin-left:auto; white-space:nowrap;">Register Now</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- ========== NEWSLETTER SECTION ========== -->
+    <section class="newsletter-section">
+        <div class="container">
+            <div class="newsletter-inner">
+                <div class="newsletter-content">
+                    <h2>📩 Stay in the Loop</h2>
+                    <p>Subscribe to receive alumni news, event invites, and job alerts directly to your inbox.</p>
+                </div>
+                <form class="newsletter-form" onsubmit="event.preventDefault(); this.querySelector('button').textContent='✓ Subscribed!'; this.querySelector('input').value='';">
+                    <input type="email" placeholder="Enter your email address" required>
+                    <button type="submit">Subscribe</button>
+                </form>
             </div>
         </div>
     </section>
@@ -355,6 +418,25 @@
             </div>
         </div>
     </footer>
+
+    <!-- ========== SEARCH OVERLAY (Advanced) ========== -->
+    <div class="search-overlay" id="searchOverlay" onclick="if(event.target===this) this.classList.remove('active');">
+        <div class="search-modal">
+            <div class="search-modal-input">
+                <i class='bx bx-search'></i>
+                <input type="text" placeholder="Search alumni by name, company, batch..." id="globalSearchInput" autofocus>
+            </div>
+            <div class="search-suggestions" id="searchSuggestions">
+                <h4>Suggested Alumni</h4>
+                <!-- Rendered by JS -->
+            </div>
+        </div>
+    </div>
+
+    <!-- ========== SCROLL TO TOP ========== -->
+    <button class="scroll-top-btn" id="scrollTopBtn" onclick="window.scrollTo({top:0,behavior:'smooth'})">
+        <i class='bx bx-chevron-up'></i>
+    </button>
 
     <script src="js/data.js"></script>
     <script src="js/app.js"></script>

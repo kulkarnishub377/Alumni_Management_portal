@@ -228,5 +228,66 @@ const APP_DATA = {
         { icon: "bxs-briefcase", color: "blue", title: "New Job Posted", desc: "Senior React Developer at TCS Digital by Aarav Patel.", time: "3 hours ago" },
         { icon: "bxs-bell-ring", color: "amber", title: "Admin Announcement", desc: "Registration drive for batch 2010-2025 is now open.", time: "5 hours ago" },
         { icon: "bxs-message-dots", color: "red", title: "New Message", desc: "Sneha Kulkarni sent you a message.", time: "1 day ago" }
+    ],
+
+    // Why Join Reasons
+    whyJoin: [
+        { icon: "bxs-network-chart", title: "Professional Network", desc: "Build meaningful connections with 12,500+ alumni working across 350+ companies globally." },
+        { icon: "bxs-briefcase-alt-2", title: "Career Opportunities", desc: "Access exclusive job postings, internships, and referral programs from alumni insiders." },
+        { icon: "bxs-user-voice", title: "Mentorship Access", desc: "Get guidance from experienced professionals who walked the same path as you." },
+        { icon: "bxs-calendar-star", title: "Exclusive Events", desc: "Attend reunions, workshops, tech talks, and networking nights designed for alumni." },
+        { icon: "bxs-group", title: "Batch Communities", desc: "Auto-join your batch group for instant connections with classmates." },
+        { icon: "bxs-trophy", title: "Recognition Platform", desc: "Showcase your achievements and get featured in the Top Alumni Hall of Fame." }
+    ],
+
+    // Testimonials
+    testimonials: [
+        {
+            name: "Aarav Patel",
+            role: "Senior Software Engineer, Google",
+            avatar: "https://i.pravatar.cc/150?img=11",
+            text: "The alumni portal helped me reconnect with my batchmates and even led to a collaboration on an open-source project. The networking features are incredible.",
+            rating: 5
+        },
+        {
+            name: "Sneha Kulkarni",
+            role: "Product Manager, Microsoft",
+            avatar: "https://i.pravatar.cc/150?img=5",
+            text: "I found my first mentor through this platform. The mentorship program is phenomenal and actually helped shape my career trajectory at Microsoft.",
+            rating: 5
+        },
+        {
+            name: "Priya Deshmukh",
+            role: "Data Scientist, Netflix",
+            avatar: "https://i.pravatar.cc/150?img=9",
+            text: "The job board is a game changer. I got referred to my current role at Netflix through an alumni connection from this portal. Highly recommend!",
+            rating: 5
+        },
+        {
+            name: "Vikram Joshi",
+            role: "Cloud Architect, AWS",
+            avatar: "https://i.pravatar.cc/150?img=8",
+            text: "The batch group chat feature made it so easy to stay in touch with old friends. We even organized an offline meetup after years of being disconnected!",
+            rating: 4
+        },
+        {
+            name: "Rohit Sharma",
+            role: "Founder & CEO, TechNova",
+            avatar: "https://i.pravatar.cc/150?img=12",
+            text: "As a startup founder, the alumni network has been invaluable. I found co-founders, early employees, and even angel investors through this community.",
+            rating: 5
+        }
+    ],
+
+    // Marquee Items
+    marqueeItems: [
+        "12,500+ Alumni Registered",
+        "350+ Partner Companies",
+        "85% Placement Rate",
+        "120+ Events Conducted",
+        "84 Active Mentors",
+        "24 Open Job Positions",
+        "6 Departments Connected",
+        "Real-time Chat System"
     ]
 };
