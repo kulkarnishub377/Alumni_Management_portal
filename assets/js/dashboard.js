@@ -390,7 +390,13 @@ document.addEventListener('DOMContentLoaded', () => {
         const btn = document.querySelector(`.bookmark-btn[data-id="${id}"] i`);
         if (btn) btn.className = bookmarkedAlumni.has(id) ? 'bx bxs-bookmark' : 'bx bx-bookmark';
     };
-    window.connectAlumni = function(name, btn) {
+    const CURRENT_USER_BATCH = '2020'; // Mocking user context
+
+    window.connectAlumni = function(name, batch, btn) {
+        if (batch !== CURRENT_USER_BATCH) {
+            showToast(`Action Denied: You can only connect with alumni from your own batch (${CURRENT_USER_BATCH}).`, 'error');
+            return;
+        }
         if (btn) {
             btn.innerHTML = '<i class="bx bx-check"></i> Pending';
             btn.classList.add('btn-secondary');
@@ -426,7 +432,9 @@ document.addEventListener('DOMContentLoaded', () => {
                         </div>
                     </div>
                     <div class="chat-list" id="chatContactList">
-                        ${APP_DATA.chatContacts.map((c, i) => chatContactItem(c, i === 2)).join('')}
+                        ${APP_DATA.chatContacts
+                            .filter(c => !c.isGroup || c.name.includes(CURRENT_USER_BATCH))
+                            .map((c, i) => chatContactItem(c, i === 2)).join('')}
                     </div>
                 </div>
                 <div class="chat-main" id="chatMainArea">
@@ -634,7 +642,7 @@ document.addEventListener('DOMContentLoaded', () => {
         return `
             <div class="page-title-bar">
                 <div><h1>Job Board</h1><p>Explore career opportunities shared by the alumni network.</p></div>
-                <button class="btn btn-primary btn-sm" onclick="showToast('Job posting form coming with backend!', 'info')"><i class='bx bx-plus'></i> Post a Job</button>
+                <button class="btn btn-primary btn-sm" onclick="togglePostJobModal()"><i class='bx bx-plus'></i> Post a Job</button>
             </div>
             <div class="filter-bar">
                 <div class="filter-input">
@@ -677,6 +685,79 @@ document.addEventListener('DOMContentLoaded', () => {
         document.querySelectorAll('.job-card').forEach(card => {
             card.style.display = (!exp || card.dataset.exp === exp) ? '' : 'none';
         });
+    };
+
+    window.togglePostJobModal = function() {
+        if (!document.getElementById('postJobModalBox')) {
+            const modalHTML = `
+                <div class="edit-modal-overlay" id="postJobModalBox">
+                    <div class="edit-modal">
+                        <div class="edit-modal-header">
+                            <h3>Post a New Job</h3>
+                            <button class="edit-modal-close" onclick="closePostJobModal()"><i class="bx bx-x"></i></button>
+                        </div>
+                        <div class="edit-modal-body">
+                            <h4 class="edit-modal-section-title">Job Details</h4>
+                            <div class="edit-modal-grid" style="margin-bottom:0;">
+                                <div class="edit-form-group"><label>Job Title</label><input type="text" id="newJobTitle" placeholder="e.g. Frontend Engineer"></div>
+                                <div class="edit-form-group"><label>Company</label><input type="text" id="newJobCompany" placeholder="e.g. Google"></div>
+                                <div class="edit-form-group"><label>Location</label><input type="text" id="newJobLocation" placeholder="e.g. Remote, India"></div>
+                                <div class="edit-form-group"><label>Job Type</label>
+                                    <select id="newJobType">
+                                        <option>Full-time</option><option>Internship</option><option>Part-time</option><option>Contract</option>
+                                    </select>
+                                </div>
+                                <div class="edit-form-group"><label>Experience Required</label>
+                                    <select id="newJobExp">
+                                        <option>Fresher</option><option>2-4 yrs</option><option>3-5 yrs</option><option>5-8 yrs</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="edit-modal-footer">
+                            <button class="btn btn-secondary" onclick="closePostJobModal()">Cancel</button>
+                            <button class="btn btn-primary" onclick="submitJobPosting()">Post Job</button>
+                        </div>
+                    </div>
+                </div>
+            `;
+            document.body.insertAdjacentHTML('beforeend', modalHTML);
+        }
+        document.getElementById('postJobModalBox').classList.add('active');
+    };
+
+    window.closePostJobModal = function() {
+        const m = document.getElementById('postJobModalBox');
+        if (m) m.classList.remove('active');
+    };
+
+    window.submitJobPosting = function() {
+        const title = document.getElementById('newJobTitle').value;
+        const company = document.getElementById('newJobCompany').value;
+        const location = document.getElementById('newJobLocation').value;
+        const type = document.getElementById('newJobType').value;
+        const exp = document.getElementById('newJobExp').value;
+
+        if (!title || !company || !location) {
+            showToast('Please fill out all required fields!', 'error');
+            return;
+        }
+
+        const newJob = {
+            id: Date.now(),
+            title: title,
+            company: company,
+            location: location,
+            type: type,
+            experience: exp,
+            postedBy: "You",
+            postedDate: "Just Now"
+        };
+
+        APP_DATA.jobs.unshift(newJob);
+        showToast('Job successfully posted! 🚀', 'success');
+        closePostJobModal();
+        renderView('jobs');
     };
 
     // ============================================
@@ -736,7 +817,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         <p class="alumni-company"><i class='bx bxs-business'></i> ${a.company} &bull; Batch ${a.batch}</p>
                         <div class="alumni-tags">${a.tags.map(t => `<span class="tag">${t}</span>`).join('')}</div>
                         <div class="card-actions">
-                            <button class="btn btn-primary btn-sm" onclick="connectAlumni('${a.name}', this)">Connect</button>
+                            <button class="btn btn-primary btn-sm" onclick="connectAlumni('${a.name.replace(/'/g, "\\'")}', '${a.batch}', this)">Connect</button>
                             <button class="btn btn-secondary btn-sm" onclick="navigateTo('chat')"><i class='bx bx-message-dots'></i></button>
                         </div>
                     </div>
@@ -917,7 +998,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 <button class="topbar-icon-btn bookmark-btn" data-id="${a.id}" onclick="toggleBookmark(${a.id})" data-tooltip="Bookmark">
                     <i class='bx ${bookmarked ? 'bxs-bookmark' : 'bx-bookmark'}'></i>
                 </button>
-                <button class="btn btn-primary btn-sm" onclick="connectAlumni('${a.name}', this)"><i class='bx bx-user-plus'></i></button>
+                <button class="btn btn-primary btn-sm" onclick="connectAlumni('${a.name.replace(/'/g, "\\'")}', '${a.batch}', this)"><i class='bx bx-user-plus'></i></button>
             </div>
         </div>`;
     }
