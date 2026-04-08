@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard | Alumni Management Portal</title>
+    <meta name="description" content="Alumni Dashboard - Manage your profile, network with alumni, chat with batchmates, and explore opportunities.">
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/dashboard.css">
+</head>
+<body>
+
+    <div class="dashboard-layout">
+
+        <!-- ========== SIDEBAR ========== -->
+        <aside class="dash-sidebar" id="dashSidebar">
+            <div class="dash-sidebar-header">
+                <div class="logo-icon"><i class='bx bxs-graduation'></i></div>
+                <h2>AlumniPortal</h2>
+            </div>
+
+            <div class="sidebar-user">
+                <div class="sidebar-user-card">
+                    <img src="https://i.pravatar.cc/150?img=3" alt="User Avatar">
+                    <div class="user-meta">
+                        <h4>Shubham K.</h4>
+                        <span>Alumni • Batch 2020</span>
+                    </div>
+                </div>
+            </div>
+
+            <nav class="dash-nav">
+                <span class="nav-section-label">Main</span>
+                <a href="#" class="dash-nav-link active" data-view="overview">
+                    <i class='bx bxs-dashboard'></i>
+                    <span>Overview</span>
+                </a>
+                <a href="#" class="dash-nav-link" data-view="profile">
+                    <i class='bx bxs-user-circle'></i>
+                    <span>My Profile</span>
+                </a>
+                <a href="#" class="dash-nav-link" data-view="network">
+                    <i class='bx bxs-contact'></i>
+                    <span>Alumni Network</span>
+                </a>
+
+                <span class="nav-section-label">Communication</span>
+                <a href="#" class="dash-nav-link" data-view="chat">
+                    <i class='bx bxs-message-dots'></i>
+                    <span>Messages</span>
+                    <span class="nav-badge">3</span>
+                </a>
+                <a href="#" class="dash-nav-link" data-view="notifications">
+                    <i class='bx bxs-bell-ring'></i>
+                    <span>Notifications</span>
+                    <span class="nav-badge">5</span>
+                </a>
+
+                <span class="nav-section-label">Discover</span>
+                <a href="#" class="dash-nav-link" data-view="events">
+                    <i class='bx bxs-calendar-event'></i>
+                    <span>Events</span>
+                </a>
+                <a href="#" class="dash-nav-link" data-view="jobs">
+                    <i class='bx bxs-briefcase'></i>
+                    <span>Job Board</span>
+                </a>
+                <a href="#" class="dash-nav-link" data-view="gallery">
+                    <i class='bx bxs-photo-album'></i>
+                    <span>Gallery</span>
+                </a>
+                <a href="#" class="dash-nav-link" data-view="topalumni">
+                    <i class='bx bxs-trophy'></i>
+                    <span>Top Alumni</span>
+                </a>
+                <a href="#" class="dash-nav-link" data-view="mentorship">
+                    <i class='bx bxs-user-voice'></i>
+                    <span>Mentorship</span>
+                </a>
+            </nav>
+
+            <div class="dash-sidebar-footer">
+                <a href="index.html" class="dash-nav-link">
+                    <i class='bx bx-log-out'></i>
+                    <span>Logout</span>
+                </a>
+            </div>
+        </aside>
+
+        <!-- ========== MAIN CONTENT ========== -->
+        <main class="dash-main">
+
+            <!-- Topbar -->
+            <header class="dash-topbar">
+                <div style="display:flex;align-items:center;gap:16px;">
+                    <button class="sidebar-toggle" onclick="document.getElementById('dashSidebar').classList.toggle('open')">
+                        <i class='bx bx-menu'></i>
+                    </button>
+                    <div class="dash-search">
+                        <i class='bx bx-search'></i>
+                        <input type="text" placeholder="Search alumni, events, jobs...">
+                    </div>
+                </div>
+                <div class="dash-topbar-actions">
+                    <button class="topbar-icon-btn" title="Notifications">
+                        <i class='bx bxs-bell'></i>
+                        <span class="notif-dot"></span>
+                    </button>
+                    <button class="topbar-icon-btn" title="Settings">
+                        <i class='bx bxs-cog'></i>
+                    </button>
+                    <div class="topbar-profile">
+                        <img src="https://i.pravatar.cc/150?img=3" alt="Profile">
+                        <span>Shubham</span>
+                        <i class='bx bx-chevron-down'></i>
+                    </div>
+                </div>
+            </header>
+
+            <!-- Dynamic View Container -->
+            <div class="dash-view" id="dashViewContainer">
+                <!-- Rendered by dashboard.js -->
+            </div>
+        </main>
+    </div>
+
+    <script src="js/data.js"></script>
+    <script src="js/dashboard.js"></script>
+</body>
+</html>
