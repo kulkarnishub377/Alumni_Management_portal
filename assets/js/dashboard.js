@@ -240,6 +240,34 @@ document.addEventListener('DOMContentLoaded', () => {
                                 </label>
                                 <div id="aiResumeLoaderProfile" style="display:none; margin-top:16px; color:var(--primary); font-size:13px; font-weight:600;"><i class='bx bx-loader-alt bx-spin'></i> AI is rewriting your profile...</div>
                             </div>
+
+                            <h4 class="edit-modal-section-title">Profile Picture & Document</h4>
+                            <div style="display:flex; align-items:center; gap:16px; margin-bottom:24px;">
+                                <img id="editProfilePicPreview" src="https://i.pravatar.cc/150?img=3" style="width:72px; height:72px; border-radius:50%; object-fit:cover; border:2px solid var(--border);">
+                                <div>
+                                    <label class="btn btn-secondary btn-sm" style="cursor:pointer;">
+                                        <i class='bx bx-upload'></i> Change Photo
+                                        <input type="file" accept="image/*" style="display:none;" onchange="previewEditProfilePic(this)">
+                                    </label>
+                                    <p style="font-size:12px; color:var(--text-muted); margin-top:4px;">JPG, GIF or PNG. Max size 2MB</p>
+                                </div>
+                            </div>
+                            
+                            <div style="display:flex; align-items:center; justify-content:space-between; padding:12px 16px; background:var(--bg-body); border:1px solid var(--border); border-radius:var(--radius-md); margin-bottom:24px;">
+                                <div style="display:flex; align-items:center; gap:12px;">
+                                    <div style="width:40px; height:40px; background:rgba(239, 68, 68, 0.1); border-radius:8px; display:flex; align-items:center; justify-content:center;">
+                                        <i class='bx bxs-file-pdf' style="font-size:24px; color:#ef4444;"></i>
+                                    </div>
+                                    <div>
+                                        <h5 style="font-size:14px; margin:0;">Shubham_Resume_2026.pdf</h5>
+                                        <p style="font-size:12px; color:var(--text-muted); margin:0;">Uploaded: 2 months ago &bull; 1.2 MB</p>
+                                    </div>
+                                </div>
+                                <div style="display:flex; gap:8px;">
+                                    <button class="topbar-icon-btn" title="Download" onclick="showToast('Downloading resume...', 'info')"><i class='bx bx-download'></i></button>
+                                    <button class="topbar-icon-btn" title="Delete" style="color:#ef4444;" onclick="this.parentElement.parentElement.style.display='none'; showToast('Resume deleted', 'success')"><i class='bx bx-trash'></i></button>
+                                </div>
+                            </div>
                             
                             <h4 class="edit-modal-section-title">Personal Information</h4>
                             <div class="edit-modal-grid">
@@ -374,6 +402,23 @@ document.addEventListener('DOMContentLoaded', () => {
             
             showToast('AI magically updated your profile!', 'success');
         }, 2000);
+    };
+
+    window.previewEditProfilePic = function(input) {
+        if (input.files && input.files[0]) {
+            if (input.files[0].size > 2 * 1024 * 1024) {
+                showToast('Photo must be less than 2MB', 'error');
+                return;
+            }
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                document.getElementById('editProfilePicPreview').src = e.target.result;
+                const topAvatar = document.querySelector('.profile-avatar');
+                if (topAvatar) topAvatar.src = e.target.result;
+                showToast('Profile photo updated', 'success');
+            };
+            reader.readAsDataURL(input.files[0]);
+        }
     };
 
     // ============================================
