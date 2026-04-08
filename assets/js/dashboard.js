@@ -4,6 +4,13 @@
 // ============================================
 
 document.addEventListener('DOMContentLoaded', () => {
+    // ===== ROUTE GUARD: PROTECT DASHBOARD VIEWS =====
+    const user = getUser();
+    if (!user || !user.loggedIn) {
+        window.location.href = '../auth/login.html';
+        return; // Stop execution
+    }
+
     const viewContainer = document.getElementById('dashViewContainer');
     const navLinks = document.querySelectorAll('.dash-nav-link[data-view]');
     const months = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
