@@ -856,13 +856,13 @@ document.addEventListener('DOMContentLoaded', () => {
             <div class="page-title-bar"><div><h1>🏆 Top Alumni</h1><p>Celebrating our most distinguished graduates.</p></div></div>
             <div class="alumni-cards-grid">
                 ${APP_DATA.topAlumni.map(a => `
-                    <div class="alumni-card">
+                    <div class="alumni-card" style="cursor:pointer;" onclick="viewAlumniProfile('${a.name.replace(/'/g, "\\'")}')">
                         <img src="${a.avatar}" alt="${a.name}" class="alumni-avatar">
                         <h3 class="alumni-name">${a.name}</h3>
                         <p class="alumni-role">${a.role}</p>
                         <p class="alumni-company"><i class='bx bxs-business'></i> ${a.company} &bull; Batch ${a.batch}</p>
                         <div class="alumni-tags">${a.tags.map(t => `<span class="tag">${t}</span>`).join('')}</div>
-                        <div class="card-actions">
+                        <div class="card-actions" onclick="event.stopPropagation()">
                             <button class="btn btn-primary btn-sm" onclick="connectAlumni('${a.name.replace(/'/g, "\\'")}', '${a.batch}', this)">Connect</button>
                             <button class="btn btn-secondary btn-sm" onclick="navigateTo('chat')"><i class='bx bx-message-dots'></i></button>
                         </div>
@@ -1033,14 +1033,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function networkCard(a) {
         const bookmarked = bookmarkedAlumni.has(a.id);
-        return `<div class="network-card" data-name="${a.name.toLowerCase()}" data-batch="${a.batch}" data-company="${a.company}" data-role="${a.role}">
+        return `<div class="network-card" style="cursor:pointer;" onclick="viewAlumniProfile('${a.name.replace(/'/g, "\\'")}')" data-name="${a.name.toLowerCase()}" data-batch="${a.batch}" data-company="${a.company}" data-role="${a.role}">
             <img src="${a.avatar}" alt="${a.name}">
             <div class="nc-info">
                 <h4>${a.name}</h4>
                 <p>${a.role} at ${a.company}</p>
                 <span class="nc-batch">Batch ${a.batch}</span>
             </div>
-            <div style="display:flex;gap:6px;margin-left:auto;">
+            <div style="display:flex;gap:6px;margin-left:auto;" onclick="event.stopPropagation()">
                 <button class="topbar-icon-btn bookmark-btn" data-id="${a.id}" onclick="toggleBookmark(${a.id})" data-tooltip="Bookmark">
                     <i class='bx ${bookmarked ? 'bxs-bookmark' : 'bx-bookmark'}'></i>
                 </button>
@@ -1083,6 +1083,47 @@ document.addEventListener('DOMContentLoaded', () => {
             </label>
         </div>`;
     }
+
+    // ============================================
+    // VIEW ALUMNI PROFILE DIALOG
+    // ============================================
+    window.viewAlumniProfile = function(name) {
+        const a = APP_DATA.topAlumni.find(x => x.name === name);
+        if(!a) return;
+        
+        const existing = document.getElementById('viewAlumniModalBox');
+        if(existing) existing.remove();
+
+        const modalHTML = `
+            <div class="edit-modal-overlay active" id="viewAlumniModalBox" style="align-items:center; justify-content:center;">
+                <div class="edit-modal" style="max-width:500px; text-align:center;">
+                    <div class="edit-modal-header" style="justify-content: flex-end; border-bottom: none; padding-bottom: 0;">
+                        <button class="edit-modal-close" onclick="document.getElementById('viewAlumniModalBox').remove()"><i class="bx bx-x"></i></button>
+                    </div>
+                    <div class="edit-modal-body" style="padding-top:0;">
+                        <img src="${a.avatar}" style="width:100px; height:100px; border-radius:50%; margin-bottom:16px; border:3px solid var(--primary-light);">
+                        <h2 style="font-size:24px; margin-bottom:4px; font-weight:700;">${a.name}</h2>
+                        <p style="color:var(--primary); font-weight:600; margin-bottom:8px;">${a.role} at ${a.company}</p>
+                        <p style="color:var(--text-muted); font-size:14px; margin-bottom:20px;">Class of ${a.batch}</p>
+                        
+                        <div style="display:flex; flex-wrap:wrap; justify-content:center; gap:8px; margin-bottom:30px;">
+                            ${a.tags.map(t => `<span style="background:var(--bg-body); padding:6px 12px; border-radius:20px; font-size:12px; font-weight:600; color:var(--text-secondary); border:1px solid var(--border);">${t}</span>`).join('')}
+                        </div>
+                        
+                        <div style="display:flex; gap:16px; justify-content:center;">
+                            <button class="btn btn-primary" onclick="connectAlumni('${a.name.replace(/'/g,"\\'")}', '${a.batch}', this)">
+                                <i class='bx bx-user-plus'></i> Connect
+                            </button>
+                            <button class="btn btn-secondary" onclick="navigateTo('chat'); document.getElementById('viewAlumniModalBox').remove();">
+                                <i class='bx bx-message-dots'></i> Message
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        `;
+        document.body.insertAdjacentHTML('beforeend', modalHTML);
+    };
 
     // ============================================
     // AI COPILOT INITIALIZATION
