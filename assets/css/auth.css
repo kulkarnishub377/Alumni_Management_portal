@@ -489,4 +489,27 @@
     .role-tabs {
         flex-wrap: wrap;
     }
+    .auth-form-container .form-header h2 {
+        font-size: 24px;
+    }
+    .reg-progress {
+        flex-wrap: wrap;
+        gap: 6px;
+    }
+    .reg-step .step-label {
+        display: none;
+    }
+    .step-line {
+        width: 24px;
+    }
+    .photo-upload {
+        flex-direction: column;
+        text-align: center;
+    }
+    .auth-form-panel {
+        padding: 16px;
+    }
+    .auth-form-container {
+        max-width: 100%;
+    }
 }
