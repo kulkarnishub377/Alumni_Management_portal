@@ -1062,6 +1062,47 @@
     -webkit-overflow-scrolling: touch;
 }
 
+/* Mentor Card Layout */
+.mentor-card-flex {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    flex-wrap: wrap;
+}
+.mentor-actions {
+    display: flex;
+    gap: 8px;
+    margin-top: 12px;
+    flex-wrap: wrap;
+}
+
+@media (max-width: 768px) {
+    .mentor-card-flex {
+        flex-direction: column;
+        text-align: center;
+        align-items: center;
+    }
+    .mentor-card-flex > div {
+        min-width: 0 !important;
+    }
+    .mentor-actions {
+        justify-content: center;
+    }
+    .mentor-actions .btn {
+        flex: 1;
+        min-width: 120px;
+    }
+}
+
+@media (max-width: 480px) {
+    .mentor-actions {
+        flex-direction: column;
+    }
+    .mentor-actions .btn {
+        width: 100%;
+    }
+}
+
 /* === Responsive Dashboard === */
 @media (max-width: 1024px) {
     .dash-sidebar {
