@@ -8,6 +8,66 @@
     <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
     <link rel="stylesheet" href="../../assets/css/common.css">
     <link rel="stylesheet" href="../../assets/css/dashboard.css">
+<style>
+/* INTERNAL RESPONSIVE CSS INJECTED FOR MENTORSHIP */
+@media (max-width: 1024px) {
+    .dash-sidebar { width: 80px; }
+    .dash-sidebar-header h2, .sidebar-user, .nav-section-label, .dash-nav-link span, .dash-nav-link .nav-badge { display: none; }
+    .dash-nav-link { justify-content: center; padding: 14px; }
+    .dash-main { margin-left: 80px; width: calc(100% - 80px); }
+    
+    .mentorship-stats-row { grid-template-columns: repeat(2, 1fr); gap: 16px; }
+    .resource-grid { grid-template-columns: repeat(2, 1fr); gap: 16px; }
+}
+
+@media (max-width: 768px) {
+    .dash-sidebar { transform: translateX(-100%); width: 270px; background: var(--bg-card); position: fixed; z-index: 1000; height: 100vh; }
+    .dash-sidebar.open { transform: translateX(0); box-shadow: 10px 0 30px rgba(0,0,0,0.1); }
+    .dash-sidebar-header h2, .sidebar-user, .nav-section-label, .dash-nav-link span { display: block; }
+    .dash-nav-link { justify-content: flex-start; padding: 12px 20px; }
+    .dash-main { margin-left: 0; width: 100%; }
+    .mobile-menu-btn { display: flex !important; }
+    
+    /* Topbar */
+    .dash-topbar { padding: 0 16px; gap: 12px; }
+    .search-bar { display: none; }
+    
+    /* Mentorship Layout Fixes */
+    .page-title-bar { flex-direction: column; align-items: flex-start; margin-bottom: 20px; }
+    .page-title-bar h1 { font-size: 24px; }
+    
+    .mentor-hero-content { flex-direction: column; align-items: center; text-align: center; padding: 20px 16px; }
+    .mentor-hero-info { padding-top: 16px; }
+    .mentor-hero-name { justify-content: center; }
+    .mentor-hero-stats { justify-content: center; gap: 8px; }
+    .mentor-hero-avatar { margin-top: 40px; width: 80px; height: 80px; }
+    .mentor-actions { justify-content: center; width: 100%; }
+    
+    .mentorship-stats-row { grid-template-columns: 1fr 1fr; gap: 12px; }
+    .ms-stat-card { padding: 16px; gap: 10px; flex-direction: column; text-align: center; }
+    .ms-stat-icon { width: 40px; height: 40px; font-size: 20px; margin: 0 auto; }
+    
+    .resource-grid { grid-template-columns: 1fr 1fr; gap: 12px; }
+    .resource-card { padding: 16px; }
+    
+    .announcement-item { padding: 16px; flex-wrap: wrap; }
+    .ann-badge { margin-left: 54px; }
+    
+    .premium-table th, .premium-table td { padding: 10px 12px; font-size: 13px; }
+    .status-badge { font-size: 11px; padding: 3px 8px; }
+}
+
+@media (max-width: 480px) {
+    .mentorship-stats-row { grid-template-columns: 1fr; }
+    .resource-grid { grid-template-columns: 1fr; }
+    .mentor-hero-bg { height: 80px; }
+    .mentor-hero-stats { flex-direction: column; align-items: stretch; }
+    .mhs-item { justify-content: center; }
+    .mentor-actions { flex-direction: column; }
+    .mentor-actions .btn { width: 100%; justify-content: center; }
+    .ann-badge { margin-left: 0; margin-top: 8px; width: fit-content; }
+}
+</style>
 </head>
 <body>
 
