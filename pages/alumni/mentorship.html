@@ -1,0 +1,539 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mentorship | Alumni Management Portal</title>
+    <meta name="description" content="Alumni Mentorship Program">
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    <link rel="stylesheet" href="../../assets/css/common.css">
+    <link rel="stylesheet" href="../../assets/css/dashboard.css">
+    <style>
+        /* Standalone Premium Mentorship CSS */
+        :root {
+            --mesh-bg: linear-gradient(135deg, #4f46e5 0%, #06b6d4 100%);
+            --card-glass: rgba(255, 255, 255, 0.9);
+            --card-border: rgba(0,0,0,0.05);
+            --shadow-soft: 0 10px 40px rgba(0,0,0,0.04);
+            --shadow-hover: 0 20px 40px rgba(79, 70, 229, 0.15);
+        }
+
+        [data-theme="dark"] :root {
+            --mesh-bg: linear-gradient(135deg, #3730a3 0%, #0891b2 100%);
+            --card-glass: rgba(30, 30, 45, 0.9);
+            --card-border: rgba(255,255,255,0.05);
+        }
+
+        .sm-container {
+            padding: 10px 0;
+            display: flex;
+            flex-direction: column;
+            gap: 25px;
+            animation: fadeUp 0.5s ease;
+        }
+
+        /* Hero Card */
+        .sm-hero {
+            position: relative;
+            background: var(--bg-card);
+            border-radius: 24px;
+            overflow: hidden;
+            box-shadow: var(--shadow-soft);
+            border: 1px solid var(--card-border);
+        }
+
+        .sm-hero-mesh {
+            height: 160px;
+            background: var(--mesh-bg);
+            position: relative;
+        }
+        .sm-hero-mesh::after {
+            content: ''; position: absolute; inset: 0;
+            background-image: radial-gradient(circle at 20% 50%, rgba(255,255,255,0.2) 0%, transparent 50%),
+                              radial-gradient(circle at 80% 50%, rgba(255,255,255,0.1) 0%, transparent 50%);
+        }
+
+        .sm-hero-content {
+            padding: 0 30px 30px 30px;
+            display: flex;
+            align-items: flex-start;
+            gap: 25px;
+            position: relative;
+        }
+
+        .sm-avatar {
+            width: 140px; height: 140px; border-radius: 50%;
+            border: 5px solid var(--bg-card);
+            background: var(--bg-card);
+            margin-top: -70px;
+            position: relative;
+            z-index: 2;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.1);
+        }
+        .sm-avatar img { width: 100%; height: 100%; border-radius: 50%; object-fit: cover; }
+        .sm-verified {
+            position: absolute; bottom: 5px; right: 10px;
+            color: #3b82f6; font-size: 28px; background: #fff; border-radius: 50%;
+        }
+
+        .sm-info { padding-top: 15px; flex: 1; }
+        .sm-info h2 { font-size: 28px; font-weight: 800; color: var(--text-primary); margin-bottom: 4px; display: flex; align-items: center; gap: 8px;}
+        .sm-info .role { font-size: 16px; color: var(--primary); font-weight: 600; margin-bottom: 8px; }
+        .sm-info .desc { font-size: 14px; color: var(--text-secondary); max-width: 600px; line-height: 1.6; }
+
+        .sm-stats-badges {
+            display: flex; gap: 15px; margin-top: 15px; flex-wrap: wrap;
+        }
+        .sm-badge {
+            display: flex; align-items: center; gap: 6px;
+            padding: 6px 14px; border-radius: 20px;
+            background: var(--bg-body); font-size: 13px; font-weight: 600;
+            color: var(--text-primary); border: 1px solid var(--card-border);
+        }
+        .sm-badge i { color: #f59e0b; font-size: 16px; }
+
+        .sm-actions {
+            padding-top: 20px; display: flex; gap: 12px; flex-direction: column; min-width: 200px;
+        }
+        .sm-btn {
+            padding: 12px 20px; border-radius: 12px; border: none; font-size: 14px; font-weight: 600;
+            display: flex; align-items: center; justify-content: center; gap: 8px; cursor: pointer;
+            transition: all 0.3s;
+        }
+        .sm-btn-primary { background: #4f46e5; color: #fff; box-shadow: 0 4px 15px rgba(79,70,229,0.3); }
+        .sm-btn-primary:hover { background: #4338ca; transform: translateY(-2px); }
+        .sm-btn-secondary { background: var(--bg-body); color: var(--text-primary); border: 1px solid var(--card-border); }
+        .sm-btn-secondary:hover { background: var(--bg-card); transform: translateY(-2px); box-shadow: var(--shadow-soft); }
+
+        /* Stats Row */
+        .sm-stats-grid {
+            display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px;
+        }
+        .sm-stat-card {
+            background: var(--bg-card); padding: 20px; border-radius: 20px;
+            border: 1px solid var(--card-border); box-shadow: var(--shadow-soft);
+            display: flex; align-items: center; gap: 15px;
+            transition: all 0.3s ease;
+        }
+        .sm-stat-card:hover { transform: translateY(-5px); box-shadow: var(--shadow-hover); border-color: transparent; }
+        
+        .sm-icon-box {
+            width: 50px; height: 50px; border-radius: 14px;
+            display: flex; align-items: center; justify-content: center; font-size: 24px; color: #fff;
+        }
+        .bg-purple { background: linear-gradient(135deg, #a855f7, #9333ea); }
+        .bg-blue { background: linear-gradient(135deg, #3b82f6, #2563eb); }
+        .bg-green { background: linear-gradient(135deg, #10b981, #059669); }
+        .bg-amber { background: linear-gradient(135deg, #f59e0b, #d97706); }
+        
+        .sm-stat-data h3 { font-size: 24px; font-weight: 800; color: var(--text-primary); line-height: 1; margin-bottom: 4px;}
+        .sm-stat-data p { font-size: 13px; color: var(--text-muted); font-weight: 500; }
+
+        /* Sections Layout */
+        .sm-two-cols {
+            display: grid; grid-template-columns: 1.5fr 1fr; gap: 25px;
+        }
+
+        .sm-section {
+            background: var(--bg-card); border-radius: 20px;
+            border: 1px solid var(--card-border); box-shadow: var(--shadow-soft);
+            overflow: hidden;
+        }
+        .sm-section-header {
+            padding: 20px 25px; border-bottom: 1px solid var(--card-border);
+            display: flex; justify-content: space-between; align-items: center;
+        }
+        .sm-section-header h3 { font-size: 18px; font-weight: 700; color: var(--text-primary); display: flex; align-items: center; gap: 8px;}
+        .sm-section-header h3 i { color: #4f46e5; }
+        .sm-section-body { padding: 25px; }
+
+        /* Table */
+        .sm-table { width: 100%; border-collapse: separate; border-spacing: 0 10px; margin-top: -10px; }
+        .sm-table th { text-align: left; padding: 0 15px 10px 15px; font-size: 13px; color: var(--text-muted); font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; }
+        .sm-table td { padding: 16px 15px; background: var(--bg-body); font-size: 14px; color: var(--text-primary); }
+        .sm-table tr td:first-child { border-radius: 12px 0 0 12px; font-weight: 600; }
+        .sm-table tr td:last-child { border-radius: 0 12px 12px 0; }
+        .sm-table tr { transition: transform 0.2s; }
+        .sm-table tr:hover td { background: var(--chat-hover); }
+
+        .sm-status { padding: 4px 10px; border-radius: 20px; font-size: 11px; font-weight: 700; text-transform: uppercase; display: inline-flex; align-items: center; gap: 4px; }
+        .sts-upcoming { background: rgba(59,130,246,0.1); color: #3b82f6; }
+        .sts-completed { background: rgba(16,185,129,0.1); color: #10b981; }
+
+        /* Announcements List */
+        .sm-announcement-list { display: flex; flex-direction: column; gap: 15px; }
+        .sm-ann-item {
+            display: flex; gap: 15px; padding: 15px; border-radius: 16px;
+            background: var(--bg-body); border: 1px solid transparent;
+            transition: all 0.3s; position: relative; overflow: hidden;
+        }
+        .sm-ann-item:hover { transform: translateX(5px); border-color: var(--card-border); background: var(--chat-hover); }
+        .sm-ann-icon {
+            width: 40px; height: 40px; border-radius: 12px; background: rgba(79,70,229,0.1); color: #4f46e5;
+            display: flex; align-items: center; justify-content: center; font-size: 20px; flex-shrink: 0;
+        }
+        .sm-ann-content h4 { font-size: 15px; font-weight: 700; margin-bottom: 4px; color: var(--text-primary); }
+        .sm-ann-content p { font-size: 13px; color: var(--text-secondary); line-height: 1.5; margin-bottom: 8px;}
+        .sm-ann-time { font-size: 11px; color: var(--text-muted); font-weight: 600; display: flex; align-items: center; gap: 4px; }
+        .sm-ann-new { position: absolute; top: 15px; right: 15px; background: #ef4444; color: #fff; font-size: 10px; font-weight: 800; padding: 2px 6px; border-radius: 10px; text-transform: uppercase; animation: pulse 2s infinite; }
+
+        /* Resources */
+        .sm-res-grid { display: grid; grid-template-columns: 1fr; gap: 12px; }
+        .sm-res-card {
+            display: flex; align-items: center; gap: 15px; padding: 15px;
+            background: var(--bg-body); border-radius: 16px; cursor: pointer; border: 1px solid transparent;
+            transition: all 0.3s;
+        }
+        .sm-res-card:hover { background: var(--bg-card); border-color: #4f46e5; transform: translateY(-3px); box-shadow: 0 10px 25px rgba(79,70,229,0.1); }
+        .sm-res-icon { width: 45px; height: 45px; border-radius: 12px; background: #f3f4f6; color: #ef4444; display: flex; align-items: center; justify-content: center; font-size: 24px; }
+        [data-theme="dark"] .sm-res-icon { background: #2b2b40; }
+        .sm-res-icon.doc { color: #3b82f6; }
+        .sm-res-icon.vid { color: #8b5cf6; }
+        .sm-res-info h4 { font-size: 14.5px; font-weight: 700; color: var(--text-primary); margin-bottom: 2px;}
+        .sm-res-info p { font-size: 12px; color: var(--text-muted); }
+
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .sm-stats-grid { grid-template-columns: repeat(2, 1fr); }
+            .sm-two-cols { grid-template-columns: 1fr; }
+        }
+        @media (max-width: 768px) {
+            .sm-hero-content { flex-direction: column; align-items: center; text-align: center; padding: 0 20px 25px 20px; }
+            .sm-avatar { margin-top: -60px; width: 120px; height: 120px; }
+            .sm-actions { width: 100%; flex-direction: row; }
+            .sm-btn { flex: 1; }
+            .sm-stats-badges { justify-content: center; }
+            .sm-table th, .sm-table td { padding: 12px 10px; font-size: 13px; }
+            .sm-table th:nth-child(4), .sm-table td:nth-child(4) { display: none; }
+        }
+        @media (max-width: 480px) {
+            .sm-stats-grid { grid-template-columns: 1fr; }
+            .sm-actions { flex-direction: column; }
+            .sm-table th:nth-child(3), .sm-table td:nth-child(3) { display: none; }
+        }
+
+        @keyframes fadeUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes pulse {
+            0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.4); }
+            70% { transform: scale(1.05); box-shadow: 0 0 0 6px rgba(239, 68, 68, 0); }
+            100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(239, 68, 68, 0); }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="dashboard-layout">
+        <!-- Sidebar -->
+        <aside class="dash-sidebar" id="dashSidebar">
+            <div class="dash-sidebar-header">
+                <a href="../../index.html" style="display:flex;align-items:center;gap:12px;text-decoration:none;">
+                    <div class="logo-icon"><i class='bx bxs-graduation'></i></div>
+                    <h2>AlumniPortal</h2>
+                </a>
+            </div>
+
+            <div class="sidebar-user">
+                <div class="sidebar-user-card">
+                    <img src="https://i.pravatar.cc/150?img=3" alt="User Avatar" id="sidebarAvatar">
+                    <div class="user-meta">
+                        <h4 id="sidebarUserName">Shubham K.</h4>
+                        <span id="sidebarUserRole">Alumni   Batch 2020</span>
+                    </div>
+                </div>
+            </div>
+
+            <nav class="dash-nav">
+                <span class="nav-section-label">Main</span>
+                <a href="dashboard.html" class="dash-nav-link" data-view="overview">
+                    <i class='bx bxs-dashboard'></i><span>Overview</span>
+                </a>
+                <a href="profile.html" class="dash-nav-link" data-view="profile">
+                    <i class='bx bxs-user-circle'></i><span>My Profile</span>
+                </a>
+                <a href="network.html" class="dash-nav-link" data-view="network">
+                    <i class='bx bxs-contact'></i><span>Alumni Network</span>
+                </a>
+
+                <span class="nav-section-label">Communication</span>
+                <a href="chat.html" class="dash-nav-link" data-view="chat">
+                    <i class='bx bxs-message-dots'></i><span>Messages</span>
+                    <span class="nav-badge">3</span>
+                </a>
+                <a href="notifications.html" class="dash-nav-link" data-view="notifications">
+                    <i class='bx bxs-bell-ring'></i><span>Notifications</span>
+                    <span class="nav-badge">5</span>
+                </a>
+
+                <span class="nav-section-label">Discover</span>
+                <a href="events.html" class="dash-nav-link" data-view="events">
+                    <i class='bx bxs-calendar-event'></i><span>Events</span>
+                </a>
+                <a href="jobs.html" class="dash-nav-link" data-view="jobs">
+                    <i class='bx bxs-briefcase'></i><span>Job Board</span>
+                </a>
+                <a href="gallery.html" class="dash-nav-link" data-view="gallery">
+                    <i class='bx bxs-photo-album'></i><span>Gallery</span>
+                </a>
+                <a href="mentorship.html" class="dash-nav-link active" data-view="mentorship">
+                    <i class='bx bxs-user-voice'></i><span>Mentorship</span>
+                </a>
+
+                <span class="nav-section-label">Settings</span>
+                <a href="settings.html" class="dash-nav-link" data-view="settings">
+                    <i class='bx bxs-cog'></i><span>Settings</span>
+                </a>
+            </nav>
+
+            <div class="dash-sidebar-footer">
+                <a href="#" class="dash-nav-link" id="logoutBtn">
+                    <i class='bx bx-log-out'></i><span>Logout</span>
+                </a>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="dash-main">
+            <!-- Topbar -->
+            <header class="dash-topbar">
+                <div style="display:flex;align-items:center;gap:16px;">
+                    <button class="sidebar-toggle" onclick="document.getElementById('dashSidebar').classList.toggle('open')">
+                        <i class='bx bx-menu'></i>
+                    </button>
+                    <div class="dash-search">
+                        <i class='bx bx-search'></i>
+                        <input type="text" placeholder="Search alumni, events, jobs..." id="dashSearchInput">
+                    </div>
+                </div>
+                <div class="dash-topbar-actions">
+                    <button class="topbar-icon-btn" title="Notifications" onclick="navigateTo('notifications')">
+                        <i class='bx bxs-bell'></i><span class="notif-dot"></span>
+                    </button>
+                    <button class="topbar-icon-btn" title="Settings" onclick="navigateTo('settings')">
+                        <i class='bx bxs-cog'></i>
+                    </button>
+                    <div class="topbar-profile" id="topbarProfile">
+                        <img src="https://i.pravatar.cc/150?img=3" alt="Profile">
+                        <span>Shubham</span><i class='bx bx-chevron-down'></i>
+                    </div>
+                </div>
+            </header>
+
+            <!-- Container rendered natively -->
+            <div class="dash-view" id="dashViewContainer" data-page="mentorship" data-standalone="true" style="opacity: 1; transform: translateY(0);">
+                
+                <div class="sm-container">
+                    
+                    <!-- Page Header -->
+                    <div class="page-title-bar">
+                        <div>
+                            <h1><i class='bx bxs-user-voice' style="color:var(--primary);margin-right:8px;"></i>Mentorship Program</h1>
+                            <p>Connect with your assigned mentor and accelerate your career.</p>
+                        </div>
+                    </div>
+
+                    <!-- Hero Card -->
+                    <div class="sm-hero">
+                        <div class="sm-hero-mesh"></div>
+                        <div class="sm-hero-content">
+                            <div class="sm-avatar">
+                                <img src="https://ui-avatars.com/api/?name=Prof+R+D+More&background=4f46e5&color=fff&size=200&bold=true" alt="Mentor">
+                                <i class='bx bxs-badge-check sm-verified' title="Verified Mentor"></i>
+                            </div>
+                            <div class="sm-info">
+                                <h2>Dr. R. D. More</h2>
+                                <div class="role">Chief Mentor — Computer Engineering Dept.</div>
+                                <div class="desc">Guiding the batches of 2018, 2019, 2020 through their professional journey, helping alumni transition into leadership roles.</div>
+                                <div class="sm-stats-badges">
+                                    <span class="sm-badge"><i class='bx bxs-group'></i> 120+ Mentees Placed</span>
+                                    <span class="sm-badge"><i class='bx bxs-star'></i> 4.9/5 Rating</span>
+                                    <span class="sm-badge"><i class='bx bxs-time'></i> 15 Years Exp.</span>
+                                </div>
+                            </div>
+                            <div class="sm-actions">
+                                <button class="sm-btn sm-btn-primary" onclick="window.location.href='chat.html'"><i class='bx bxs-message-square-dots'></i> Connect Mentor</button>
+                                <button class="sm-btn sm-btn-secondary" id="scheduleBtn" onclick="toggleSchedule()"><i class='bx bx-calendar-plus'></i> Book Session</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Quick Stats -->
+                    <div class="sm-stats-grid">
+                        <div class="sm-stat-card">
+                            <div class="sm-icon-box bg-purple"><i class='bx bx-check-double'></i></div>
+                            <div class="sm-stat-data"><h3>4</h3><p>Sessions Attended</p></div>
+                        </div>
+                        <div class="sm-stat-card">
+                            <div class="sm-icon-box bg-blue"><i class='bx bxs-calendar-event'></i></div>
+                            <div class="sm-stat-data"><h3>1</h3><p>Upcoming Session</p></div>
+                        </div>
+                        <div class="sm-stat-card">
+                            <div class="sm-icon-box bg-green"><i class='bx bxs-bar-chart-alt-2'></i></div>
+                            <div class="sm-stat-data"><h3>92%</h3><p>Batch Placement</p></div>
+                        </div>
+                        <div class="sm-stat-card">
+                            <div class="sm-icon-box bg-amber"><i class='bx bxs-trophy'></i></div>
+                            <div class="sm-stat-data"><h3>Top 5</h3><p>Batch Ranking</p></div>
+                        </div>
+                    </div>
+
+                    <!-- Complex Layout Grid -->
+                    <div class="sm-two-cols">
+                        
+                        <!-- Left Column -->
+                        <div style="display:flex; flex-direction:column; gap:25px;">
+                            
+                            <!-- Announcements -->
+                            <div class="sm-section">
+                                <div class="sm-section-header">
+                                    <h3><i class='bx bxs-megaphone'></i> Mentor Announcements</h3>
+                                </div>
+                                <div class="sm-section-body">
+                                    <div class="sm-announcement-list">
+                                        <div class="sm-ann-item">
+                                            <div class="sm-ann-new">New</div>
+                                            <div class="sm-ann-icon"><i class='bx bx-broadcast'></i></div>
+                                            <div class="sm-ann-content">
+                                                <h4>Batch 2020 Annual Survey</h4>
+                                                <p>Please complete your current employment status survey on the portal by Friday to assist our analytics pipeline.</p>
+                                                <span class="sm-ann-time"><i class='bx bx-time-five'></i> 2 hours ago</span>
+                                            </div>
+                                        </div>
+                                        <div class="sm-ann-item">
+                                            <div class="sm-ann-icon" style="background:rgba(16,185,129,0.1); color:#10b981;"><i class='bx bx-calendar-star'></i></div>
+                                            <div class="sm-ann-content">
+                                                <h4>Upcoming Review Workshop</h4>
+                                                <p>Join the virtual review session on Saturday. Bring updated resumes and specific questions.</p>
+                                                <span class="sm-ann-time"><i class='bx bx-time-five'></i> 3 days ago</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Schedule Table -->
+                            <div class="sm-section">
+                                <div class="sm-section-header">
+                                    <h3><i class='bx bxs-calendar'></i> Mentorship Schedule</h3>
+                                    <button class="sm-btn sm-btn-secondary" style="padding:6px 12px; font-size:12px;">View All</button>
+                                </div>
+                                <div class="sm-section-body" style="overflow-x: auto;">
+                                    <table class="sm-table">
+                                        <thead>
+                                            <tr>
+                                                <th>Date & Time</th>
+                                                <th>Topic</th>
+                                                <th>Mode</th>
+                                                <th>Status</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td>Next Sat, 10:00 AM</td>
+                                                <td>Portfolio & Resume Revamp</td>
+                                                <td>Virtual</td>
+                                                <td><span class="sm-status sts-upcoming"><i class='bx bxs-circle' style="font-size:6px;"></i> Upcoming</span></td>
+                                            </tr>
+                                            <tr>
+                                                <td>Last Mon, 5:00 PM</td>
+                                                <td>Industry Connect Q&A</td>
+                                                <td>Hybrid</td>
+                                                <td><span class="sm-status sts-completed"><i class='bx bx-check'></i> Completed</span></td>
+                                            </tr>
+                                            <tr>
+                                                <td>Jan 15, 2026</td>
+                                                <td>Career Goal Setting</td>
+                                                <td>In-Person</td>
+                                                <td><span class="sm-status sts-completed"><i class='bx bx-check'></i> Completed</span></td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+
+                        </div>
+
+                        <!-- Right Column -->
+                        <div style="display:flex; flex-direction:column; gap:25px;">
+                            
+                            <!-- Premium Resource List -->
+                            <div class="sm-section">
+                                <div class="sm-section-header">
+                                    <h3><i class='bx bxs-book-content'></i> Curated Resources</h3>
+                                </div>
+                                <div class="sm-section-body">
+                                    <div class="sm-res-grid">
+                                        
+                                        <div class="sm-res-card" onclick="alertMsg('Downloading templates...')">
+                                            <div class="sm-res-icon doc"><i class='bx bxs-file-doc'></i></div>
+                                            <div class="sm-res-info">
+                                                <h4>2026 Resume Templates</h4>
+                                                <p>ATS-friendly formats</p>
+                                            </div>
+                                            <i class='bx bx-download' style="margin-left:auto; color:var(--text-muted); font-size:18px;"></i>
+                                        </div>
+
+                                        <div class="sm-res-card" onclick="alertMsg('Opening video...')">
+                                            <div class="sm-res-icon vid"><i class='bx bxs-video'></i></div>
+                                            <div class="sm-res-info">
+                                                <h4>Mock Interview Series</h4>
+                                                <p>Watch recorded sessions</p>
+                                            </div>
+                                            <i class='bx bx-link-external' style="margin-left:auto; color:var(--text-muted); font-size:18px;"></i>
+                                        </div>
+
+                                        <div class="sm-res-card" onclick="alertMsg('Downloading PDF...')">
+                                            <div class="sm-res-icon"><i class='bx bxs-file-pdf'></i></div>
+                                            <div class="sm-res-info">
+                                                <h4>System Design Guide</h4>
+                                                <p>Essential prep material</p>
+                                            </div>
+                                            <i class='bx bx-download' style="margin-left:auto; color:var(--text-muted); font-size:18px;"></i>
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+
+                    </div>
+                </div>
+
+            </div>
+        </main>
+    </div>
+
+    <script src="../../assets/js/data.js"></script>
+    <script src="../../assets/js/common.js"></script>
+    <script src="../../assets/js/dashboard.js"></script>
+
+    <script>
+        // Internal Scripts for Mentorship Page interactions
+        function toggleSchedule() {
+            const btn = document.getElementById('scheduleBtn');
+            if (btn.classList.contains('sm-btn-primary')) {
+                btn.classList.remove('sm-btn-primary');
+                btn.classList.add('sm-btn-secondary');
+                btn.innerHTML = "<i class='bx bx-calendar-plus'></i> Book Session";
+                if(typeof showToast !== 'undefined') showToast('Session scheduling cancelled', 'info');
+            } else {
+                btn.classList.remove('sm-btn-secondary');
+                btn.classList.add('sm-btn-primary');
+                btn.innerHTML = "<i class='bx bx-check'></i> Requested";
+                if(typeof showToast !== 'undefined') showToast('Session request sent to mentor!', 'success');
+            }
+        }
+
+        function alertMsg(msg) {
+            if(typeof showToast !== 'undefined') {
+                showToast(msg, 'success');
+            } else {
+                alert(msg);
+            }
+        }
+    </script>
+</body>
+</html>
