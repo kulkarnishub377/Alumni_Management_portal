@@ -8,12 +8,151 @@
     <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
     <link rel="stylesheet" href="../../assets/css/common.css">
     <link rel="stylesheet" href="../../assets/css/dashboard.css">
+    <style>
+        /* Standalone Dashboard Home CSS */
+        :root {
+            --dh-glass: rgba(255, 255, 255, 0.95);
+            --dh-border: rgba(0,0,0,0.08);
+            --shadow-soft: 0 10px 30px rgba(0,0,0,0.03);
+            --shadow-hover: 0 15px 35px rgba(79, 70, 229, 0.1);
+        }
+
+        [data-theme="dark"] :root {
+            --dh-glass: rgba(30, 30, 45, 0.95);
+            --dh-border: rgba(255,255,255,0.08);
+        }
+
+        .dh-container {
+            padding: 10px 0 40px 0;
+            display: flex;
+            flex-direction: column;
+            gap: 25px;
+            animation: fadeIn 0.4s ease;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        /* Hero Banner */
+        .dh-hero {
+            background: linear-gradient(135deg, #4f46e5 0%, #06b6d4 100%);
+            border-radius: 20px; padding: 30px 40px; position: relative; overflow: hidden;
+            display: flex; justify-content: space-between; align-items: center;
+            box-shadow: 0 10px 25px rgba(79,70,229,0.2);
+        }
+        .dh-hero::before {
+            content: ''; position: absolute; inset: 0;
+            background: url('data:image/svg+xml;utf8,<svg width="100" height="100" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><circle cx="50" cy="50" r="40" stroke="rgba(255,255,255,0.1)" stroke-width="2" fill="none"/></svg>') repeat;
+            opacity: 0.5; z-index: 1; pointer-events: none;
+        }
+        .dh-hero-content {
+            position: relative; z-index: 2; color: #fff;
+        }
+        .dh-hero-title { font-size: 28px; font-weight: 800; margin-bottom: 8px; letter-spacing: -0.5px; }
+        .dh-hero-subtitle { font-size: 15px; opacity: 0.9; font-weight: 500; max-width: 500px; line-height: 1.5; }
+        .dh-hero-actions {
+            position: relative; z-index: 2; display: flex; gap: 15px;
+        }
+        .dh-btn-white {
+            background: #fff; color: #4f46e5; border: none; padding: 12px 24px; border-radius: 12px;
+            font-size: 14px; font-weight: 700; cursor: pointer; transition: all 0.2s; box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+        .dh-btn-white:hover { transform: translateY(-2px); box-shadow: 0 8px 25px rgba(0,0,0,0.15); }
+
+        /* Stats Grid */
+        .dh-stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; }
+        .dh-stat-card {
+            background: var(--bg-card); border-radius: 20px; padding: 25px;
+            border: 1px solid var(--dh-border); box-shadow: var(--shadow-soft);
+            display: flex; align-items: center; gap: 18px; transition: all 0.3s;
+        }
+        .dh-stat-card:hover { transform: translateY(-5px); box-shadow: var(--shadow-hover); border-color: #4f46e5; }
+        .dh-stat-icon {
+            width: 55px; height: 55px; border-radius: 16px; display: flex; align-items: center; justify-content: center;
+            font-size: 26px; flex-shrink: 0;
+        }
+        .icon-blue { background: rgba(59,130,246,0.1); color: #3b82f6; }
+        .icon-purple { background: rgba(139,92,246,0.1); color: #8b5cf6; }
+        .icon-green { background: rgba(16,185,129,0.1); color: #10b981; }
+        .icon-amber { background: rgba(245,158,11,0.1); color: #f59e0b; }
+        .dh-stat-info h3 { font-size: 26px; font-weight: 800; color: var(--text-primary); margin-bottom: 2px; }
+        .dh-stat-info p { font-size: 13px; font-weight: 600; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; }
+
+        /* Main Content Grid */
+        .dh-grid { display: grid; grid-template-columns: 2fr 1fr; gap: 25px; }
+
+        /* Generic Card Style */
+        .dh-card {
+            background: var(--bg-card); border-radius: 20px; border: 1px solid var(--dh-border); box-shadow: var(--shadow-soft);
+        }
+        .dh-card-header {
+            padding: 20px 25px; border-bottom: 1px solid var(--dh-border); display: flex; justify-content: space-between; align-items: center;
+        }
+        .dh-card-header h3 { font-size: 17px; font-weight: 700; color: var(--text-primary); display: flex; align-items: center; gap: 8px; }
+        .dh-card-header h3 i { color: #4f46e5; font-size: 22px; }
+        .dh-card-action { font-size: 13px; font-weight: 600; color: #4f46e5; text-decoration: none; transition: color 0.2s; }
+        .dh-card-action:hover { color: #3730a3; text-decoration: underline; }
+        .dh-card-body { padding: 25px; }
+
+        /* Network Activity Feed */
+        .dh-feed { display: flex; flex-direction: column; gap: 20px; }
+        .feed-item { display: flex; gap: 15px; position: relative; }
+        .feed-item:not(:last-child)::after {
+            content: ''; position: absolute; left: 22px; top: 50px; bottom: -15px; width: 2px; background: var(--dh-border);
+        }
+        .feed-avatar { width: 46px; height: 46px; border-radius: 50%; object-fit: cover; border: 2px solid var(--bg-card); box-shadow: 0 4px 10px rgba(0,0,0,0.05); z-index: 2; flex-shrink: 0;}
+        .feed-content { flex: 1; background: rgba(79,70,229,0.03); border: 1px solid rgba(79,70,229,0.08); padding: 15px; border-radius: 14px; transition: background 0.2s; }
+        .feed-content:hover { background: rgba(79,70,229,0.06); }
+        .feed-meta { font-size: 14px; color: var(--text-primary); margin-bottom: 6px; }
+        .feed-meta strong { font-weight: 700; }
+        .feed-time { font-size: 11px; color: var(--text-muted); font-weight: 600; margin-left: 8px; }
+        .feed-text { font-size: 14px; color: var(--text-secondary); line-height: 1.5; }
+        .feed-img-preview { margin-top: 10px; border-radius: 10px; overflow: hidden; height: 120px; }
+        .feed-img-preview img { width: 100%; height: 100%; object-fit: cover; }
+
+        /* Upcoming Events Snapshot */
+        .event-snap { display: flex; flex-direction: column; gap: 15px; }
+        .event-row { display: flex; align-items: stretch; gap: 15px; padding: 15px; border-radius: 14px; border: 1px solid var(--dh-border); background: var(--bg-body); transition: transform 0.2s; cursor: pointer; }
+        .event-row:hover { transform: translateY(-2px); border-color: #3b82f6; box-shadow: 0 5px 15px rgba(59,130,246,0.1); }
+        .event-date-box {
+            background: rgba(59,130,246,0.1); color: #3b82f6; border-radius: 12px; min-width: 65px; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 10px;
+        }
+        .event-month { font-size: 11px; font-weight: 700; text-transform: uppercase; margin-bottom: 2px;}
+        .event-day { font-size: 22px; font-weight: 800; line-height: 1; }
+        .event-info { display: flex; flex-direction: column; justify-content: center; }
+        .event-title { font-size: 15px; font-weight: 700; color: var(--text-primary); margin-bottom: 5px; }
+        .event-loc { font-size: 12px; color: var(--text-secondary); display: flex; align-items: center; gap: 4px; }
+
+        /* Quick Shortcuts */
+        .shortcuts-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
+        .sc-card {
+            background: var(--bg-body); border-radius: 14px; padding: 20px 15px; text-align: center; border: 1px solid var(--dh-border); cursor: pointer; transition: all 0.2s;
+        }
+        .sc-card:hover { background: #4f46e5; color: #fff; transform: translateY(-3px); box-shadow: 0 8px 20px rgba(79,70,229,0.25); border-color: transparent;}
+        .sc-card i { font-size: 32px; color: inherit; margin-bottom: 10px; opacity: 0.8; }
+        .sc-card:hover i { opacity: 1; color: #fff; }
+        .sc-card h4 { font-size: 14px; font-weight: 600; color: inherit; }
+
+        @media (max-width: 1024px) {
+            .dh-stats { grid-template-columns: repeat(2, 1fr); }
+            .dh-grid { grid-template-columns: 1fr; }
+            .dh-hero { flex-direction: column; text-align: center; gap: 25px; padding: 30px 20px; }
+            .dh-hero-subtitle { margin: 0 auto; }
+        }
+        @media (max-width: 600px) {
+            .dh-stats { grid-template-columns: 1fr; }
+            .shortcuts-grid { grid-template-columns: 1fr; }
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(15px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
 </head>
 <body>
 
     <div class="dashboard-layout">
-
-        <!-- ========== SIDEBAR ========== -->
+        <!-- Sidebar -->
         <aside class="dash-sidebar" id="dashSidebar">
             <div class="dash-sidebar-header">
                 <a href="../../index.html" style="display:flex;align-items:center;gap:12px;text-decoration:none;">
@@ -27,111 +166,219 @@
                     <img src="https://i.pravatar.cc/150?img=3" alt="User Avatar" id="sidebarAvatar">
                     <div class="user-meta">
                         <h4 id="sidebarUserName">Shubham K.</h4>
-                        <span id="sidebarUserRole">Alumni • Batch 2020</span>
+                        <span id="sidebarUserRole">Alumni   Batch 2020</span>
                     </div>
                 </div>
             </div>
 
             <nav class="dash-nav">
                 <span class="nav-section-label">Main</span>
-                <a href="dashboard.html" class="dash-nav-link active" data-view="overview">
-                    <i class='bx bxs-dashboard'></i>
-                    <span>Overview</span>
-                </a>
-                <a href="profile.html" class="dash-nav-link" data-view="profile">
-                    <i class='bx bxs-user-circle'></i>
-                    <span>My Profile</span>
-                </a>
-                <a href="network.html" class="dash-nav-link" data-view="network">
-                    <i class='bx bxs-contact'></i>
-                    <span>Alumni Network</span>
-                </a>
+                <a href="dashboard.html" class="dash-nav-link active" data-view="overview"><i class='bx bxs-dashboard'></i><span>Overview</span></a>
+                <a href="profile.html" class="dash-nav-link" data-view="profile"><i class='bx bxs-user-circle'></i><span>My Profile</span></a>
+                <a href="network.html" class="dash-nav-link" data-view="network"><i class='bx bxs-contact'></i><span>Alumni Network</span></a>
 
                 <span class="nav-section-label">Communication</span>
-                <a href="chat.html" class="dash-nav-link" data-view="chat">
-                    <i class='bx bxs-message-dots'></i>
-                    <span>Messages</span>
-                    <span class="nav-badge">3</span>
-                </a>
-                <a href="notifications.html" class="dash-nav-link" data-view="notifications">
-                    <i class='bx bxs-bell-ring'></i>
-                    <span>Notifications</span>
-                    <span class="nav-badge">5</span>
-                </a>
+                <a href="chat.html" class="dash-nav-link" data-view="chat"><i class='bx bxs-message-dots'></i><span>Messages</span><span class="nav-badge">3</span></a>
+                <a href="notifications.html" class="dash-nav-link" data-view="notifications"><i class='bx bxs-bell-ring'></i><span>Notifications</span><span class="nav-badge">5</span></a>
 
                 <span class="nav-section-label">Discover</span>
-                <a href="events.html" class="dash-nav-link" data-view="events">
-                    <i class='bx bxs-calendar-event'></i>
-                    <span>Events</span>
-                </a>
-                <a href="jobs.html" class="dash-nav-link" data-view="jobs">
-                    <i class='bx bxs-briefcase'></i>
-                    <span>Job Board</span>
-                </a>
-                <a href="gallery.html" class="dash-nav-link" data-view="gallery">
-                    <i class='bx bxs-photo-album'></i>
-                    <span>Gallery</span>
-                </a>
-                <a href="mentorship.html" class="dash-nav-link" data-view="mentorship">
-                    <i class='bx bxs-user-voice'></i>
-                    <span>Mentorship</span>
-                </a>
+                <a href="events.html" class="dash-nav-link" data-view="events"><i class='bx bxs-calendar-event'></i><span>Events</span></a>
+                <a href="jobs.html" class="dash-nav-link" data-view="jobs"><i class='bx bxs-briefcase'></i><span>Job Board</span></a>
+                <a href="gallery.html" class="dash-nav-link" data-view="gallery"><i class='bx bxs-photo-album'></i><span>Gallery</span></a>
+                <a href="mentorship.html" class="dash-nav-link" data-view="mentorship"><i class='bx bxs-user-voice'></i><span>Mentorship</span></a>
 
                 <span class="nav-section-label">Settings</span>
-                <a href="settings.html" class="dash-nav-link" data-view="settings">
-                    <i class='bx bxs-cog'></i>
-                    <span>Settings</span>
-                </a>
+                <a href="settings.html" class="dash-nav-link" data-view="settings"><i class='bx bxs-cog'></i><span>Settings</span></a>
             </nav>
 
             <div class="dash-sidebar-footer">
-                <a href="#" class="dash-nav-link" id="logoutBtn">
-                    <i class='bx bx-log-out'></i>
-                    <span>Logout</span>
-                </a>
+                <a href="#" class="dash-nav-link" id="logoutBtn"><i class='bx bx-log-out'></i><span>Logout</span></a>
             </div>
         </aside>
 
-        <!-- ========== MAIN CONTENT ========== -->
+        <!-- Main Content -->
         <main class="dash-main">
-
             <!-- Topbar -->
             <header class="dash-topbar">
                 <div style="display:flex;align-items:center;gap:16px;">
-                    <button class="sidebar-toggle" onclick="document.getElementById('dashSidebar').classList.toggle('open')">
-                        <i class='bx bx-menu'></i>
-                    </button>
-                    <div class="dash-search">
-                        <i class='bx bx-search'></i>
-                        <input type="text" placeholder="Search alumni, events, jobs..." id="dashSearchInput">
-                    </div>
+                    <button class="sidebar-toggle" onclick="document.getElementById('dashSidebar').classList.toggle('open')"><i class='bx bx-menu'></i></button>
+                    <div class="dash-search"><i class='bx bx-search'></i><input type="text" placeholder="Search alumni, events, jobs..." id="dashSearchInput"></div>
                 </div>
                 <div class="dash-topbar-actions">
-                    <button class="topbar-icon-btn" title="Notifications" data-tooltip="Notifications" onclick="navigateTo('notifications')">
-                        <i class='bx bxs-bell'></i>
-                        <span class="notif-dot"></span>
-                    </button>
-                    <button class="topbar-icon-btn" title="Settings" data-tooltip="Settings" onclick="navigateTo('settings')">
-                        <i class='bx bxs-cog'></i>
-                    </button>
+                    <button class="topbar-icon-btn" title="Notifications" onclick="window.location.href='notifications.html'"><i class='bx bxs-bell'></i><span class="notif-dot"></span></button>
+                    <button class="topbar-icon-btn" title="Settings" onclick="window.location.href='settings.html'"><i class='bx bxs-cog'></i></button>
                     <div class="topbar-profile" id="topbarProfile">
-                        <img src="https://i.pravatar.cc/150?img=3" alt="Profile">
-                        <span>Shubham</span>
-                        <i class='bx bx-chevron-down'></i>
+                        <img src="https://i.pravatar.cc/150?img=3" alt="Profile"><span>Shubham</span><i class='bx bx-chevron-down'></i>
                     </div>
                 </div>
             </header>
 
-            <!-- Dynamic View Container -->
-            <div class="dash-view" id="dashViewContainer" data-page="dashboard">
-                <!-- Rendered by dashboard.js -->
+            <!-- Container rendered natively -->
+            <div class="dash-view" id="dashViewContainer" data-page="overview" data-standalone="true" style="opacity: 1; transform: translateY(0);">
+                
+                <div class="dh-container">
+
+                    <!-- Welcome Hero Banner -->
+                    <div class="dh-hero">
+                        <div class="dh-hero-content">
+                            <h1 class="dh-hero-title">Welcome back, Shubham!</h1>
+                            <p class="dh-hero-subtitle">You have 3 unread messages, 2 upcoming college events, and 14 new job opportunities mapped to your skillset this week.</p>
+                        </div>
+                        <div class="dh-hero-actions">
+                            <button class="dh-btn-white" onclick="window.location.href='network.html'"><i class='bx bx-search-alt'></i> Explore Network</button>
+                        </div>
+                    </div>
+
+                    <!-- Statistics Cards -->
+                    <div class="dh-stats">
+                        <div class="dh-stat-card">
+                            <div class="dh-stat-icon icon-blue"><i class='bx bxs-group'></i></div>
+                            <div class="dh-stat-info">
+                                <h3>500+</h3>
+                                <p>Connections</p>
+                            </div>
+                        </div>
+                        <div class="dh-stat-card">
+                            <div class="dh-stat-icon icon-purple"><i class='bx bxs-briefcase'></i></div>
+                            <div class="dh-stat-info">
+                                <h3>14</h3>
+                                <p>New Jobs</p>
+                            </div>
+                        </div>
+                        <div class="dh-stat-card">
+                            <div class="dh-stat-icon icon-green"><i class='bx bxs-calendar-event'></i></div>
+                            <div class="dh-stat-info">
+                                <h3>2</h3>
+                                <p>Events RSVPed</p>
+                            </div>
+                        </div>
+                        <div class="dh-stat-card">
+                            <div class="dh-stat-icon icon-amber"><i class='bx bxs-star'></i></div>
+                            <div class="dh-stat-info">
+                                <h3>Top 5%</h3>
+                                <p>Profile Rank</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Main Grid Content -->
+                    <div class="dh-grid">
+                        
+                        <!-- Left Column: Activity Feed -->
+                        <div class="dh-card">
+                            <div class="dh-card-header">
+                                <h3><i class='bx bx-broadcast'></i> Network Activity</h3>
+                                <a href="network.html" class="dh-card-action">View All</a>
+                            </div>
+                            <div class="dh-card-body">
+                                <div class="dh-feed">
+                                    
+                                    <div class="feed-item">
+                                        <img src="https://i.pravatar.cc/150?img=11" alt="Aarav" class="feed-avatar">
+                                        <div class="feed-content">
+                                            <div class="feed-meta"><strong>Aarav Patel</strong> updated their employment status. <span class="feed-time">2 hours ago</span></div>
+                                            <div class="feed-text">Just started a new position as <strong>Senior Cloud Architect</strong> at Amazon Web Services (AWS). Excited for the journey!</div>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="feed-item">
+                                        <img src="https://i.pravatar.cc/150?img=5" alt="Priya" class="feed-avatar">
+                                        <div class="feed-content">
+                                            <div class="feed-meta"><strong>Priya Sharma</strong> shared an open opportunity. <span class="feed-time">5 hours ago</span></div>
+                                            <div class="feed-text">My team at Netflix is hiring a Mid-Level Frontend Engineer (React/Node). Alumni from the 2019-2022 batches get priority referrals. DM me if interested!</div>
+                                        </div>
+                                    </div>
+
+                                    <div class="feed-item">
+                                        <div class="feed-avatar" style="background:#10b981; color:#fff; display:flex; align-items:center; justify-content:center; border:none; font-size:24px; box-shadow:none;"><i class='bx bxs-graduation'></i></div>
+                                        <div class="feed-content">
+                                            <div class="feed-meta"><strong>College Administration</strong> posted an announcement. <span class="feed-time">1 day ago</span></div>
+                                            <div class="feed-text">The Annual Tech Symposium is scheduled for next month! We are actively looking for Alumni Guest Speakers. Please check the events page to apply.</div>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Right Column: Events & Shortcuts -->
+                        <div style="display:flex; flex-direction:column; gap:25px;">
+                            
+                            <!-- Upcoming Events -->
+                            <div class="dh-card">
+                                <div class="dh-card-header">
+                                    <h3><i class='bx bx-calendar'></i> Upcoming Events</h3>
+                                    <a href="events.html" class="dh-card-action">Events Page</a>
+                                </div>
+                                <div class="dh-card-body">
+                                    <div class="event-snap">
+                                        
+                                        <div class="event-row" onclick="window.location.href='events.html'">
+                                            <div class="event-date-box">
+                                                <span class="event-month">Jun</span>
+                                                <span class="event-day">02</span>
+                                            </div>
+                                            <div class="event-info">
+                                                <div class="event-title">Tech Industry Mentorship</div>
+                                                <div class="event-loc"><i class='bx bx-video'></i> Virtual (Zoom)</div>
+                                            </div>
+                                        </div>
+
+                                        <div class="event-row" onclick="window.location.href='events.html'">
+                                            <div class="event-date-box" style="background:rgba(239,68,68,0.1); color:#ef4444;">
+                                                <span class="event-month">Jun</span>
+                                                <span class="event-day">20</span>
+                                            </div>
+                                            <div class="event-info">
+                                                <div class="event-title">Startup Pitch Night</div>
+                                                <div class="event-loc"><i class='bx bx-map'></i> Innovation Hub, Pune</div>
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Shortcuts Quick Links -->
+                            <div class="dh-card">
+                                <div class="dh-card-header">
+                                    <h3><i class='bx bx-bolt-circle'></i> Quick Actions</h3>
+                                </div>
+                                <div class="dh-card-body" style="padding: 15px;">
+                                    <div class="shortcuts-grid">
+                                        <div class="sc-card" style="color:#ef4444;" onclick="window.location.href='jobs.html'">
+                                            <i class='bx bxs-briefcase-alt-2'></i>
+                                            <h4>Find Jobs</h4>
+                                        </div>
+                                        <div class="sc-card" style="color:#10b981;" onclick="window.location.href='mentorship.html'">
+                                            <i class='bx bxs-user-voice'></i>
+                                            <h4>Mentors</h4>
+                                        </div>
+                                        <div class="sc-card" style="color:#3b82f6;" onclick="window.location.href='profile.html'">
+                                            <i class='bx bx-cloud-upload'></i>
+                                            <h4>Upload CV</h4>
+                                        </div>
+                                        <div class="sc-card" style="color:#8b5cf6;" onclick="window.location.href='network.html'">
+                                            <i class='bx bxs-group'></i>
+                                            <h4>Batchmates</h4>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+
+                    </div>
+                </div>
+
             </div>
         </main>
     </div>
 
+    <!-- Scripts -->
     <script src="../../assets/js/data.js"></script>
     <script src="../../assets/js/common.js"></script>
     <script src="../../assets/js/dashboard.js"></script>
+
 </body>
 </html>
-
