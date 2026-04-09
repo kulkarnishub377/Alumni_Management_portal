@@ -16,8 +16,9 @@ document.addEventListener('DOMContentLoaded', () => {
     const months = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
 
     // State
+    const CURRENT_USER_BATCH = '2020'; // Mocking user context
     let chatMessages = [...APP_DATA.chatMessages];
-    let activeChatContact = APP_DATA.chatContacts[2]; // Aarav by default
+    let activeChatContact = APP_DATA.chatContacts.filter(c => !c.isGroup || c.name.includes(CURRENT_USER_BATCH))[0] || APP_DATA.chatContacts[0];
     let registeredEvents = new Set();
     let appliedJobs = new Set();
     let bookmarkedAlumni = new Set();
@@ -517,7 +518,6 @@ document.addEventListener('DOMContentLoaded', () => {
         const btn = document.querySelector(`.bookmark-btn[data-id="${id}"] i`);
         if (btn) btn.className = bookmarkedAlumni.has(id) ? 'bx bxs-bookmark' : 'bx bx-bookmark';
     };
-    const CURRENT_USER_BATCH = '2020'; // Mocking user context
 
     window.connectAlumni = function(name, batch, btn) {
         if (btn) {
