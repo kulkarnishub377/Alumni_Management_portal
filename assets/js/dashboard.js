@@ -722,7 +722,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     const isRegistered = registeredEvents.has(ev.id);
                     return `
                         <div class="dash-section" style="margin-bottom:16px;">
-                            <div class="dash-section-body" style="display:flex;align-items:center;gap:20px;flex-wrap:wrap;">
+                            <div class="dash-section-body event-card-row">
                                 <div style="width:64px;height:70px;background:var(--primary);border-radius:var(--radius-md);display:flex;flex-direction:column;align-items:center;justify-content:center;color:#fff;min-width:64px;">
                                     <span style="font-size:24px;font-weight:800;line-height:1;">${d.day}</span>
                                     <span style="font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:1px;opacity:0.8;">${d.month}</span>
