@@ -125,6 +125,11 @@
         .sec-action:hover { background: #4f46e5; color: #fff; transform: translateY(-2px); }
         .sec-body { padding: 25px; color: var(--text-secondary); font-size: 14.5px; line-height: 1.6; }
 
+        /* Detail Grids (Personal Info) */
+        .detail-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+        .detail-block h5 { font-size: 12px; text-transform: uppercase; letter-spacing: 0.5px; color: var(--text-muted); margin-bottom: 5px; }
+        .detail-block p { font-size: 15px; font-weight: 600; color: var(--text-primary); }
+
         /* Timeline (Experience) */
         .exp-timeline { position: relative; padding-left: 30px; display: flex; flex-direction: column; gap: 20px; }
         .exp-timeline::before { content: ''; position: absolute; left: 8px; top: 0; bottom: 0; width: 2px; background: var(--profile-border); }
@@ -191,6 +196,40 @@
         .btn-outline { background: transparent; border: 1px solid var(--profile-border); color: var(--text-primary); }
         .btn-outline:hover { background: var(--bg-body); }
 
+        /* Modal Subsystem */
+        .modal-overlay {
+            position: fixed; inset: 0; background: rgba(0,0,0,0.5); backdrop-filter: blur(4px);
+            z-index: 1000; display: none; align-items: center; justify-content: center;
+            opacity: 0; transition: opacity 0.3s;
+        }
+        .modal-overlay.active { display: flex; opacity: 1; }
+        
+        .modal-box {
+            background: var(--bg-card); width: 100%; max-width: 550px; border-radius: 20px;
+            box-shadow: 0 15px 40px rgba(0,0,0,0.2); transform: translateY(20px); transition: transform 0.3s;
+            border: 1px solid var(--profile-border); display: flex; flex-direction: column;
+            max-height: 90vh;
+        }
+        .modal-overlay.active .modal-box { transform: translateY(0); }
+        
+        .modal-header {
+            padding: 20px 25px; border-bottom: 1px solid var(--profile-border); display: flex; justify-content: space-between; align-items: center;
+        }
+        .modal-header h3 { font-size: 18px; font-weight: 700; color: var(--text-primary); }
+        .modal-close { background: transparent; border: none; font-size: 24px; color: var(--text-muted); cursor: pointer; transition: color 0.2s; display: flex; align-items: center; justify-content: center; width: 32px; height: 32px; border-radius: 8px;}
+        .modal-close:hover { color: #ef4444; background: rgba(239,68,68,0.1); }
+        
+        .modal-body { padding: 25px; overflow-y: auto; }
+        .modal-footer { padding: 15px 25px; border-top: 1px solid var(--profile-border); display: flex; justify-content: flex-end; gap: 10px; background: var(--bg-body); border-radius: 0 0 20px 20px; }
+        
+        .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 20px; }
+        .form-group { margin-bottom: 20px; }
+        .form-group.full { grid-column: 1 / -1; }
+        .form-group label { display: block; font-size: 13px; font-weight: 600; color: var(--text-secondary); margin-bottom: 8px; }
+        .form-control { width: 100%; padding: 12px 15px; border-radius: 10px; border: 1px solid var(--profile-border); background: var(--bg-body); color: var(--text-primary); font-family: inherit; font-size: 14px; outline: none; transition: border-color 0.2s; }
+        .form-control:focus { border-color: #4f46e5; }
+        textarea.form-control { resize: vertical; min-height: 100px; }
+
         /* Responsive Overrides */
         @media (max-width: 1024px) {
             .sp-grid { grid-template-columns: 1fr; }
@@ -206,6 +245,8 @@
             .resume-viewer { height: 300px; }
             .sp-card.left-nav { flex-direction: column; }
             .sp-hero-body { border-right: none; width: 100%; border-bottom: 1px solid var(--profile-border); }
+            .detail-grid { grid-template-columns: 1fr; }
+            .form-row { grid-template-columns: 1fr; }
         }
         @media (max-width: 480px) {
             .page-header { flex-direction: column; align-items: flex-start; }
@@ -221,7 +262,6 @@
 <body>
 
     <div class="dashboard-layout">
-        <!-- Sidebar -->
         <aside class="dash-sidebar" id="dashSidebar">
             <div class="dash-sidebar-header">
                 <a href="../../index.html" style="display:flex;align-items:center;gap:12px;text-decoration:none;">
@@ -292,7 +332,6 @@
                             <h1><i class='bx bxs-user-badge'></i> My Profile</h1>
                             <p>Manage your professional identity, view your resume, and update your career trajectory.</p>
                         </div>
-                        <button class="btn-action" onclick="alertMsg('Profile Edit Form Opened')"><i class='bx bx-edit-alt'></i> Edit Profile</button>
                     </div>
 
                     <div class="sp-grid">
@@ -303,34 +342,29 @@
                             <div class="sp-hero-body">
                                 <div class="sp-avatar-box">
                                     <img src="https://i.pravatar.cc/150?img=3" alt="Shubham Kulkarni">
-                                    <div class="sp-avatar-edit" onclick="alertMsg('Avatar Uploader Clicked')"><i class='bx bx-camera'></i></div>
+                                    <div class="sp-avatar-edit" onclick="openModal('avatarModal')"><i class='bx bx-camera'></i></div>
                                 </div>
-                                <h2>Shubham Kulkarni</h2>
-                                <div class="sp-hero-role">Senior Full-Stack Engineer</div>
-                                <div class="sp-hero-company"><i class='bx bxs-buildings'></i> Tech Solutions Pvt. Ltd.</div>
+                                <h2 id="dispProfileName">Shubham Kulkarni</h2>
+                                <div class="sp-hero-role" id="dispProfileRole">Senior Full-Stack Engineer</div>
+                                <div class="sp-hero-company"><i class='bx bxs-buildings'></i> <span id="dispProfileCompany">Tech Solutions Pvt. Ltd.</span></div>
 
                                 <div class="sp-stats-row">
-                                    <div class="sp-stat-item">
-                                        <div class="sp-stat-num">500+</div>
-                                        <div class="sp-stat-label">Connections</div>
-                                    </div>
-                                    <div class="sp-stat-item">
-                                        <div class="sp-stat-num">124</div>
-                                        <div class="sp-stat-label">Profile Views</div>
-                                    </div>
-                                    <div class="sp-stat-item">
-                                        <div class="sp-stat-num">14</div>
-                                        <div class="sp-stat-label">Endorsements</div>
-                                    </div>
+                                    <div class="sp-stat-item"><div class="sp-stat-num">500+</div><div class="sp-stat-label">Connections</div></div>
+                                    <div class="sp-stat-item"><div class="sp-stat-num">124</div><div class="sp-stat-label">Views</div></div>
+                                    <div class="sp-stat-item"><div class="sp-stat-num">14</div><div class="sp-stat-label">Endorsed</div></div>
                                 </div>
                             </div>
                             
                             <div class="sp-left-bottom" style="padding: 0 25px 25px 25px;">
+                                <div class="sec-header" style="padding: 0 0 15px 0; margin-bottom: 15px;">
+                                    <h3 style="font-size: 15px;">Contact Info</h3>
+                                    <button class="sec-action" style="width: 28px; height: 28px; font-size: 14px;" onclick="openModal('contactModal')"><i class='bx bx-edit-alt'></i></button>
+                                </div>
                                 <div class="sp-info-list">
-                                    <div class="sp-info-item"><i class='bx bx-envelope'></i> shubham@example.com</div>
-                                    <div class="sp-info-item"><i class='bx bx-map'></i> Pune, India</div>
-                                    <div class="sp-info-item"><i class='bx bxl-linkedin-square' style="color:#0a66c2;"></i> <a href="#" class="sp-info-link">linkedin.com/in/shubham-k</a></div>
-                                    <div class="sp-info-item"><i class='bx bxl-github' style="color:var(--text-primary);"></i> <a href="#" class="sp-info-link">github.com/shubh-dev</a></div>
+                                    <div class="sp-info-item"><i class='bx bx-envelope'></i> <span id="dispEmail">shubham@example.com</span></div>
+                                    <div class="sp-info-item"><i class='bx bx-phone'></i> <span id="dispPhone">+91 98765 43210</span></div>
+                                    <div class="sp-info-item"><i class='bx bx-map'></i> <span id="dispLocation">Pune, India</span></div>
+                                    <div class="sp-info-item"><i class='bx bxl-linkedin-square' style="color:#0a66c2;"></i> <a href="#" class="sp-info-link" id="dispLinkedIn">linkedin.com/in/shubham-k</a></div>
                                 </div>
                             </div>
                         </div>
@@ -338,14 +372,33 @@
                         <!-- Right Side: Details & Resume -->
                         <div style="display:flex; flex-direction:column; gap:25px;">
                             
+                            <!-- Detailed Personal Information -->
+                            <div class="sp-card">
+                                <div class="sec-header">
+                                    <h3><i class='bx bxs-id-card'></i> Detailed Personal Information</h3>
+                                    <button class="sec-action" onclick="openModal('personalModal')" title="Edit Personal Info"><i class='bx bx-edit-alt'></i></button>
+                                </div>
+                                <div class="sec-body">
+                                    <div class="detail-grid">
+                                        <div class="detail-block"><h5>Full Legal Name</h5><p id="dispFullName">Shubham Kulkarni</p></div>
+                                        <div class="detail-block"><h5>Date of Birth</h5><p id="dispDOB">12 Aug 1998</p></div>
+                                        <div class="detail-block"><h5>Gender</h5><p id="dispGender">Male</p></div>
+                                        <div class="detail-block"><h5>Nationality</h5><p id="dispNationality">Indian</p></div>
+                                        <div class="detail-block"><h5>Degree & Department</h5><p id="dispDegree">B.E. Computer Engineering</p></div>
+                                        <div class="detail-block"><h5>Graduating Batch</h5><p id="dispBatch">Class of 2020</p></div>
+                                        <div class="detail-block"><h5>Current Address</h5><p id="dispAddress">Aundh, Pune, Maharashtra 411007</p></div>
+                                        <div class="detail-block"><h5>Languages</h5><p id="dispLanguages">English, Hindi, Marathi</p></div>
+                                    </div>
+                                </div>
+                            </div>
+
                             <!-- Resume Module -->
                             <div class="sp-card">
                                 <div class="sec-header">
                                     <h3><i class='bx bxs-file-pdf'></i> Resume & Portfolio</h3>
-                                    <button class="sec-action" title="Update Resume" onclick="alertMsg('Upload New Resume Module')"><i class='bx bx-cloud-upload'></i></button>
+                                    <button class="sec-action" title="Update Resume" onclick="openModal('resumeModal')"><i class='bx bx-cloud-upload'></i></button>
                                 </div>
                                 <div class="sec-body" style="padding: 20px;">
-                                    
                                     <div class="resume-panel">
                                         <!-- Interactive Mock Viewer -->
                                         <div class="resume-viewer">
@@ -354,61 +407,60 @@
                                                 <div class="pdf-mockup-line" style="margin-top:20px;"></div>
                                                 <div class="pdf-mockup-line"></div>
                                                 <div class="pdf-mockup-line short"></div>
-                                                
                                                 <div class="pdf-mockup-header" style="margin-top:25px; width:40%;"></div>
                                                 <div class="pdf-mockup-line"></div>
                                                 <div class="pdf-mockup-line short"></div>
                                             </div>
-
                                             <div class="resume-overlay">
-                                                <button class="btn-action" onclick="alertMsg('Previewing Resume Document')"><i class='bx bx-fullscreen'></i> View Full Screen</button>
+                                                <button class="btn-action" onclick="alert('Full screen preview opened')"><i class='bx bx-fullscreen'></i> View Full Screen</button>
                                             </div>
                                         </div>
 
                                         <!-- Resume Info Sidebar -->
                                         <div class="resume-sidebar">
-                                            <h4>Shubham_Kulkarni_Resume.pdf</h4>
-                                            <p>This is your primary curriculum vitae visible to hiring managers and recruiters tracking alumni job boards.</p>
+                                            <h4 id="dispResName">Shubham_Kulkarni_Resume.pdf</h4>
+                                            <p>This is your primary curriculum vitae visible to hiring managers and mentors.</p>
                                             
                                             <div class="resume-meta">
                                                 <i class='bx bxs-file-pdf'></i>
                                                 <div style="display:flex; flex-direction:column;">
                                                     <span style="font-weight:600; color:var(--text-primary); font-size:13px;">Last Updated: Oct 2025</span>
-                                                    <span>Size: 1.2 MB</span>
+                                                    <span id="dispResSize">Size: 1.2 MB</span>
                                                 </div>
                                             </div>
 
-                                            <button class="btn-full btn-black" onclick="alertMsg('Downloading Resume Source')"><i class='bx bx-download'></i> Download PDF</button>
-                                            <button class="btn-full btn-outline" onclick="alertMsg('Copying Public Sharable Link')"><i class='bx bx-link-alt'></i> Share public link</button>
+                                            <button class="btn-full btn-black" onclick="alert('Downloading...')"><i class='bx bx-download'></i> Download PDF</button>
+                                            <button class="btn-full btn-outline" onclick="alert('Link copied to clipboard')"><i class='bx bx-link-alt'></i> Share public link</button>
                                         </div>
                                     </div>
-
                                 </div>
                             </div>
 
-                            <!-- About & Experience -->
+                            <!-- About Summary -->
                             <div class="sp-card">
                                 <div class="sec-header">
                                     <h3><i class='bx bx-notepad'></i> Professional Summary</h3>
+                                    <button class="sec-action" onclick="openModal('summaryModal')"><i class='bx bx-edit-alt'></i></button>
                                 </div>
-                                <div class="sec-body">
+                                <div class="sec-body" id="dispSummary">
                                     Experienced software engineer with a strong background in developing scalable web applications. Passionate about system architecture, cloud technologies, and mentoring junior developers. Adept at leading cross-functional teams in agile environments to deliver high-quality products on schedule. Always looking to leverage technology to solve complex real-world problems.
                                 </div>
                             </div>
 
+                            <!-- Experience Timeline -->
                             <div class="sp-card">
                                 <div class="sec-header">
                                     <h3><i class='bx bx-briefcase-alt-2'></i> Career Trajectory</h3>
-                                    <button class="sec-action" title="Add Experience"><i class='bx bx-plus'></i></button>
+                                    <button class="sec-action" title="Add Experience" onclick="openModal('experienceModal')"><i class='bx bx-plus'></i></button>
                                 </div>
                                 <div class="sec-body">
-                                    <div class="exp-timeline">
-                                        
+                                    <div class="exp-timeline" id="expContainer">
+                                        <!-- Static Base Items -->
                                         <div class="exp-item">
                                             <div class="exp-dot"></div>
                                             <h4>Senior Full-Stack Engineer</h4>
                                             <div class="exp-comp">Tech Solutions Pvt. Ltd.</div>
-                                            <div class="exp-time"><i class='bx bx-calendar'></i> Jan 2024 - Present • 2 yrs</div>
+                                            <div class="exp-time"><i class='bx bx-calendar'></i> Jan 2024 - Present</div>
                                             <p>Leading the core architecture team building microservices using Node.js and React. Successfully reduced server response time by 40% through efficient caching strategies.</p>
                                         </div>
 
@@ -416,18 +468,9 @@
                                             <div class="exp-dot"></div>
                                             <h4>Software Developer II</h4>
                                             <div class="exp-comp">InnovateX Technologies</div>
-                                            <div class="exp-time"><i class='bx bx-calendar'></i> Jun 2021 - Dec 2023 • 2.5 yrs</div>
+                                            <div class="exp-time"><i class='bx bx-calendar'></i> Jun 2021 - Dec 2023</div>
                                             <p>Developed and maintained multiple client-facing SPAs. Integrated complex authentication pipelines and mentored two junior interns.</p>
                                         </div>
-
-                                        <div class="exp-item">
-                                            <div class="exp-dot"></div>
-                                            <h4>Junior Developer Analyst</h4>
-                                            <div class="exp-comp">Global Systems Inc.</div>
-                                            <div class="exp-time"><i class='bx bx-calendar'></i> Aug 2020 - May 2021 • 10 mos</div>
-                                            <p>Started immediately post-graduation. Worked on SQL optimization, database indexing, and bug fixes for older legacy CRM systems.</p>
-                                        </div>
-
                                     </div>
                                 </div>
                             </div>
@@ -436,20 +479,16 @@
                             <div class="sp-card">
                                 <div class="sec-header">
                                     <h3><i class='bx bx-slider'></i> Technical Skills</h3>
-                                    <button class="sec-action" title="Edit Skills"><i class='bx bx-edit-alt'></i></button>
+                                    <button class="sec-action" title="Edit Skills" onclick="openModal('skillsModal')"><i class='bx bx-edit-alt'></i></button>
                                 </div>
                                 <div class="sec-body">
-                                    <div class="skills-wrapper">
-                                        <span class="skill-tag">JavaScript / TypeScript</span>
+                                    <div class="skills-wrapper" id="dispSkills">
+                                        <span class="skill-tag">JavaScript</span>
                                         <span class="skill-tag">React.js</span>
                                         <span class="skill-tag">Node.js</span>
-                                        <span class="skill-tag">Python</span>
                                         <span class="skill-tag">PostgreSQL</span>
-                                        <span class="skill-tag">MongoDB</span>
-                                        <span class="skill-tag">AWS (EC2, S3, RDS)</span>
-                                        <span class="skill-tag">Docker Containerization</span>
-                                        <span class="skill-tag">Redis Caching</span>
-                                        <span class="skill-tag">Agile Scrum</span>
+                                        <span class="skill-tag">AWS</span>
+                                        <span class="skill-tag">Docker</span>
                                     </div>
                                 </div>
                             </div>
@@ -462,17 +501,255 @@
         </main>
     </div>
 
+    <!-- Modals Subsystem -->
+    <div class="modal-overlay" id="appModals">
+        
+        <!-- Personal Info Modal -->
+        <div class="modal-box" id="personalModal" style="display:none;">
+            <div class="modal-header">
+                <h3>Edit Personal Information</h3>
+                <button class="modal-close" onclick="closeModal()"><i class='bx bx-x'></i></button>
+            </div>
+            <div class="modal-body">
+                <div class="form-row">
+                    <div class="form-group full"><label>Full Legal Name</label><input type="text" class="form-control" id="inpFullName" value="Shubham Kulkarni"></div>
+                    <div class="form-group"><label>Date of Birth</label><input type="date" class="form-control" id="inpDOB" value="1998-08-12"></div>
+                    <div class="form-group"><label>Gender</label><select class="form-control" id="inpGender"><option value="Male" selected>Male</option><option value="Female">Female</option><option value="Other">Other</option></select></div>
+                    <div class="form-group full"><label>Current Address</label><input type="text" class="form-control" id="inpAddress" value="Aundh, Pune, Maharashtra 411007"></div>
+                    <div class="form-group"><label>Degree</label><input type="text" class="form-control" id="inpDegree" value="B.E. Computer Engineering"></div>
+                    <div class="form-group"><label>Batch</label><input type="text" class="form-control" id="inpBatch" value="Class of 2020"></div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn-secondary" style="padding: 8px 16px;" onclick="closeModal()">Cancel</button>
+                <button class="btn-primary" style="padding: 8px 16px;" onclick="savePersonal()">Save Changes</button>
+            </div>
+        </div>
+
+        <!-- Contact Info Modal -->
+        <div class="modal-box" id="contactModal" style="display:none;">
+            <div class="modal-header">
+                <h3>Edit Contact details</h3>
+                <button class="modal-close" onclick="closeModal()"><i class='bx bx-x'></i></button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group"><label>Email Address</label><input type="email" class="form-control" id="inpEmail" value="shubham@example.com"></div>
+                <div class="form-group"><label>Phone Number</label><input type="text" class="form-control" id="inpPhone" value="+91 98765 43210"></div>
+                <div class="form-group"><label>Location / City</label><input type="text" class="form-control" id="inpLoc" value="Pune, India"></div>
+                <div class="form-group"><label>LinkedIn Username</label><input type="text" class="form-control" id="inpLinked" value="linkedin.com/in/shubham-k"></div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn-secondary" style="padding: 8px 16px;" onclick="closeModal()">Cancel</button>
+                <button class="btn-primary" style="padding: 8px 16px;" onclick="saveContact()">Save Data</button>
+            </div>
+        </div>
+
+        <!-- Summary Modal -->
+        <div class="modal-box" id="summaryModal" style="display:none;">
+            <div class="modal-header">
+                <h3>Edit Professional Summary</h3>
+                <button class="modal-close" onclick="closeModal()"><i class='bx bx-x'></i></button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label>Summary Bio</label>
+                    <textarea class="form-control" id="inpSummary" rows="5">Experienced software engineer with a strong background in developing scalable web applications. Passionate about system architecture, cloud technologies, and mentoring junior developers.</textarea>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn-secondary" style="padding: 8px 16px;" onclick="closeModal()">Cancel</button>
+                <button class="btn-primary" style="padding: 8px 16px;" onclick="saveSummary()">Save Summary</button>
+            </div>
+        </div>
+
+        <!-- Add Experience Modal -->
+        <div class="modal-box" id="experienceModal" style="display:none;">
+            <div class="modal-header">
+                <h3>Add Work Experience</h3>
+                <button class="modal-close" onclick="closeModal()"><i class='bx bx-x'></i></button>
+            </div>
+            <div class="modal-body">
+                <div class="form-row">
+                    <div class="form-group full"><label>Job Title</label><input type="text" class="form-control" id="inpExpTitle" placeholder="e.g. Lead Engineer"></div>
+                    <div class="form-group full"><label>Company Name</label><input type="text" class="form-control" id="inpExpComp" placeholder="e.g. Netflix"></div>
+                    <div class="form-group"><label>Start Date</label><input type="month" class="form-control" id="inpExpStart"></div>
+                    <div class="form-group"><label>End Date</label><input type="month" class="form-control" id="inpExpEnd"></div>
+                    <div class="form-group full"><label>Description</label><textarea class="form-control" id="inpExpDesc" rows="3" placeholder="Describe your achievements..."></textarea></div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn-secondary" style="padding: 8px 16px;" onclick="closeModal()">Cancel</button>
+                <button class="btn-primary" style="padding: 8px 16px;" onclick="addExperience()">Add to Timeline</button>
+            </div>
+        </div>
+
+        <!-- Skills Modal -->
+        <div class="modal-box" id="skillsModal" style="display:none;">
+            <div class="modal-header">
+                <h3>Edit Technical Skills</h3>
+                <button class="modal-close" onclick="closeModal()"><i class='bx bx-x'></i></button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label>Skills (Comma Separated)</label>
+                    <textarea class="form-control" id="inpSkills" rows="4">JavaScript, React.js, Node.js, PostgreSQL, AWS, Docker</textarea>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn-secondary" style="padding: 8px 16px;" onclick="closeModal()">Cancel</button>
+                <button class="btn-primary" style="padding: 8px 16px;" onclick="saveSkills()">Update Skills</button>
+            </div>
+        </div>
+
+        <!-- Resume Upload/Edit -->
+        <div class="modal-box" id="resumeModal" style="display:none;">
+            <div class="modal-header">
+                <h3>Update Resume</h3>
+                <button class="modal-close" onclick="closeModal()"><i class='bx bx-x'></i></button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label>Select PDF File</label>
+                    <input type="file" class="form-control" accept=".pdf" id="inpResumeFile">
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn-secondary" style="padding: 8px 16px;" onclick="closeModal()">Cancel</button>
+                <button class="btn-primary" style="padding: 8px 16px;" onclick="saveResume()">Upload Resume</button>
+            </div>
+        </div>
+
+    </div>
+
     <!-- Scripts -->
     <script src="../../assets/js/data.js"></script>
     <script src="../../assets/js/common.js"></script>
     <script src="../../assets/js/dashboard.js"></script>
 
+    <!-- Native App State Logic for Modals -->
     <script>
-        function alertMsg(msg) {
-            if(typeof showToast !== 'undefined') {
-                showToast(msg, 'success');
+        const overlay = document.getElementById('appModals');
+        const modalBoxes = document.querySelectorAll('.modal-box');
+        
+        function openModal(id) {
+            modalBoxes.forEach(box => box.style.display = 'none');
+            document.getElementById(id).style.display = 'flex';
+            overlay.classList.add('active');
+        }
+
+        function closeModal() {
+            overlay.classList.remove('active');
+            setTimeout(() => {
+                modalBoxes.forEach(box => box.style.display = 'none');
+            }, 300);
+        }
+
+        // Close on overlay click outside
+        overlay.addEventListener('click', (e) => {
+            if(e.target === overlay) closeModal();
+        });
+
+        /* --- SAVE HANDLERS --- */
+        function savePersonal() {
+            document.getElementById('dispFullName').innerText = document.getElementById('inpFullName').value;
+            // Format dates
+            let dob = document.getElementById('inpDOB').value;
+            document.getElementById('dispDOB').innerText = dob ? new Date(dob).toLocaleDateString('en-GB') : "Not Specifed";
+            document.getElementById('dispGender').innerText = document.getElementById('inpGender').value;
+            document.getElementById('dispAddress').innerText = document.getElementById('inpAddress').value;
+            document.getElementById('dispDegree').innerText = document.getElementById('inpDegree').value;
+            document.getElementById('dispBatch').innerText = document.getElementById('inpBatch').value;
+            
+            // Also update main profile card
+            document.getElementById('dispProfileName').innerText = document.getElementById('inpFullName').value;
+            
+            closeModal();
+            showToast('Personal info updated successfully', 'success');
+        }
+
+        function saveContact() {
+            document.getElementById('dispEmail').innerText = document.getElementById('inpEmail').value;
+            document.getElementById('dispPhone').innerText = document.getElementById('inpPhone').value;
+            document.getElementById('dispLocation').innerText = document.getElementById('inpLoc').value;
+            document.getElementById('dispLinkedIn').innerText = document.getElementById('inpLinked').value;
+            closeModal();
+            showToast('Contact info saved', 'success');
+        }
+
+        function saveSummary() {
+            document.getElementById('dispSummary').innerText = document.getElementById('inpSummary').value;
+            closeModal();
+            showToast('Profile summary updated', 'success');
+        }
+
+        function addExperience() {
+            const title = document.getElementById('inpExpTitle').value;
+            const comp = document.getElementById('inpExpComp').value;
+            const startStr = document.getElementById('inpExpStart').value;
+            const endStr = document.getElementById('inpExpEnd').value;
+            const desc = document.getElementById('inpExpDesc').value;
+
+            if(!title || !comp) {
+                alert('Title and Company are required!');
+                return;
+            }
+
+            const timeStr = startStr ? `${startStr} to ${endStr || 'Present'}` : 'Recent';
+
+            const newExp = document.createElement('div');
+            newExp.className = 'exp-item';
+            newExp.innerHTML = `
+                <div class="exp-dot"></div>
+                <h4>${title}</h4>
+                <div class="exp-comp">${comp}</div>
+                <div class="exp-time"><i class='bx bx-calendar'></i> ${timeStr}</div>
+                <p>${desc}</p>
+            `;
+            
+            document.getElementById('expContainer').prepend(newExp);
+            closeModal();
+            
+            // reset form
+            document.getElementById('inpExpTitle').value = '';
+            document.getElementById('inpExpComp').value = '';
+            document.getElementById('inpExpDesc').value = '';
+            showToast('New experience added', 'success');
+        }
+
+        function saveSkills() {
+            const rawStr = document.getElementById('inpSkills').value;
+            const skills = rawStr.split(',').map(s => s.trim()).filter(s => s);
+            
+            const cont = document.getElementById('dispSkills');
+            cont.innerHTML = '';
+            skills.forEach(skill => {
+                const sp = document.createElement('span');
+                sp.className = 'skill-tag';
+                sp.innerText = skill;
+                cont.appendChild(sp);
+            });
+            
+            closeModal();
+            showToast('Skills updated successfully', 'success');
+        }
+
+        function saveResume() {
+            const fileInp = document.getElementById('inpResumeFile');
+            if(fileInp.files.length > 0) {
+                const file = fileInp.files[0];
+                document.getElementById('dispResName').innerText = file.name;
+                document.getElementById('dispResSize').innerText = 'Size: ' + (file.size / (1024*1024)).toFixed(2) + ' MB';
+                closeModal();
+                showToast('Resume uploaded and verified', 'success');
             } else {
-                alert(msg);
+                alert('Please select a PDF file first!');
+            }
+        }
+
+        // Mock toast helper if missing from standard layout
+        if(typeof showToast === 'undefined') {
+            window.showToast = function(msg, type) {
+                alert(msg); // Fallback
             }
         }
     </script>
