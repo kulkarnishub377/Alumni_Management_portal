@@ -99,13 +99,15 @@ document.addEventListener('DOMContentLoaded', () => {
                 mentorship: renderMentorship,
                 settings: renderSettings
             };
-            viewContainer.innerHTML = (renderers[view] || renderOverview)();
+            if (!viewContainer.hasAttribute('data-standalone')) {
+                viewContainer.innerHTML = (renderers[view] || renderOverview)();
+            }
             viewContainer.style.transition = 'all 0.35s ease';
             viewContainer.style.opacity = '1';
             viewContainer.style.transform = 'translateY(0)';
 
             // Post-render hooks
-            if (view === 'chat') setupChatInteractions();
+            if (view === 'chat' && !viewContainer.hasAttribute('data-standalone')) setupChatInteractions();
         }, 100);
     }
 
