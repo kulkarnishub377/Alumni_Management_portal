@@ -535,7 +535,15 @@ document.addEventListener('DOMContentLoaded', () => {
     function renderChat() {
         return `
             <div class="page-title-bar">
-                <div><h1>Messages</h1><p>Chat with batchmates, mentors, and alumni groups.</p></div>
+                <div>
+                    <h1><i class='bx bxs-message-dots' style="color:var(--primary);margin-right:8px;"></i>Messages</h1>
+                    <p>Chat with batchmates, mentors, and alumni groups.</p>
+                </div>
+                <div class="chat-header-stats">
+                    <div class="chat-stat-pill"><i class='bx bxs-group'></i> <span>${APP_DATA.chatContacts.filter(c => c.isGroup && c.name.includes(CURRENT_USER_BATCH)).length}</span> Groups</div>
+                    <div class="chat-stat-pill"><i class='bx bxs-user'></i> <span>${APP_DATA.chatContacts.filter(c => !c.isGroup).length}</span> Direct</div>
+                    <div class="chat-stat-pill online-pill"><i class='bx bxs-circle' style="font-size:8px;"></i> <span>${APP_DATA.chatContacts.filter(c => c.online).length}</span> Online</div>
+                </div>
             </div>
 
             <div class="chat-layout">
@@ -543,12 +551,12 @@ document.addEventListener('DOMContentLoaded', () => {
                     <div class="chat-contacts-header">
                         <h3>Conversations</h3>
                         <div class="chat-tabs">
-                            <button class="chat-tab active" onclick="filterChatContacts('all', this)">All</button>
-                            <button class="chat-tab" onclick="filterChatContacts('group', this)">Groups</button>
-                            <button class="chat-tab" onclick="filterChatContacts('direct', this)">Direct</button>
+                            <button class="chat-tab active" onclick="filterChatContacts('all', this)"><i class='bx bx-conversation'></i> All</button>
+                            <button class="chat-tab" onclick="filterChatContacts('group', this)"><i class='bx bx-group'></i> Groups</button>
+                            <button class="chat-tab" onclick="filterChatContacts('direct', this)"><i class='bx bx-user'></i> Direct</button>
                         </div>
                     </div>
-                    <div class="chat-search" style="padding:0 16px 12px;">
+                    <div class="chat-search">
                         <div class="filter-input" style="margin:0;">
                             <i class='bx bx-search'></i>
                             <input type="text" placeholder="Search conversations..." oninput="searchChats(this.value)">
@@ -571,25 +579,32 @@ document.addEventListener('DOMContentLoaded', () => {
         const c = activeChatContact;
         return `
             <div class="chat-main-header">
-                <img src="${c.avatar}" alt="${c.name}">
+                <div class="ch-avatar-wrap">
+                    <img src="${c.avatar}" alt="${c.name}">
+                    ${c.online ? '<span class="ch-online-dot"></span>' : ''}
+                </div>
                 <div class="ch-info">
                     <h4>${c.name}</h4>
-                    <span style="color:${c.online ? '#10b981' : 'var(--text-muted)'};">${c.online ? '● Online' : '○ Offline'}</span>
+                    <span class="ch-status ${c.online ? 'online' : 'offline'}">${c.online ? 'Online' : 'Last seen recently'}</span>
                 </div>
-                <div style="margin-left:auto;display:flex;gap:8px;">
-                    <button class="topbar-icon-btn" data-tooltip="Voice Call"><i class='bx bxs-phone'></i></button>
-                    <button class="topbar-icon-btn" data-tooltip="Video Call"><i class='bx bxs-video'></i></button>
+                <div class="ch-actions">
+                    <button class="topbar-icon-btn" data-tooltip="Voice Call" onclick="showToast('Calling ${c.name}...', 'info')"><i class='bx bxs-phone'></i></button>
+                    <button class="topbar-icon-btn" data-tooltip="Video Call" onclick="showToast('Video call starting...', 'info')"><i class='bx bxs-video'></i></button>
                     <button class="topbar-icon-btn" data-tooltip="More"><i class='bx bx-dots-vertical-rounded'></i></button>
                 </div>
             </div>
             <div class="chat-messages" id="chatMessagesContainer">
-                <div style="text-align:center;padding:16px;"><span class="badge badge-primary">Today</span></div>
+                <div class="chat-date-divider"><span>Today</span></div>
                 ${chatMessages.map(msg => chatBubble(msg)).join('')}
+                <div class="typing-indicator" id="typingIndicator" style="display:none;">
+                    <div class="typing-dots"><span></span><span></span><span></span></div>
+                    <span>${c.name} is typing...</span>
+                </div>
             </div>
             <div class="chat-input-area">
-                <button class="topbar-icon-btn" data-tooltip="Attach File"><i class='bx bx-paperclip'></i></button>
-                <button class="topbar-icon-btn" data-tooltip="Emoji"><i class='bx bx-smile'></i></button>
-                <input type="text" placeholder="Type a message..." id="chatInput">
+                <button class="topbar-icon-btn chat-attach-btn" data-tooltip="Attach File" onclick="showToast('File attachment coming soon!', 'info')"><i class='bx bx-paperclip'></i></button>
+                <button class="topbar-icon-btn chat-attach-btn" data-tooltip="Emoji" onclick="showToast('Emoji picker coming soon!', 'info')"><i class='bx bx-smile'></i></button>
+                <input type="text" placeholder="Type a message..." id="chatInput" autocomplete="off">
                 <button class="send-btn" id="sendMsgBtn"><i class='bx bxs-send'></i></button>
             </div>
         `;
@@ -611,8 +626,11 @@ document.addEventListener('DOMContentLoaded', () => {
                     container.innerHTML += chatBubble({ sender: 'me', text, time: timeStr });
                     container.scrollTop = container.scrollHeight;
                 }
-                // Simulate auto-reply after 2s
+                // Simulate typing indicator then auto-reply after 2s
+                const typingEl = document.getElementById('typingIndicator');
+                if (typingEl) { typingEl.style.display = 'flex'; container.scrollTop = container.scrollHeight; }
                 setTimeout(() => {
+                    if (typingEl) typingEl.style.display = 'none';
                     const replies = [
                         "That sounds great! Let me check and get back to you.",
                         "Thanks for sharing! I'll look into it.",
@@ -624,7 +642,9 @@ document.addEventListener('DOMContentLoaded', () => {
                     const replyTime = new Date().toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', hour12: true });
                     chatMessages.push({ sender: 'other', name: activeChatContact.name, text: reply, time: replyTime });
                     if (container) {
+                        container.innerHTML = container.innerHTML.replace(/<div class="typing-indicator".*?<\/div>\s*<\/div>/s, '');
                         container.innerHTML += chatBubble({ sender: 'other', name: activeChatContact.name, text: reply, time: replyTime });
+                        container.innerHTML += '<div class="typing-indicator" id="typingIndicator" style="display:none;"><div class="typing-dots"><span></span><span></span><span></span></div><span>' + activeChatContact.name + ' is typing...</span></div>';
                         container.scrollTop = container.scrollHeight;
                     }
                 }, 2000);
@@ -673,23 +693,63 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
     // ============================================
-    // VIEW: NOTIFICATIONS
+    // VIEW: NOTIFICATIONS (Premium Redesign)
     // ============================================
     function renderNotifications() {
+        const unreadCount = notifications.length;
+        const categories = {
+            social: notifications.filter(a => a.icon.includes('user')),
+            events: notifications.filter(a => a.icon.includes('calendar')),
+            jobs: notifications.filter(a => a.icon.includes('briefcase')),
+            system: notifications.filter(a => a.icon.includes('bell') || a.icon.includes('message'))
+        };
         return `
             <div class="page-title-bar">
-                <div><h1>Notifications</h1><p>Stay updated with the latest alerts and announcements.</p></div>
-                <button class="btn btn-secondary btn-sm" onclick="markAllRead()"><i class='bx bx-check-double'></i> Mark All Read</button>
+                <div>
+                    <h1><i class='bx bxs-bell-ring' style="color:var(--primary);margin-right:8px;"></i>Notifications</h1>
+                    <p>Stay updated with the latest alerts and announcements.</p>
+                </div>
+                <div class="notif-header-actions">
+                    <div class="notif-counter">${unreadCount} unread</div>
+                    <button class="btn btn-secondary btn-sm" onclick="markAllRead()"><i class='bx bx-check-double'></i> Mark All Read</button>
+                </div>
             </div>
-            <div class="dash-section">
-                <div class="dash-section-body">
-                    <div class="activity-list" id="notificationsList">
+
+            <div class="notif-summary-row">
+                <div class="notif-summary-card" onclick="filterNotifs('all')">
+                    <div class="nsc-icon purple"><i class='bx bxs-bell'></i></div>
+                    <div class="nsc-info"><span class="nsc-count">${unreadCount}</span><span class="nsc-label">All</span></div>
+                </div>
+                <div class="notif-summary-card" onclick="filterNotifs('social')">
+                    <div class="nsc-icon blue"><i class='bx bxs-user-plus'></i></div>
+                    <div class="nsc-info"><span class="nsc-count">${categories.social.length}</span><span class="nsc-label">Social</span></div>
+                </div>
+                <div class="notif-summary-card" onclick="filterNotifs('events')">
+                    <div class="nsc-icon green"><i class='bx bxs-calendar'></i></div>
+                    <div class="nsc-info"><span class="nsc-count">${categories.events.length}</span><span class="nsc-label">Events</span></div>
+                </div>
+                <div class="notif-summary-card" onclick="filterNotifs('system')">
+                    <div class="nsc-icon amber"><i class='bx bxs-message-dots'></i></div>
+                    <div class="nsc-info"><span class="nsc-count">${categories.system.length}</span><span class="nsc-label">System</span></div>
+                </div>
+            </div>
+
+            <div class="dash-section notif-section">
+                <div class="dash-section-header">
+                    <h3>Recent Notifications</h3>
+                </div>
+                <div class="dash-section-body" style="padding:0;">
+                    <div class="notif-list" id="notificationsList">
                         ${notifications.map((act, i) => `
-                            <div class="activity-item" id="notif-${i}" style="opacity:1;transition:all 0.3s ease;">
-                                <div class="act-icon stat-icon ${act.color}"><i class='bx ${act.icon}'></i></div>
-                                <div class="act-content"><h4>${act.title}</h4><p>${act.desc}</p></div>
-                                <span class="act-time">${act.time}</span>
-                                <button class="topbar-icon-btn" style="margin-left:8px;" onclick="dismissNotif(${i})" data-tooltip="Dismiss"><i class='bx bx-x'></i></button>
+                            <div class="notif-item" id="notif-${i}" data-type="${act.icon.includes('user') ? 'social' : act.icon.includes('calendar') ? 'events' : act.icon.includes('briefcase') ? 'jobs' : 'system'}">
+                                <div class="notif-unread-dot"></div>
+                                <div class="notif-icon stat-icon ${act.color}"><i class='bx ${act.icon}'></i></div>
+                                <div class="notif-content">
+                                    <h4>${act.title}</h4>
+                                    <p>${act.desc}</p>
+                                    <span class="notif-time"><i class='bx bx-time-five'></i> ${act.time}</span>
+                                </div>
+                                <button class="notif-dismiss" onclick="dismissNotif(${i})" title="Dismiss"><i class='bx bx-x'></i></button>
                             </div>
                         `).join('')}
                     </div>
@@ -698,16 +758,27 @@ document.addEventListener('DOMContentLoaded', () => {
         `;
     }
     window.markAllRead = function() {
-        document.querySelectorAll('.activity-item').forEach(item => {
-            item.style.opacity = '0.5';
-            item.style.filter = 'grayscale(100%)';
+        document.querySelectorAll('.notif-item').forEach(item => {
+            item.classList.add('read');
+            const dot = item.querySelector('.notif-unread-dot');
+            if (dot) dot.style.display = 'none';
         });
         document.querySelectorAll('.nav-badge, .notif-dot').forEach(badge => badge.style.display = 'none');
         showToast('All notifications marked as read', 'success');
     };
     window.dismissNotif = function(i) {
         const el = document.getElementById(`notif-${i}`);
-        if (el) { el.style.opacity = '0'; el.style.height = '0'; el.style.overflow = 'hidden'; el.style.padding = '0'; el.style.margin = '0'; }
+        if (el) {
+            el.style.transform = 'translateX(100%)';
+            el.style.opacity = '0';
+            setTimeout(() => { el.style.height = '0'; el.style.padding = '0'; el.style.margin = '0'; el.style.overflow = 'hidden'; }, 300);
+        }
+    };
+    window.filterNotifs = function(type) {
+        document.querySelectorAll('.notif-item').forEach(item => {
+            if (type === 'all') item.style.display = '';
+            else item.style.display = item.dataset.type === type ? '' : 'none';
+        });
     };
 
     // ============================================
@@ -953,72 +1024,160 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // ============================================
-    // VIEW: MENTORSHIP
+    // VIEW: MENTORSHIP (Premium Redesign)
     // ============================================
     function renderMentorship() {
         return `
-            <div class="page-title-bar"><div><h1>Mentorship Program</h1><p>Connect with your batch mentor and receive guidance for career growth.</p></div></div>
+            <div class="page-title-bar">
+                <div>
+                    <h1><i class='bx bxs-user-voice' style="color:var(--primary);margin-right:8px;"></i>Mentorship Program</h1>
+                    <p>Connect with your batch mentor and receive guidance for career growth.</p>
+                </div>
+            </div>
+
+            <!-- Mentor Hero Card -->
+            <div class="mentor-hero-card">
+                <div class="mentor-hero-bg"></div>
+                <div class="mentor-hero-content">
+                    <img src="https://ui-avatars.com/api/?name=Prof+R+D+More&background=4f46e5&color=fff&size=120&bold=true" alt="Mentor" class="mentor-hero-avatar">
+                    <div class="mentor-hero-info">
+                        <div class="mentor-hero-name">
+                            <h2>Prof. R. D. More</h2>
+                            <span class="mentor-verified"><i class='bx bxs-badge-check'></i></span>
+                        </div>
+                        <p class="mentor-hero-role">Batch Mentor — Computer Engineering</p>
+                        <p class="mentor-hero-sub">Assigned batches: 2019, 2020, 2021</p>
+                        <div class="mentor-hero-stats">
+                            <div class="mhs-item"><i class='bx bxs-group'></i> 120+ Mentees</div>
+                            <div class="mhs-item"><i class='bx bxs-star'></i> 4.9 Rating</div>
+                            <div class="mhs-item"><i class='bx bxs-time-five'></i> 5+ Years</div>
+                        </div>
+                        <div class="mentor-actions">
+                            <button class="btn btn-primary btn-sm" onclick="navigateTo('chat')"><i class='bx bxs-envelope'></i> Message Mentor</button>
+                            <button class="btn btn-secondary btn-sm" onclick="showToast('Call feature coming soon!', 'info')"><i class='bx bxs-phone'></i> Schedule Call</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Mentorship Stats -->
+            <div class="mentorship-stats-row">
+                <div class="ms-stat-card">
+                    <div class="ms-stat-icon green"><i class='bx bxs-check-circle'></i></div>
+                    <div class="ms-stat-info"><h3>3</h3><p>Sessions Completed</p></div>
+                </div>
+                <div class="ms-stat-card">
+                    <div class="ms-stat-icon blue"><i class='bx bxs-calendar-event'></i></div>
+                    <div class="ms-stat-info"><h3>2</h3><p>Upcoming Sessions</p></div>
+                </div>
+                <div class="ms-stat-card">
+                    <div class="ms-stat-icon purple"><i class='bx bxs-bar-chart-alt-2'></i></div>
+                    <div class="ms-stat-info"><h3>92%</h3><p>Batch Placement</p></div>
+                </div>
+                <div class="ms-stat-card">
+                    <div class="ms-stat-icon amber"><i class='bx bxs-trophy'></i></div>
+                    <div class="ms-stat-info"><h3>Top 5</h3><p>Batch Ranking</p></div>
+                </div>
+            </div>
+
+            <!-- Announcements -->
             <div class="dash-section">
-                <div class="dash-section-header"><h3>👨‍🏫 Your Batch Mentor</h3></div>
-                <div class="dash-section-body">
-                    <div class="mentor-card-flex" style="display:flex;align-items:center;gap:20px;flex-wrap:wrap;">
-                        <img src="https://ui-avatars.com/api/?name=Prof+R+D+More&background=4f46e5&color=fff&size=80" alt="Mentor" style="width:80px;height:80px;border-radius:50%;flex-shrink:0;">
-                        <div style="flex:1;min-width:200px;">
-                            <h3 style="font-size:20px;font-weight:700;">Prof. R. D. More</h3>
-                            <p style="color:var(--primary);font-weight:500;">Batch Mentor - Computer Engineering</p>
-                            <p style="color:var(--text-muted);font-size:14px;margin-top:4px;">Assigned batches: 2019, 2020, 2021</p>
-                            <div class="mentor-actions" style="display:flex;gap:8px;margin-top:12px;flex-wrap:wrap;">
-                                <button class="btn btn-primary btn-sm" onclick="navigateTo('chat')"><i class='bx bxs-envelope'></i> Message Mentor</button>
-                                <button class="btn btn-secondary btn-sm" onclick="showToast('Call feature coming soon!', 'info')"><i class='bx bxs-phone'></i> Call</button>
+                <div class="dash-section-header"><h3><i class='bx bxs-megaphone' style="color:var(--primary);margin-right:8px;"></i>Mentor Announcements</h3></div>
+                <div class="dash-section-body" style="padding:0;">
+                    <div class="announcement-list">
+                        <div class="announcement-item">
+                            <div class="ann-icon blue"><i class='bx bxs-megaphone'></i></div>
+                            <div class="ann-content">
+                                <h4>Batch 2020 - Career Survey</h4>
+                                <p>Please fill out the annual career progression survey by May 1st.</p>
+                                <span class="ann-time"><i class='bx bx-time-five'></i> 2 days ago</span>
+                            </div>
+                            <span class="ann-badge new">New</span>
+                        </div>
+                        <div class="announcement-item">
+                            <div class="ann-icon green"><i class='bx bxs-calendar-check'></i></div>
+                            <div class="ann-content">
+                                <h4>Monthly Check-in Scheduled</h4>
+                                <p>Virtual mentorship session on April 20th at 6 PM via Zoom.</p>
+                                <span class="ann-time"><i class='bx bx-time-five'></i> 5 days ago</span>
+                            </div>
+                        </div>
+                        <div class="announcement-item">
+                            <div class="ann-icon amber"><i class='bx bxs-trophy'></i></div>
+                            <div class="ann-content">
+                                <h4>Placement Drive Update</h4>
+                                <p>Batch 2020 achieved 92% placement rate! Congratulations to everyone.</p>
+                                <span class="ann-time"><i class='bx bx-time-five'></i> 1 week ago</span>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
+
+            <!-- Schedule Table -->
             <div class="dash-section" style="margin-top:24px;">
-                <div class="dash-section-header"><h3>📋 Mentor Announcements</h3></div>
-                <div class="dash-section-body">
-                    <div class="activity-list">
-                        ${activityItem({ icon: 'bxs-megaphone', color: 'blue', title: 'Batch 2020 - Career Survey', desc: 'Please fill out the annual career progression survey by May 1st.', time: '2 days ago' })}
-                        ${activityItem({ icon: 'bxs-calendar-check', color: 'green', title: 'Monthly Check-in Scheduled', desc: 'Virtual mentorship session on April 20th at 6 PM via Zoom.', time: '5 days ago' })}
-                        ${activityItem({ icon: 'bxs-trophy', color: 'amber', title: 'Placement Drive Update', desc: 'Batch 2020 achieved 92% placement rate! Congratulations to everyone.', time: '1 week ago' })}
-                    </div>
-                </div>
-            </div>
-            <div class="dash-section" style="margin-top:24px;">
-                <div class="dash-section-header"><h3>📅 Mentorship Schedule</h3></div>
+                <div class="dash-section-header"><h3><i class='bx bxs-calendar' style="color:var(--primary);margin-right:8px;"></i>Mentorship Schedule</h3></div>
                 <div class="dash-section-body">
                     <div class="table-responsive">
-                    <table style="width:100%;border-collapse:collapse;">
+                    <table class="premium-table">
                         <thead>
-                            <tr style="border-bottom:2px solid var(--border);">
-                                <th style="padding:12px;text-align:left;font-size:13px;color:var(--text-muted);text-transform:uppercase;letter-spacing:1px;">Date</th>
-                                <th style="padding:12px;text-align:left;font-size:13px;color:var(--text-muted);text-transform:uppercase;letter-spacing:1px;">Topic</th>
-                                <th style="padding:12px;text-align:left;font-size:13px;color:var(--text-muted);text-transform:uppercase;letter-spacing:1px;">Mode</th>
-                                <th style="padding:12px;text-align:left;font-size:13px;color:var(--text-muted);text-transform:uppercase;letter-spacing:1px;">Status</th>
+                            <tr>
+                                <th>Date</th>
+                                <th>Topic</th>
+                                <th>Mode</th>
+                                <th>Status</th>
                             </tr>
                         </thead>
                         <tbody>
-                            <tr style="border-bottom:1px solid var(--border);">
-                                <td style="padding:12px;font-weight:600;">Apr 20, 2026</td>
-                                <td style="padding:12px;">Career Progression Review</td>
-                                <td style="padding:12px;"><span class="badge badge-primary">Virtual</span></td>
-                                <td style="padding:12px;"><span style="color:#10b981;font-weight:600;">Upcoming</span></td>
-                            </tr>
-                            <tr style="border-bottom:1px solid var(--border);">
-                                <td style="padding:12px;font-weight:600;">May 15, 2026</td>
-                                <td style="padding:12px;">Alumni Meetup Coordination</td>
-                                <td style="padding:12px;"><span class="badge badge-accent">In-Person</span></td>
-                                <td style="padding:12px;"><span style="color:#f59e0b;font-weight:600;">Planned</span></td>
+                            <tr>
+                                <td><strong>Apr 20, 2026</strong></td>
+                                <td>Career Progression Review</td>
+                                <td><span class="badge badge-primary">Virtual</span></td>
+                                <td><span class="status-badge upcoming"><i class='bx bxs-circle' style="font-size:6px;"></i> Upcoming</span></td>
                             </tr>
                             <tr>
-                                <td style="padding:12px;font-weight:600;">Mar 10, 2026</td>
-                                <td style="padding:12px;">Resume Review Workshop</td>
-                                <td style="padding:12px;"><span class="badge badge-primary">Virtual</span></td>
-                                <td style="padding:12px;"><span style="color:var(--text-muted);font-weight:600;">Completed</span></td>
+                                <td><strong>May 15, 2026</strong></td>
+                                <td>Alumni Meetup Coordination</td>
+                                <td><span class="badge badge-accent">In-Person</span></td>
+                                <td><span class="status-badge planned"><i class='bx bxs-circle' style="font-size:6px;"></i> Planned</span></td>
+                            </tr>
+                            <tr>
+                                <td><strong>Mar 10, 2026</strong></td>
+                                <td>Resume Review Workshop</td>
+                                <td><span class="badge badge-primary">Virtual</span></td>
+                                <td><span class="status-badge completed"><i class='bx bxs-circle' style="font-size:6px;"></i> Completed</span></td>
                             </tr>
                         </tbody>
                     </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Resources -->
+            <div class="dash-section" style="margin-top:24px;">
+                <div class="dash-section-header"><h3><i class='bx bxs-book-content' style="color:var(--primary);margin-right:8px;"></i>Resources & Materials</h3></div>
+                <div class="dash-section-body">
+                    <div class="resource-grid">
+                        <div class="resource-card" onclick="showToast('Download starting...', 'info')">
+                            <div class="rc-icon"><i class='bx bxs-file-pdf'></i></div>
+                            <h4>Career Guide 2026</h4>
+                            <p>Complete guide for career planning</p>
+                        </div>
+                        <div class="resource-card" onclick="showToast('Opening document...', 'info')">
+                            <div class="rc-icon"><i class='bx bxs-file-doc'></i></div>
+                            <h4>Resume Templates</h4>
+                            <p>Professional resume formats</p>
+                        </div>
+                        <div class="resource-card" onclick="showToast('Opening link...', 'info')">
+                            <div class="rc-icon"><i class='bx bxs-video'></i></div>
+                            <h4>Interview Prep</h4>
+                            <p>Video series on interview skills</p>
+                        </div>
+                        <div class="resource-card" onclick="showToast('Opening document...', 'info')">
+                            <div class="rc-icon"><i class='bx bxs-spreadsheet'></i></div>
+                            <h4>Placement Stats</h4>
+                            <p>Batch-wise placement analytics</p>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -1147,9 +1306,13 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function chatBubble(msg) {
-        return `<div class="chat-msg ${msg.sender === 'me' ? 'sent' : 'received'}">
+        const isSent = msg.sender === 'me';
+        return `<div class="chat-msg ${isSent ? 'sent' : 'received'}">
             <div class="msg-bubble">${msg.text}</div>
-            <span class="msg-time">${msg.time}</span>
+            <div class="msg-meta">
+                <span class="msg-time">${msg.time}</span>
+                ${isSent ? '<i class="bx bx-check-double" style="color:#10b981;font-size:16px;"></i>' : ''}
+            </div>
         </div>`;
     }
 
