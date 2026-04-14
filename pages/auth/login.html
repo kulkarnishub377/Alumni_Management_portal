@@ -53,17 +53,27 @@
 
                 <!-- Role Tabs -->
                 <div class="role-tabs">
-                    <button class="role-tab active" data-role="alumni">Alumni</button>
-                    <button class="role-tab" data-role="student">Student</button>
-                    <button class="role-tab" data-role="mentor">Mentor</button>
-                    <button class="role-tab" data-role="admin">Admin</button>
+                    <button class="role-tab active" data-role="alumni" onclick="updateCredentialHint(this)">Alumni</button>
+                    <button class="role-tab" data-role="mentor" onclick="updateCredentialHint(this)">Mentor</button>
+                    <button class="role-tab" data-role="coordinator" onclick="updateCredentialHint(this)">Coordinator</button>
+                    <button class="role-tab" data-role="admin" onclick="updateCredentialHint(this)">Admin</button>
                 </div>
 
-                <div style="background: rgba(79, 70, 229, 0.1); padding: 12px; border-radius: var(--radius-md); border: 1px solid var(--primary-light); margin-bottom: 20px; font-size: 13px;">
+                <div id="credentialHint" style="background: rgba(79, 70, 229, 0.1); padding: 12px; border-radius: var(--radius-md); border: 1px solid var(--primary-light); margin-bottom: 20px; font-size: 13px;">
                     <strong>🎓 Demo Credentials:</strong><br>
-                    Email: <b>shubham@alumni.com</b><br>
+                    Email: <b id="hintEmail">shubham@alumni.com</b><br>
                     Pass: <b>password123</b>
                 </div>
+
+                <script>
+                function updateCredentialHint(btn) {
+                    const emails = { alumni: 'shubham@alumni.com', mentor: 'mentor@dvvpcoe.edu.in', coordinator: 'coordinator@dvvpcoe.edu.in', admin: 'admin@dvvpcoe.edu.in' };
+                    const role = btn.dataset.role;
+                    document.getElementById('hintEmail').textContent = emails[role] || emails.alumni;
+                    document.getElementById('loginEmail').value = emails[role] || emails.alumni;
+                    document.getElementById('loginPassword').value = 'password123';
+                }
+                </script>
 
                 <form id="loginForm" onsubmit="handleLogin(event)">
                     <div class="form-group">
