@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Alumni Management | Admin Portal</title>
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    <link rel="stylesheet" href="../../assets/css/common.css">
+    <link rel="stylesheet" href="../../assets/css/dashboard.css">
+</head>
+<body>
+    <div class="dashboard-layout">
+        <aside class="dash-sidebar" id="dashSidebar">
+            <div class="dash-sidebar-header"><a href="../../index.html" style="display:flex;align-items:center;gap:12px;text-decoration:none;"><div class="logo-icon"><i class='bx bxs-graduation'></i></div><h2>AlumniPortal</h2></a></div>
+            <div class="sidebar-user"><div class="sidebar-user-card"><img src="https://ui-avatars.com/api/?name=Admin&background=ef4444&color=fff" alt="Admin"><div class="user-meta"><h4>Principal Admin</h4><span>Super Administrator</span></div></div></div>
+            <nav class="dash-nav">
+                <span class="nav-section-label">Overview</span>
+                <a href="dashboard.html" class="dash-nav-link"><i class='bx bxs-dashboard'></i><span>Dashboard</span></a>
+                <a href="departments.html" class="dash-nav-link"><i class='bx bxs-building-house'></i><span>Departments</span></a>
+                <span class="nav-section-label">Management</span>
+                <a href="users.html" class="dash-nav-link"><i class='bx bxs-group'></i><span>All Users</span></a>
+                <a href="mentors.html" class="dash-nav-link"><i class='bx bxs-user-voice'></i><span>Mentors</span></a>
+                <a href="alumni.html" class="dash-nav-link active"><i class='bx bxs-user-detail'></i><span>Alumni</span></a>
+                <a href="top-alumni.html" class="dash-nav-link"><i class='bx bxs-trophy'></i><span>Top Alumni</span></a>
+                <span class="nav-section-label">Content</span>
+                <a href="events.html" class="dash-nav-link"><i class='bx bxs-calendar-event'></i><span>Events</span></a>
+                <a href="jobs.html" class="dash-nav-link"><i class='bx bxs-briefcase'></i><span>Job Board</span></a>
+                <span class="nav-section-label">Communication</span>
+                <a href="chat.html" class="dash-nav-link"><i class='bx bxs-message-dots'></i><span>Messages</span></a>
+                <a href="notifications.html" class="dash-nav-link"><i class='bx bxs-bell-ring'></i><span>Notifications</span></a>
+                <span class="nav-section-label">System</span>
+                <a href="settings.html" class="dash-nav-link"><i class='bx bxs-cog'></i><span>Settings</span></a>
+            </nav>
+            <div class="dash-sidebar-footer"><a href="#" class="dash-nav-link" id="logoutBtn"><i class='bx bx-log-out'></i><span>Logout</span></a></div>
+        </aside>
+        <main class="dash-main">
+            <header class="dash-topbar">
+                <div style="display:flex;align-items:center;gap:16px;">
+                    <button class="sidebar-toggle" onclick="document.getElementById('dashSidebar').classList.toggle('open')"><i class='bx bx-menu'></i></button>
+                    <div class="dash-search"><i class='bx bx-search'></i><input type="text" placeholder="Search alumni..."></div>
+                </div>
+                <div class="dash-topbar-actions">
+                    <button class="topbar-icon-btn" onclick="window.location.href='notifications.html'"><i class='bx bxs-bell'></i><span class="notif-dot"></span></button>
+                    <div class="topbar-profile"><img src="https://ui-avatars.com/api/?name=Admin&background=ef4444&color=fff" alt="Admin"><span>Admin</span><i class='bx bx-chevron-down'></i></div>
+                </div>
+            </header>
+            <div class="dash-view" style="opacity:1;transform:translateY(0);">
+                <div class="page-title-bar">
+                    <div><h1>🎓 Global Alumni Management</h1><p>View, filter, and manage all alumni across departments.</p></div>
+                    <div style="display:flex;gap:8px;">
+                        <button class="btn btn-secondary btn-sm" onclick="showToast('Exporting alumni list as Excel...','info')"><i class='bx bx-download'></i> Export Excel</button>
+                        <button class="btn btn-secondary btn-sm" onclick="showToast('Generating PDF report...','info')"><i class='bx bxs-file-pdf'></i> Export PDF</button>
+                    </div>
+                </div>
+                <div class="dash-stats-row">
+                    <div class="dash-stat-card"><div class="stat-icon purple"><i class='bx bxs-user-detail'></i></div><div class="stat-info"><h3>12,500</h3><p>Total Alumni</p></div></div>
+                    <div class="dash-stat-card"><div class="stat-icon green"><i class='bx bxs-check-circle'></i></div><div class="stat-info"><h3>11,800</h3><p>Verified</p></div></div>
+                    <div class="dash-stat-card"><div class="stat-icon amber"><i class='bx bxs-time-five'></i></div><div class="stat-info"><h3 id="pendingCount">5</h3><p>Pending Approval</p></div></div>
+                    <div class="dash-stat-card"><div class="stat-icon blue"><i class='bx bxs-trophy'></i></div><div class="stat-info"><h3>6</h3><p>Featured</p></div></div>
+                </div>
+                <div class="filter-bar" style="margin-bottom:24px;">
+                    <div class="filter-input"><i class='bx bx-search'></i><input type="text" placeholder="Search by name, company..." id="alumniSearch" oninput="filterAlumniAdmin()"></div>
+                    <select id="deptFilterAlumni" onchange="filterAlumniAdmin()"><option value="">All Departments</option></select>
+                    <select id="batchFilterAlumni" onchange="filterAlumniAdmin()"><option value="">All Batches</option></select>
+                </div>
+                <div class="network-grid" id="alumniGrid"></div>
+            </div>
+        </main>
+    </div>
+    <script src="../../assets/js/data.js"></script>
+    <script src="../../assets/js/common.js"></script>
+    <script>
+        const user = getUser(); if (!user || !user.loggedIn || user.role !== 'admin') window.location.href = '../auth/login.html';
+        document.getElementById('logoutBtn')?.addEventListener('click', (e) => { e.preventDefault(); clearUser(); showToast('Logged out','info'); setTimeout(()=>window.location.href='../../index.html',1000); });
+
+        // Populate filters
+        const depts = [...new Set(APP_DATA.departments.map(d => d.name))].sort();
+        depts.forEach(d => document.getElementById('deptFilterAlumni').innerHTML += `<option value="${d}">${d}</option>`);
+        const batches = [...new Set(APP_DATA.topAlumni.map(a => a.batch))].sort((a,b) => b-a);
+        batches.forEach(b => document.getElementById('batchFilterAlumni').innerHTML += `<option value="${b}">${b}</option>`);
+
+        function renderAlumniCards(list) {
+            document.getElementById('alumniGrid').innerHTML = list.map(a => `
+                <div class="network-card" data-name="${a.name.toLowerCase()}" data-company="${a.company}" data-batch="${a.batch}">
+                    <img src="${a.avatar}" alt="${a.name}" style="width:48px;height:48px;border-radius:50%;">
+                    <div class="nc-info" style="flex:1;">
+                        <h4>${a.name}</h4>
+                        <p>${a.role} at ${a.company}</p>
+                        <span class="nc-batch">Batch ${a.batch}</span>
+                    </div>
+                    <div style="display:flex;gap:6px;">
+                        <button class="topbar-icon-btn" title="Edit" onclick="showToast('Editing ${a.name}...','info')"><i class='bx bx-edit'></i></button>
+                        <button class="topbar-icon-btn" title="Delete" onclick="showToast('Cannot delete alumni from here','error')"><i class='bx bx-trash'></i></button>
+                    </div>
+                </div>
+            `).join('');
+        }
+        renderAlumniCards(APP_DATA.topAlumni);
+
+        function filterAlumniAdmin() {
+            const search = (document.getElementById('alumniSearch')?.value || '').toLowerCase();
+            const batch = document.getElementById('batchFilterAlumni')?.value || '';
+            const filtered = APP_DATA.topAlumni.filter(a => {
+                const matchSearch = !search || a.name.toLowerCase().includes(search) || a.company.toLowerCase().includes(search);
+                const matchBatch = !batch || a.batch === batch;
+                return matchSearch && matchBatch;
+            });
+            renderAlumniCards(filtered);
+        }
+    </script>
+</body>
+</html>
