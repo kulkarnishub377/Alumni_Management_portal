@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Management | Admin Portal</title>
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    <link rel="stylesheet" href="../../assets/css/common.css">
+    <link rel="stylesheet" href="../../assets/css/dashboard.css">
+    <style>
+        .user-table { width: 100%; border-collapse: collapse; background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius-lg); overflow: hidden; }
+        .user-table th { padding: 14px 20px; text-align: left; font-size: 11px; font-weight: 700; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1.2px; border-bottom: 2px solid var(--border); }
+        .user-table td { padding: 14px 20px; font-size: 14px; border-bottom: 1px solid var(--border); }
+        .user-table tbody tr:hover { background: rgba(79,70,229,0.03); }
+        .user-table tbody tr:last-child td { border-bottom: none; }
+        .role-badge { padding: 4px 10px; border-radius: 20px; font-size: 11px; font-weight: 700; text-transform: uppercase; }
+        .role-badge.admin { background: rgba(239,68,68,0.1); color: #ef4444; }
+        .role-badge.coordinator { background: rgba(79,70,229,0.1); color: #4f46e5; }
+        .role-badge.mentor { background: rgba(245,158,11,0.1); color: #f59e0b; }
+        .role-badge.alumni { background: rgba(16,185,129,0.1); color: #10b981; }
+        .toggle-switch { position: relative; width: 44px; height: 24px; }
+        .toggle-switch input { opacity: 0; width: 0; height: 0; }
+        .toggle-slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background: #cbd5e1; border-radius: 24px; transition: 0.3s; }
+        .toggle-slider::before { content: ''; position: absolute; height: 18px; width: 18px; left: 3px; bottom: 3px; background: #fff; border-radius: 50%; transition: 0.3s; }
+        .toggle-switch input:checked + .toggle-slider { background: #10b981; }
+        .toggle-switch input:checked + .toggle-slider::before { transform: translateX(20px); }
+    </style>
+</head>
+<body>
+    <div class="dashboard-layout">
+        <aside class="dash-sidebar" id="dashSidebar">
+            <div class="dash-sidebar-header"><a href="../../index.html" style="display:flex;align-items:center;gap:12px;text-decoration:none;"><div class="logo-icon"><i class='bx bxs-graduation'></i></div><h2>AlumniPortal</h2></a></div>
+            <div class="sidebar-user"><div class="sidebar-user-card"><img src="https://ui-avatars.com/api/?name=Admin&background=ef4444&color=fff" alt="Admin"><div class="user-meta"><h4>Principal Admin</h4><span>Super Administrator</span></div></div></div>
+            <nav class="dash-nav">
+                <span class="nav-section-label">Overview</span><a href="dashboard.html" class="dash-nav-link"><i class='bx bxs-dashboard'></i><span>Dashboard</span></a><a href="departments.html" class="dash-nav-link"><i class='bx bxs-building-house'></i><span>Departments</span></a>
+                <span class="nav-section-label">Management</span><a href="users.html" class="dash-nav-link active"><i class='bx bxs-group'></i><span>All Users</span></a><a href="mentors.html" class="dash-nav-link"><i class='bx bxs-user-voice'></i><span>Mentors</span></a><a href="alumni.html" class="dash-nav-link"><i class='bx bxs-user-detail'></i><span>Alumni</span></a><a href="top-alumni.html" class="dash-nav-link"><i class='bx bxs-trophy'></i><span>Top Alumni</span></a>
+                <span class="nav-section-label">Content</span><a href="events.html" class="dash-nav-link"><i class='bx bxs-calendar-event'></i><span>Events</span></a><a href="jobs.html" class="dash-nav-link"><i class='bx bxs-briefcase'></i><span>Job Board</span></a>
+                <span class="nav-section-label">Communication</span><a href="chat.html" class="dash-nav-link"><i class='bx bxs-message-dots'></i><span>Messages</span></a><a href="notifications.html" class="dash-nav-link"><i class='bx bxs-bell-ring'></i><span>Notifications</span></a>
+                <span class="nav-section-label">System</span><a href="settings.html" class="dash-nav-link"><i class='bx bxs-cog'></i><span>Settings</span></a>
+            </nav>
+            <div class="dash-sidebar-footer"><a href="#" class="dash-nav-link" id="logoutBtn"><i class='bx bx-log-out'></i><span>Logout</span></a></div>
+        </aside>
+        <main class="dash-main">
+            <header class="dash-topbar"><div style="display:flex;align-items:center;gap:16px;"><button class="sidebar-toggle" onclick="document.getElementById('dashSidebar').classList.toggle('open')"><i class='bx bx-menu'></i></button><div class="dash-search"><i class='bx bx-search'></i><input type="text" placeholder="Search users..."></div></div><div class="dash-topbar-actions"><div class="topbar-profile"><img src="https://ui-avatars.com/api/?name=Admin&background=ef4444&color=fff" alt="Admin"><span>Admin</span><i class='bx bx-chevron-down'></i></div></div></header>
+            <div class="dash-view" style="opacity:1;transform:translateY(0);">
+                <div class="page-title-bar"><div><h1>👥 User Management</h1><p>Manage all users across the system — alumni, mentors, coordinators.</p></div></div>
+                <div class="dash-stats-row">
+                    <div class="dash-stat-card"><div class="stat-icon purple"><i class='bx bxs-group'></i></div><div class="stat-info"><h3>12,518</h3><p>Total Users</p></div></div>
+                    <div class="dash-stat-card"><div class="stat-icon green"><i class='bx bxs-user-detail'></i></div><div class="stat-info"><h3>12,500</h3><p>Alumni</p></div></div>
+                    <div class="dash-stat-card"><div class="stat-icon amber"><i class='bx bxs-user-voice'></i></div><div class="stat-info"><h3>12</h3><p>Mentors</p></div></div>
+                    <div class="dash-stat-card"><div class="stat-icon blue"><i class='bx bxs-shield'></i></div><div class="stat-info"><h3>6</h3><p>Coordinators</p></div></div>
+                </div>
+                <div class="table-responsive"><table class="user-table"><thead><tr><th>User</th><th>Email</th><th>Role</th><th>Department</th><th>Active</th><th>Actions</th></tr></thead><tbody id="userTableBody"></tbody></table></div>
+            </div>
+        </main>
+    </div>
+    <script src="../../assets/js/data.js"></script>
+    <script src="../../assets/js/common.js"></script>
+    <script>
+        const user = getUser(); if (!user || !user.loggedIn || user.role !== 'admin') window.location.href = '../auth/login.html';
+        document.getElementById('logoutBtn')?.addEventListener('click', (e) => { e.preventDefault(); clearUser(); showToast('Logged out','info'); setTimeout(()=>window.location.href='../../index.html',1000); });
+
+        // Build user list from all sources
+        const allUsers = [
+            { name: 'Principal Admin', email: 'admin@dvvpcoe.edu.in', role: 'admin', department: 'All', avatar: 'https://ui-avatars.com/api/?name=PA&background=ef4444&color=fff', active: true },
+            ...APP_DATA.departments.map(d => ({ name: d.coordinator, email: d.coordinator.toLowerCase().replace(/\s/g,'.').replace('dr.','') + '@dvvpcoe.edu.in', role: 'coordinator', department: d.name, avatar: d.coordinatorAvatar, active: d.status === 'active' })),
+            ...APP_DATA.mentors.slice(0, 6).map(m => ({ name: m.name, email: m.email, role: 'mentor', department: m.department, avatar: m.avatar, active: m.status === 'active' })),
+            ...APP_DATA.topAlumni.map(a => ({ name: a.name, email: a.name.toLowerCase().replace(/\s/g,'.') + '@gmail.com', role: 'alumni', department: 'Computer Engineering', avatar: a.avatar, active: true }))
+        ];
+
+        document.getElementById('userTableBody').innerHTML = allUsers.map(u => `
+            <tr>
+                <td><div style="display:flex;align-items:center;gap:10px;"><img src="${u.avatar}" style="width:34px;height:34px;border-radius:50%;"> <strong>${u.name}</strong></div></td>
+                <td style="color:var(--text-muted);">${u.email}</td>
+                <td><span class="role-badge ${u.role}">${u.role}</span></td>
+                <td>${u.department}</td>
+                <td><label class="toggle-switch"><input type="checkbox" ${u.active?'checked':''} onchange="showToast('User status updated','success')"><span class="toggle-slider"></span></label></td>
+                <td><button class="topbar-icon-btn" title="Delete" onclick="showToast('Cannot delete system users','error')"><i class='bx bx-trash'></i></button></td>
+            </tr>`).join('');
+    </script>
+</body>
+</html>
