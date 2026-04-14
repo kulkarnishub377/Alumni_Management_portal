@@ -15,26 +15,52 @@
             <div class="sidebar-user"><div class="sidebar-user-card" style="border-left:3px solid #0d9488;"><img src="https://i.pravatar.cc/150?img=47" id="sidebarAvatar" alt="User"><div class="user-meta"><h4 id="sidebarName">Loading...</h4><span style="color:#0d9488;font-weight:600;">Dept. Coordinator</span></div></div></div>
             <nav class="dash-nav">
                 <span class="nav-section-label">Department</span>
-                <a href="dashboard.html" class="dash-nav-link "><i class='bx bxs-dashboard'></i><span>Overview</span></a>
-                <a href="alumni.html" class="dash-nav-link "><i class='bx bxs-user-detail'></i><span>Alumni</span></a>
-                <a href="mentors.html" class="dash-nav-link "><i class='bx bxs-user-voice'></i><span>Mentors</span></a>
+                <a href="dashboard.html" class="dash-nav-link"><i class='bx bxs-dashboard'></i><span>Overview</span></a>
+                <a href="alumni.html" class="dash-nav-link"><i class='bx bxs-user-detail'></i><span>Alumni</span></a>
+                <a href="mentors.html" class="dash-nav-link"><i class='bx bxs-user-voice'></i><span>Mentors</span></a>
                 <span class="nav-section-label">Actions</span>
-                <a href="jobs.html" class="dash-nav-link "><i class='bx bxs-briefcase'></i><span>Job Approvals</span></a>
+                <a href="jobs.html" class="dash-nav-link"><i class='bx bxs-briefcase'></i><span>Job Approvals</span></a>
                 <a href="top-alumni.html" class="dash-nav-link active"><i class='bx bxs-trophy'></i><span>Suggest Top Alumni</span></a>
-                <a href="events.html" class="dash-nav-link "><i class='bx bxs-calendar-event'></i><span>Events</span></a>
+                <a href="events.html" class="dash-nav-link"><i class='bx bxs-calendar-event'></i><span>Events</span></a>
                 <span class="nav-section-label">Communication</span>
-                <a href="chat.html" class="dash-nav-link "><i class='bx bxs-message-dots'></i><span>Messages</span></a>
-                <a href="notifications.html" class="dash-nav-link "><i class='bx bxs-bell-ring'></i><span>Announcements</span></a>
+                <a href="chat.html" class="dash-nav-link"><i class='bx bxs-message-dots'></i><span>Messages</span></a>
+                <a href="notifications.html" class="dash-nav-link"><i class='bx bxs-bell-ring'></i><span>Announcements</span></a>
                 <span class="nav-section-label">Account</span>
-                <a href="settings.html" class="dash-nav-link "><i class='bx bxs-cog'></i><span>Settings</span></a>
+                <a href="settings.html" class="dash-nav-link"><i class='bx bxs-cog'></i><span>Settings</span></a>
             </nav>
             <div class="dash-sidebar-footer"><a href="#" class="dash-nav-link" id="logoutBtn"><i class='bx bx-log-out'></i><span>Logout</span></a></div>
         </aside>
         <main class="dash-main">
             <header class="dash-topbar"><div style="display:flex;align-items:center;gap:16px;"><button class="sidebar-toggle" onclick="document.getElementById('dashSidebar').classList.toggle('open')"><i class='bx bx-menu'></i></button></div><div class="dash-topbar-actions"><div class="topbar-profile"><img src="https://i.pravatar.cc/150?img=47" id="topAvatar" alt="Profile"><span id="topName">User</span><i class='bx bx-chevron-down'></i></div></div></header>
             <div class="dash-view" style="opacity:1;transform:translateY(0);">
-                <div class="page-title-bar"><div><h1>🏆 Suggest Top Alumni</h1><p>Recommend outstanding alumni for global featuring.</p></div></div>
-                <div class='dash-section'><div class='dash-section-body'><p style='color:var(--text-muted);'>Recommendation forms coming soon.</p></div></div>
+                <div class="page-title-bar"><div><h1>🏆 Suggest Top Alumni</h1><p>Recommend outstanding alumni from your department to be featured globally on the homepage.</p></div></div>
+                
+                <div style="display:grid;grid-template-columns:1fr 2fr;gap:24px;">
+                    <div class="dash-section">
+                        <div class="dash-section-header"><h3>New Suggestion Form</h3></div>
+                        <div class="dash-section-body">
+                            <form id="suggestForm" onsubmit="event.preventDefault(); showToast('Suggestion sent to Admin successfully!','success'); this.reset();">
+                                <div class="edit-form-group" style="margin-bottom:16px;">
+                                    <label>Select Alumni <span style="color:#ef4444">*</span></label>
+                                    <select required style="width:100%;padding:10px;border-radius:var(--radius-md);border:1px solid var(--border);background:var(--bg-body);" id="alumniSelect">
+                                        <option value="">-- Choose from your department --</option>
+                                    </select>
+                                </div>
+                                <div class="edit-form-group" style="margin-bottom:16px;">
+                                    <label>Reason for Recommendation <span style="color:#ef4444">*</span></label>
+                                    <textarea required rows="4" placeholder="Briefly explain why this alumnus should be featured..." style="width:100%;padding:10px;border-radius:var(--radius-md);border:1px solid var(--border);background:var(--bg-body);font-family:inherit;"></textarea>
+                                </div>
+                                <button type="submit" class="btn btn-primary" style="width:100%;font-weight:600;"><i class='bx bx-send'></i> Submit to Main Admin</button>
+                            </form>
+                        </div>
+                    </div>
+
+                    <div class="dash-section">
+                        <div class="dash-section-header"><h3>Your Previous Suggestions</h3></div>
+                        <div class="dash-section-body" id="suggestionsHistory"></div>
+                    </div>
+                </div>
+
             </div>
         </main>
     </div>
@@ -45,8 +71,34 @@
         document.getElementById('logoutBtn')?.addEventListener('click', (e) => { e.preventDefault(); clearUser(); showToast('Logged out','info'); setTimeout(()=>window.location.href='../../index.html',1000); });
         document.getElementById('sidebarName').textContent = user.name;
         document.getElementById('topName').textContent = user.name;
-        
-        
+        const dept = APP_DATA.departments.find(d => d.name === user.department);
+        if(dept) { document.getElementById('sidebarAvatar').src = dept.coordinatorAvatar; document.getElementById('topAvatar').src = dept.coordinatorAvatar; }
+
+        // Populate Alumni select
+        const deptAlumni = APP_DATA.topAlumni.filter(a => a.department === user.department);
+        document.getElementById('alumniSelect').innerHTML += deptAlumni.map(a => `<option value="${a.id}">${a.name} - ${a.company}</option>`).join('');
+
+        // Populate history
+        const mySuggestions = APP_DATA.topAlumniSuggestions.filter(s => s.department === user.department);
+        document.getElementById('suggestionsHistory').innerHTML = mySuggestions.length ? mySuggestions.map(s => {
+            let badge = '';
+            if(s.status === 'pending') badge = '<span style="color:#f59e0b;font-size:11px;font-weight:700;padding:2px 8px;background:rgba(245,158,11,0.1);border-radius:12px;">Pending</span>';
+            else if(s.status === 'approved') badge = '<span style="color:#10b981;font-size:11px;font-weight:700;padding:2px 8px;background:rgba(16,185,129,0.1);border-radius:12px;">Featured</span>';
+            
+            return `
+            <div style="display:flex;gap:12px;padding:16px;border:1px solid var(--border);border-radius:var(--radius-md);margin-bottom:12px;background:var(--bg-body);">
+                <img src="${s.avatar}" style="width:40px;height:40px;border-radius:50%;">
+                <div style="flex:1;">
+                    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px;">
+                        <h4 style="font-size:15px;font-weight:700;">${s.name}</h4>
+                        ${badge}
+                    </div>
+                    <p style="font-size:12px;color:var(--text-muted);margin-bottom:8px;">${s.role} at ${s.company}</p>
+                    <p style="font-size:13px;color:var(--text-secondary);background:var(--bg-card);padding:8px;border-radius:6px;border:1px solid var(--border);">"${s.reason}"</p>
+                </div>
+            </div>`;
+        }).join('') : '<p style="color:var(--text-muted);font-size:14px;">No suggestions made yet.</p>';
+
     </script>
 </body>
 </html>

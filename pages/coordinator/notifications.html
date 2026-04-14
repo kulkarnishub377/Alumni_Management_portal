@@ -15,26 +15,57 @@
             <div class="sidebar-user"><div class="sidebar-user-card" style="border-left:3px solid #0d9488;"><img src="https://i.pravatar.cc/150?img=47" id="sidebarAvatar" alt="User"><div class="user-meta"><h4 id="sidebarName">Loading...</h4><span style="color:#0d9488;font-weight:600;">Dept. Coordinator</span></div></div></div>
             <nav class="dash-nav">
                 <span class="nav-section-label">Department</span>
-                <a href="dashboard.html" class="dash-nav-link "><i class='bx bxs-dashboard'></i><span>Overview</span></a>
-                <a href="alumni.html" class="dash-nav-link "><i class='bx bxs-user-detail'></i><span>Alumni</span></a>
-                <a href="mentors.html" class="dash-nav-link "><i class='bx bxs-user-voice'></i><span>Mentors</span></a>
+                <a href="dashboard.html" class="dash-nav-link"><i class='bx bxs-dashboard'></i><span>Overview</span></a>
+                <a href="alumni.html" class="dash-nav-link"><i class='bx bxs-user-detail'></i><span>Alumni</span></a>
+                <a href="mentors.html" class="dash-nav-link"><i class='bx bxs-user-voice'></i><span>Mentors</span></a>
                 <span class="nav-section-label">Actions</span>
-                <a href="jobs.html" class="dash-nav-link "><i class='bx bxs-briefcase'></i><span>Job Approvals</span></a>
-                <a href="top-alumni.html" class="dash-nav-link "><i class='bx bxs-trophy'></i><span>Suggest Top Alumni</span></a>
-                <a href="events.html" class="dash-nav-link "><i class='bx bxs-calendar-event'></i><span>Events</span></a>
+                <a href="jobs.html" class="dash-nav-link"><i class='bx bxs-briefcase'></i><span>Job Approvals</span></a>
+                <a href="top-alumni.html" class="dash-nav-link"><i class='bx bxs-trophy'></i><span>Suggest Top Alumni</span></a>
+                <a href="events.html" class="dash-nav-link"><i class='bx bxs-calendar-event'></i><span>Events</span></a>
                 <span class="nav-section-label">Communication</span>
-                <a href="chat.html" class="dash-nav-link "><i class='bx bxs-message-dots'></i><span>Messages</span></a>
+                <a href="chat.html" class="dash-nav-link"><i class='bx bxs-message-dots'></i><span>Messages</span></a>
                 <a href="notifications.html" class="dash-nav-link active"><i class='bx bxs-bell-ring'></i><span>Announcements</span></a>
                 <span class="nav-section-label">Account</span>
-                <a href="settings.html" class="dash-nav-link "><i class='bx bxs-cog'></i><span>Settings</span></a>
+                <a href="settings.html" class="dash-nav-link"><i class='bx bxs-cog'></i><span>Settings</span></a>
             </nav>
             <div class="dash-sidebar-footer"><a href="#" class="dash-nav-link" id="logoutBtn"><i class='bx bx-log-out'></i><span>Logout</span></a></div>
         </aside>
         <main class="dash-main">
             <header class="dash-topbar"><div style="display:flex;align-items:center;gap:16px;"><button class="sidebar-toggle" onclick="document.getElementById('dashSidebar').classList.toggle('open')"><i class='bx bx-menu'></i></button></div><div class="dash-topbar-actions"><div class="topbar-profile"><img src="https://i.pravatar.cc/150?img=47" id="topAvatar" alt="Profile"><span id="topName">User</span><i class='bx bx-chevron-down'></i></div></div></header>
             <div class="dash-view" style="opacity:1;transform:translateY(0);">
-                <div class="page-title-bar"><div><h1>📢 Announcements</h1><p>Send announcements to your department alumni.</p></div></div>
-                <div class='dash-section'><div class='dash-section-body'><p style='color:var(--text-muted);'>Announcement composer coming soon.</p></div></div>
+                <div class="page-title-bar"><div><h1>📢 Department Announcements</h1><p>Send notifications specifically to alumni from <span id="pageDeptName" style="color:var(--primary);font-weight:700;"></span>.</p></div></div>
+                
+                <div class="dash-section" style="margin-bottom:24px;">
+                    <div class="dash-section-header"><h3>✍️ Compose Target Announcement</h3></div>
+                    <div class="dash-section-body">
+                        <form onsubmit="event.preventDefault(); showToast('Announcement sent to selected recipients!','success'); this.reset();">
+                            <div class="edit-form-group" style="margin-bottom:16px;">
+                                <label>Target Audience</label>
+                                <select required style="padding:10px 14px;border:1px solid var(--border);border-radius:var(--radius-md);background:var(--bg-body);font-size:14px;width:100%;">
+                                    <option value="all">All Department Alumni</option>
+                                    <option value="mentors">All Department Mentors</option>
+                                    <option value="b2024">Batch 2024</option>
+                                    <option value="b2023">Batch 2023</option>
+                                    <option value="b2022">Batch 2022</option>
+                                </select>
+                            </div>
+                            <div class="edit-form-group" style="margin-bottom:16px;"><label>Title</label><input type="text" required placeholder="Announcement title..." style="padding:10px 14px;border:1px solid var(--border);border-radius:var(--radius-md);background:var(--bg-body);font-size:14px;width:100%;"></div>
+                            <div class="edit-form-group" style="margin-bottom:16px;"><label>Message</label><textarea required rows="4" placeholder="Write your announcement..." style="padding:10px 14px;border:1px solid var(--border);border-radius:var(--radius-md);background:var(--bg-body);font-size:14px;width:100%;resize:vertical;font-family:inherit;"></textarea></div>
+                            <button type="submit" class="btn btn-primary" style="background:#0d9488;border-color:#0d9488;"><i class='bx bx-send'></i> Send Announcement</button>
+                        </form>
+                    </div>
+                </div>
+
+                <div class="dash-section">
+                    <div class="dash-section-header"><h3>Recent Department Announcements</h3></div>
+                    <div class="dash-section-body" style="padding:0;">
+                        <div class="notif-item">
+                            <div class="notif-icon" style="width:40px;height:40px;min-width:40px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px;background:#e0f2fe;color:#0ea5e9"><i class='bx bx-globe'></i></div>
+                            <div class="notif-content"><h4>Webinar on AI Trends</h4><p>Target: All Department Alumni</p><span class="notif-time"><i class='bx bx-time-five'></i> 2 days ago</span></div>
+                        </div>
+                    </div>
+                </div>
+
             </div>
         </main>
     </div>
@@ -45,8 +76,9 @@
         document.getElementById('logoutBtn')?.addEventListener('click', (e) => { e.preventDefault(); clearUser(); showToast('Logged out','info'); setTimeout(()=>window.location.href='../../index.html',1000); });
         document.getElementById('sidebarName').textContent = user.name;
         document.getElementById('topName').textContent = user.name;
-        
-        
+        document.getElementById('pageDeptName').textContent = user.department;
+        const dept = APP_DATA.departments.find(d => d.name === user.department);
+        if(dept) { document.getElementById('sidebarAvatar').src = dept.coordinatorAvatar; document.getElementById('topAvatar').src = dept.coordinatorAvatar; }
     </script>
 </body>
 </html>

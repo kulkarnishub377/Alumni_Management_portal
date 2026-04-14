@@ -15,16 +15,16 @@
             <div class="sidebar-user"><div class="sidebar-user-card" style="border-left:3px solid #0d9488;"><img src="https://i.pravatar.cc/150?img=47" id="sidebarAvatar" alt="User"><div class="user-meta"><h4 id="sidebarName">Loading...</h4><span style="color:#0d9488;font-weight:600;">Dept. Coordinator</span></div></div></div>
             <nav class="dash-nav">
                 <span class="nav-section-label">Department</span>
-                <a href="dashboard.html" class="dash-nav-link "><i class='bx bxs-dashboard'></i><span>Overview</span></a>
-                <a href="alumni.html" class="dash-nav-link "><i class='bx bxs-user-detail'></i><span>Alumni</span></a>
-                <a href="mentors.html" class="dash-nav-link "><i class='bx bxs-user-voice'></i><span>Mentors</span></a>
+                <a href="dashboard.html" class="dash-nav-link"><i class='bx bxs-dashboard'></i><span>Overview</span></a>
+                <a href="alumni.html" class="dash-nav-link"><i class='bx bxs-user-detail'></i><span>Alumni</span></a>
+                <a href="mentors.html" class="dash-nav-link"><i class='bx bxs-user-voice'></i><span>Mentors</span></a>
                 <span class="nav-section-label">Actions</span>
-                <a href="jobs.html" class="dash-nav-link "><i class='bx bxs-briefcase'></i><span>Job Approvals</span></a>
-                <a href="top-alumni.html" class="dash-nav-link "><i class='bx bxs-trophy'></i><span>Suggest Top Alumni</span></a>
-                <a href="events.html" class="dash-nav-link "><i class='bx bxs-calendar-event'></i><span>Events</span></a>
+                <a href="jobs.html" class="dash-nav-link"><i class='bx bxs-briefcase'></i><span>Job Approvals</span></a>
+                <a href="top-alumni.html" class="dash-nav-link"><i class='bx bxs-trophy'></i><span>Suggest Top Alumni</span></a>
+                <a href="events.html" class="dash-nav-link"><i class='bx bxs-calendar-event'></i><span>Events</span></a>
                 <span class="nav-section-label">Communication</span>
-                <a href="chat.html" class="dash-nav-link "><i class='bx bxs-message-dots'></i><span>Messages</span></a>
-                <a href="notifications.html" class="dash-nav-link "><i class='bx bxs-bell-ring'></i><span>Announcements</span></a>
+                <a href="chat.html" class="dash-nav-link"><i class='bx bxs-message-dots'></i><span>Messages</span></a>
+                <a href="notifications.html" class="dash-nav-link"><i class='bx bxs-bell-ring'></i><span>Announcements</span></a>
                 <span class="nav-section-label">Account</span>
                 <a href="settings.html" class="dash-nav-link active"><i class='bx bxs-cog'></i><span>Settings</span></a>
             </nav>
@@ -33,8 +33,24 @@
         <main class="dash-main">
             <header class="dash-topbar"><div style="display:flex;align-items:center;gap:16px;"><button class="sidebar-toggle" onclick="document.getElementById('dashSidebar').classList.toggle('open')"><i class='bx bx-menu'></i></button></div><div class="dash-topbar-actions"><div class="topbar-profile"><img src="https://i.pravatar.cc/150?img=47" id="topAvatar" alt="Profile"><span id="topName">User</span><i class='bx bx-chevron-down'></i></div></div></header>
             <div class="dash-view" style="opacity:1;transform:translateY(0);">
-                <div class="page-title-bar"><div><h1>⚙️ Settings</h1><p>Manage your coordinator profile.</p></div></div>
-                <div class='dash-section'><div class='dash-section-body'><p style='color:var(--text-muted);'>Settings coming soon.</p></div></div>
+                <div class="page-title-bar"><div><h1>⚙️ Profile & Settings</h1><p>Manage your account securely.</p></div>
+                <button class="btn btn-primary btn-sm" onclick="showToast('Profile saved successfully!','success')"><i class='bx bx-save'></i> Save Profile</button></div>
+                
+                <div class="dash-section">
+                    <div class="dash-section-body" style="max-width:600px;">
+                        <h3 style="margin-bottom:20px;">Change Password</h3>
+                        <div class="edit-form-group" style="margin-bottom:16px;">
+                            <label>Current Password</label>
+                            <input type="password" placeholder="Enter current password" style="width:100%;padding:10px;border-radius:var(--radius-md);border:1px solid var(--border);background:var(--bg-body);">
+                        </div>
+                        <div class="edit-form-group" style="margin-bottom:16px;">
+                            <label>New Password</label>
+                            <input type="password" placeholder="Enter new password" style="width:100%;padding:10px;border-radius:var(--radius-md);border:1px solid var(--border);background:var(--bg-body);">
+                        </div>
+                        <button class="btn btn-secondary btn-sm" style="color:#0d9488;border-color:#0d9488;" onclick="showToast('Password updated!','success')">Update Password</button>
+                    </div>
+                </div>
+
             </div>
         </main>
     </div>
@@ -45,8 +61,8 @@
         document.getElementById('logoutBtn')?.addEventListener('click', (e) => { e.preventDefault(); clearUser(); showToast('Logged out','info'); setTimeout(()=>window.location.href='../../index.html',1000); });
         document.getElementById('sidebarName').textContent = user.name;
         document.getElementById('topName').textContent = user.name;
-        
-        
+        const dept = APP_DATA.departments.find(d => d.name === user.department);
+        if(dept) { document.getElementById('sidebarAvatar').src = dept.coordinatorAvatar; document.getElementById('topAvatar').src = dept.coordinatorAvatar; }
     </script>
 </body>
 </html>

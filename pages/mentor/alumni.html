@@ -15,22 +15,31 @@
             <div class="sidebar-user"><div class="sidebar-user-card" style="border-left:3px solid #4f46e5;"><img src="https://ui-avatars.com/api/?name=PM&background=4f46e5&color=fff" id="sidebarAvatar" alt="User"><div class="user-meta"><h4 id="sidebarName">Loading...</h4><span style="color:#4f46e5;font-weight:600;">Batch Mentor</span></div></div></div>
             <nav class="dash-nav">
                 <span class="nav-section-label">My Batches</span>
-                <a href="dashboard.html" class="dash-nav-link "><i class='bx bxs-dashboard'></i><span>Overview</span></a>
-                <a href="approvals.html" class="dash-nav-link "><i class='bx bxs-user-plus'></i><span>Approvals</span></a>
+                <a href="dashboard.html" class="dash-nav-link"><i class='bx bxs-dashboard'></i><span>Overview</span></a>
+                <a href="approvals.html" class="dash-nav-link"><i class='bx bxs-user-plus'></i><span>Approvals</span></a>
                 <a href="alumni.html" class="dash-nav-link active"><i class='bx bxs-user-detail'></i><span>Batch Alumni</span></a>
                 <span class="nav-section-label">Activity</span>
-                <a href="events.html" class="dash-nav-link "><i class='bx bxs-calendar-event'></i><span>Events</span></a>
-                <a href="chat.html" class="dash-nav-link "><i class='bx bxs-message-dots'></i><span>Messages</span></a>
+                <a href="events.html" class="dash-nav-link"><i class='bx bxs-calendar-event'></i><span>Events</span></a>
+                <a href="chat.html" class="dash-nav-link"><i class='bx bxs-message-dots'></i><span>Messages</span></a>
                 <span class="nav-section-label">Account</span>
-                <a href="settings.html" class="dash-nav-link "><i class='bx bxs-cog'></i><span>Settings</span></a>
+                <a href="settings.html" class="dash-nav-link"><i class='bx bxs-cog'></i><span>Settings</span></a>
             </nav>
             <div class="dash-sidebar-footer"><a href="#" class="dash-nav-link" id="logoutBtn"><i class='bx bx-log-out'></i><span>Logout</span></a></div>
         </aside>
         <main class="dash-main">
-            <header class="dash-topbar"><div style="display:flex;align-items:center;gap:16px;"><button class="sidebar-toggle" onclick="document.getElementById('dashSidebar').classList.toggle('open')"><i class='bx bx-menu'></i></button></div><div class="dash-topbar-actions"><div class="topbar-profile"><img src="https://ui-avatars.com/api/?name=PM&background=4f46e5&color=fff" id="topAvatar" alt="Profile"><span id="topName">User</span><i class='bx bx-chevron-down'></i></div></div></header>
+            <header class="dash-topbar"><div style="display:flex;align-items:center;gap:16px;"><button class="sidebar-toggle" onclick="document.getElementById('dashSidebar').classList.toggle('open')"><i class='bx bx-menu'></i></button><div class="dash-search"><i class='bx bx-search'></i><input type="text" placeholder="Search my batches..."></div></div><div class="dash-topbar-actions"><div class="topbar-profile"><img src="https://ui-avatars.com/api/?name=PM&background=4f46e5&color=fff" id="topAvatar" alt="Profile"><span id="topName">User</span><i class='bx bx-chevron-down'></i></div></div></header>
             <div class="dash-view" style="opacity:1;transform:translateY(0);">
-                <div class="page-title-bar"><div><h1>🎓 Batch Alumni</h1><p>View and manage alumni in your assigned batches.</p></div></div>
-                <div class='dash-section'><div class='dash-section-body'><p style='color:var(--text-muted);'>Alumni view coming soon.</p></div></div>
+                <div class="page-title-bar">
+                    <div><h1>🎓 My Batch Alumni</h1><p>View and manage the alumni assigned to your batches.</p></div>
+                    <button class="btn btn-secondary btn-sm" onclick="showToast('Exporting batch roster...','info')"><i class='bx bx-download'></i> Export Roster</button>
+                </div>
+                
+                <div class="filter-bar" style="margin-bottom:24px;">
+                    <div class="filter-input"><i class='bx bx-search'></i><input type="text" placeholder="Search by name, company..." id="alumniSearch" oninput="filterAlumni()"></div>
+                    <select id="batchFilterAlumni" onchange="filterAlumni()"><option value="">All My Batches</option></select>
+                </div>
+                <div class="network-grid" id="alumniGrid"></div>
+
             </div>
         </main>
     </div>
@@ -39,10 +48,40 @@
     <script>
         const user = getUser(); if (!user || user.role !== 'mentor') window.location.href = '../auth/login.html';
         document.getElementById('logoutBtn')?.addEventListener('click', (e) => { e.preventDefault(); clearUser(); showToast('Logged out','info'); setTimeout(()=>window.location.href='../../index.html',1000); });
+        
         document.getElementById('sidebarName').textContent = user.name;
         document.getElementById('topName').textContent = user.name;
-        
-        
+        const mentorInfo = APP_DATA.mentors.find(m => m.name === user.name);
+        if(mentorInfo) { document.getElementById('sidebarAvatar').src = mentorInfo.avatar; document.getElementById('topAvatar').src = mentorInfo.avatar; }
+
+        let assignedBatches = mentorInfo ? mentorInfo.batches : [];
+        let myAlumni = APP_DATA.topAlumni.filter(a => assignedBatches.includes(a.batch));
+
+        assignedBatches.sort((a,b) => b-a).forEach(b => document.getElementById('batchFilterAlumni').innerHTML += `<option value="${b}">${b}</option>`);
+
+        function renderAlumniCards(list) {
+            document.getElementById('alumniGrid').innerHTML = list.length ? list.map(a => `
+                <div class="network-card">
+                    <img src="${a.avatar}" alt="${a.name}" style="width:48px;height:48px;border-radius:50%;">
+                    <div class="nc-info" style="flex:1;">
+                        <h4>${a.name}</h4><p>${a.role} at ${a.company}</p><span class="nc-batch">Batch ${a.batch}</span>
+                    </div>
+                    <button class="topbar-icon-btn" title="View details" onclick="showToast('Viewing ${a.name} details','info')"><i class='bx bx-id-card'></i></button>
+                </div>
+            `).join('') : '<p style="grid-column:1/-1;text-align:center;color:var(--text-muted);padding:20px;">No alumni found in your assigned batches.</p>';
+        }
+        renderAlumniCards(myAlumni);
+
+        function filterAlumni() {
+            const search = (document.getElementById('alumniSearch')?.value || '').toLowerCase();
+            const batch = document.getElementById('batchFilterAlumni')?.value || '';
+            const filtered = myAlumni.filter(a => {
+                const matchSearch = !search || a.name.toLowerCase().includes(search) || a.company.toLowerCase().includes(search);
+                const matchBatch = !batch || a.batch === batch;
+                return matchSearch && matchBatch;
+            });
+            renderAlumniCards(filtered);
+        }
     </script>
 </body>
 </html>

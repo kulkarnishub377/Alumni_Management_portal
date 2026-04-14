@@ -15,26 +15,48 @@
             <div class="sidebar-user"><div class="sidebar-user-card" style="border-left:3px solid #0d9488;"><img src="https://i.pravatar.cc/150?img=47" id="sidebarAvatar" alt="User"><div class="user-meta"><h4 id="sidebarName">Loading...</h4><span style="color:#0d9488;font-weight:600;">Dept. Coordinator</span></div></div></div>
             <nav class="dash-nav">
                 <span class="nav-section-label">Department</span>
-                <a href="dashboard.html" class="dash-nav-link "><i class='bx bxs-dashboard'></i><span>Overview</span></a>
-                <a href="alumni.html" class="dash-nav-link "><i class='bx bxs-user-detail'></i><span>Alumni</span></a>
-                <a href="mentors.html" class="dash-nav-link "><i class='bx bxs-user-voice'></i><span>Mentors</span></a>
+                <a href="dashboard.html" class="dash-nav-link"><i class='bx bxs-dashboard'></i><span>Overview</span></a>
+                <a href="alumni.html" class="dash-nav-link"><i class='bx bxs-user-detail'></i><span>Alumni</span></a>
+                <a href="mentors.html" class="dash-nav-link"><i class='bx bxs-user-voice'></i><span>Mentors</span></a>
                 <span class="nav-section-label">Actions</span>
-                <a href="jobs.html" class="dash-nav-link "><i class='bx bxs-briefcase'></i><span>Job Approvals</span></a>
-                <a href="top-alumni.html" class="dash-nav-link "><i class='bx bxs-trophy'></i><span>Suggest Top Alumni</span></a>
-                <a href="events.html" class="dash-nav-link "><i class='bx bxs-calendar-event'></i><span>Events</span></a>
+                <a href="jobs.html" class="dash-nav-link"><i class='bx bxs-briefcase'></i><span>Job Approvals</span></a>
+                <a href="top-alumni.html" class="dash-nav-link"><i class='bx bxs-trophy'></i><span>Suggest Top Alumni</span></a>
+                <a href="events.html" class="dash-nav-link"><i class='bx bxs-calendar-event'></i><span>Events</span></a>
                 <span class="nav-section-label">Communication</span>
                 <a href="chat.html" class="dash-nav-link active"><i class='bx bxs-message-dots'></i><span>Messages</span></a>
-                <a href="notifications.html" class="dash-nav-link "><i class='bx bxs-bell-ring'></i><span>Announcements</span></a>
+                <a href="notifications.html" class="dash-nav-link"><i class='bx bxs-bell-ring'></i><span>Announcements</span></a>
                 <span class="nav-section-label">Account</span>
-                <a href="settings.html" class="dash-nav-link "><i class='bx bxs-cog'></i><span>Settings</span></a>
+                <a href="settings.html" class="dash-nav-link"><i class='bx bxs-cog'></i><span>Settings</span></a>
             </nav>
             <div class="dash-sidebar-footer"><a href="#" class="dash-nav-link" id="logoutBtn"><i class='bx bx-log-out'></i><span>Logout</span></a></div>
         </aside>
         <main class="dash-main">
-            <header class="dash-topbar"><div style="display:flex;align-items:center;gap:16px;"><button class="sidebar-toggle" onclick="document.getElementById('dashSidebar').classList.toggle('open')"><i class='bx bx-menu'></i></button></div><div class="dash-topbar-actions"><div class="topbar-profile"><img src="https://i.pravatar.cc/150?img=47" id="topAvatar" alt="Profile"><span id="topName">User</span><i class='bx bx-chevron-down'></i></div></div></header>
+            <header class="dash-topbar"><div style="display:flex;align-items:center;gap:16px;"><button class="sidebar-toggle" onclick="document.getElementById('dashSidebar').classList.toggle('open')"><i class='bx bx-menu'></i></button><div class="dash-search"><i class='bx bx-search'></i><input type="text" placeholder="Search chats..."></div></div><div class="dash-topbar-actions"><div class="topbar-profile"><img src="https://i.pravatar.cc/150?img=47" id="topAvatar" alt="Profile"><span id="topName">User</span><i class='bx bx-chevron-down'></i></div></div></header>
             <div class="dash-view" style="opacity:1;transform:translateY(0);">
-                <div class="page-title-bar"><div><h1>💬 Messages</h1><p>Chat with mentors, admin, and groups.</p></div></div>
-                <div class='dash-section'><div class='dash-section-body'><p style='color:var(--text-muted);'>Chat module coming soon to coordinator dashboard.</p></div></div>
+                <div class="page-title-bar">
+                    <div><h1><i class='bx bxs-message-dots' style="color:#0d9488;margin-right:8px;"></i>Department Internal Chat</h1><p>Communicate with your department mentors and the Main Admin.</p></div>
+                </div>
+                <div class="chat-layout">
+                    <div class="chat-contacts">
+                        <div class="chat-contacts-header"><h3>Chat Direct</h3></div>
+                        <div class="chat-list" id="chatContactList"></div>
+                    </div>
+                    <div class="chat-main" id="chatMainArea">
+                        <div class="chat-main-header">
+                            <div class="ch-avatar-wrap"><img src="https://ui-avatars.com/api/?name=DM&background=10b981&color=fff" id="activeChatAvatar" style="width:40px;height:40px;border-radius:50%;"></div>
+                            <div class="ch-info"><h4 id="chatName">Department Mentors Group</h4><span class="ch-status online" id="chatStatus">Online</span></div>
+                        </div>
+                        <div class="chat-messages" id="chatMessages">
+                            <div class="chat-date-divider"><span>Today</span></div>
+                            <div class="chat-msg received"><div class="msg-bubble">Alumni registration updates needed for this month.</div><div class="msg-meta"><span class="msg-time">10:30 AM</span></div></div>
+                        </div>
+                        <div class="chat-input-area">
+                            <button class="topbar-icon-btn chat-attach-btn" onclick="showToast('Attach file coming soon!','info')"><i class='bx bx-paperclip'></i></button>
+                            <input type="text" placeholder="Type a message..." id="chatInput" autocomplete="off">
+                            <button class="send-btn" id="sendMsgBtn" style="background:#0d9488;"><i class='bx bxs-send'></i></button>
+                        </div>
+                    </div>
+                </div>
             </div>
         </main>
     </div>
@@ -45,8 +67,42 @@
         document.getElementById('logoutBtn')?.addEventListener('click', (e) => { e.preventDefault(); clearUser(); showToast('Logged out','info'); setTimeout(()=>window.location.href='../../index.html',1000); });
         document.getElementById('sidebarName').textContent = user.name;
         document.getElementById('topName').textContent = user.name;
-        
-        
+        const dept = APP_DATA.departments.find(d => d.name === user.department);
+        if(dept) { document.getElementById('sidebarAvatar').src = dept.coordinatorAvatar; document.getElementById('topAvatar').src = dept.coordinatorAvatar; }
+
+        let activeContact = APP_DATA.coordinatorChatContacts[0];
+
+        function renderContacts() {
+            document.getElementById('chatContactList').innerHTML = APP_DATA.coordinatorChatContacts.map((c, i) => `
+                <div class="chat-contact-item ${i===0?'active':''}" data-id="${c.id}" onclick="selectContact(${c.id})">
+                    <div style="position:relative;"><img src="${c.avatar}" style="width:44px;height:44px;border-radius:50%;">${c.online?'<span style="position:absolute;bottom:0;right:0;width:10px;height:10px;border-radius:50%;background:#10b981;border:2px solid var(--bg-card);"></span>':''}</div>
+                    <div style="flex:1;min-width:0;"><h4 style="font-size:14px;font-weight:600;margin-bottom:2px;">${c.name}</h4><p style="font-size:12px;color:var(--text-muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${c.lastMsg}</p></div>
+                    <span style="font-size:11px;color:var(--text-muted);">${c.time}</span>
+                </div>
+            `).join('');
+        }
+        renderContacts();
+
+        window.selectContact = function(id) {
+            activeContact = APP_DATA.coordinatorChatContacts.find(c => c.id === id) || activeContact;
+            document.querySelectorAll('.chat-contact-item').forEach(c => c.classList.toggle('active', parseInt(c.dataset.id) === id));
+            document.getElementById('chatName').textContent = activeContact.name;
+            document.getElementById('activeChatAvatar').src = activeContact.avatar;
+            document.getElementById('chatStatus').textContent = activeContact.online ? 'Online' : 'Offline';
+            document.getElementById('chatStatus').className = 'ch-status ' + (activeContact.online ? 'online' : 'offline');
+            document.getElementById('chatMessages').innerHTML = `<div class="chat-date-divider"><span>Today</span></div>
+                <div class="chat-msg received"><div class="msg-bubble">${activeContact.lastMsg}</div><div class="msg-meta"><span class="msg-time">${activeContact.time}</span></div></div>`;
+        }
+
+        document.getElementById('sendMsgBtn').addEventListener('click', sendMsg);
+        document.getElementById('chatInput').addEventListener('keypress', (e) => { if(e.key==='Enter') sendMsg(); });
+        function sendMsg() {
+            const input = document.getElementById('chatInput');
+            if(!input.value.trim()) return;
+            document.getElementById('chatMessages').innerHTML += `<div class="chat-msg sent"><div class="msg-bubble" style="background:#0d9488;">${input.value}</div><div class="msg-meta"><span class="msg-time">Just now</span></div></div>`;
+            input.value = '';
+            document.getElementById('chatMessages').scrollTop = document.getElementById('chatMessages').scrollHeight;
+        }
     </script>
 </body>
 </html>

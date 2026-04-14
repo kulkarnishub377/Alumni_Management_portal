@@ -7,6 +7,20 @@
     <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
     <link rel="stylesheet" href="../../assets/css/common.css">
     <link rel="stylesheet" href="../../assets/css/dashboard.css">
+    <style>
+        .job-approval-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 24px; margin-bottom: 16px; transition: var(--transition); }
+        .job-approval-card:hover { border-color: #0d9488; }
+        .job-approval-header { display: flex; align-items: center; gap: 16px; margin-bottom: 16px; }
+        .job-approval-header img { width: 48px; height: 48px; border-radius: 50%; }
+        .job-approval-body { margin-bottom: 16px; font-size: 14px; color: var(--text-secondary); line-height: 1.6; }
+        .job-approval-meta { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 16px; }
+        .job-approval-meta span { padding: 4px 10px; border-radius: 20px; font-size: 11px; font-weight: 600; background: var(--bg-body); border: 1px solid var(--border); }
+        .status-badge { padding: 4px 10px; border-radius: 20px; font-size: 11px; font-weight: 700; text-transform: uppercase; }
+        .status-pending { background: rgba(245,158,11,0.1); color: #f59e0b; }
+        .status-forwarded { background: rgba(79,70,229,0.1); color: #4f46e5; }
+        .status-approved { background: rgba(16,185,129,0.1); color: #10b981; }
+        .status-rejected { background: rgba(239,68,68,0.1); color: #ef4444; }
+    </style>
 </head>
 <body>
     <div class="dashboard-layout">
@@ -15,26 +29,36 @@
             <div class="sidebar-user"><div class="sidebar-user-card" style="border-left:3px solid #0d9488;"><img src="https://i.pravatar.cc/150?img=47" id="sidebarAvatar" alt="User"><div class="user-meta"><h4 id="sidebarName">Loading...</h4><span style="color:#0d9488;font-weight:600;">Dept. Coordinator</span></div></div></div>
             <nav class="dash-nav">
                 <span class="nav-section-label">Department</span>
-                <a href="dashboard.html" class="dash-nav-link "><i class='bx bxs-dashboard'></i><span>Overview</span></a>
-                <a href="alumni.html" class="dash-nav-link "><i class='bx bxs-user-detail'></i><span>Alumni</span></a>
-                <a href="mentors.html" class="dash-nav-link "><i class='bx bxs-user-voice'></i><span>Mentors</span></a>
+                <a href="dashboard.html" class="dash-nav-link"><i class='bx bxs-dashboard'></i><span>Overview</span></a>
+                <a href="alumni.html" class="dash-nav-link"><i class='bx bxs-user-detail'></i><span>Alumni</span></a>
+                <a href="mentors.html" class="dash-nav-link"><i class='bx bxs-user-voice'></i><span>Mentors</span></a>
                 <span class="nav-section-label">Actions</span>
                 <a href="jobs.html" class="dash-nav-link active"><i class='bx bxs-briefcase'></i><span>Job Approvals</span></a>
-                <a href="top-alumni.html" class="dash-nav-link "><i class='bx bxs-trophy'></i><span>Suggest Top Alumni</span></a>
-                <a href="events.html" class="dash-nav-link "><i class='bx bxs-calendar-event'></i><span>Events</span></a>
+                <a href="top-alumni.html" class="dash-nav-link"><i class='bx bxs-trophy'></i><span>Suggest Top Alumni</span></a>
+                <a href="events.html" class="dash-nav-link"><i class='bx bxs-calendar-event'></i><span>Events</span></a>
                 <span class="nav-section-label">Communication</span>
-                <a href="chat.html" class="dash-nav-link "><i class='bx bxs-message-dots'></i><span>Messages</span></a>
-                <a href="notifications.html" class="dash-nav-link "><i class='bx bxs-bell-ring'></i><span>Announcements</span></a>
+                <a href="chat.html" class="dash-nav-link"><i class='bx bxs-message-dots'></i><span>Messages</span></a>
+                <a href="notifications.html" class="dash-nav-link"><i class='bx bxs-bell-ring'></i><span>Announcements</span></a>
                 <span class="nav-section-label">Account</span>
-                <a href="settings.html" class="dash-nav-link "><i class='bx bxs-cog'></i><span>Settings</span></a>
+                <a href="settings.html" class="dash-nav-link"><i class='bx bxs-cog'></i><span>Settings</span></a>
             </nav>
             <div class="dash-sidebar-footer"><a href="#" class="dash-nav-link" id="logoutBtn"><i class='bx bx-log-out'></i><span>Logout</span></a></div>
         </aside>
         <main class="dash-main">
             <header class="dash-topbar"><div style="display:flex;align-items:center;gap:16px;"><button class="sidebar-toggle" onclick="document.getElementById('dashSidebar').classList.toggle('open')"><i class='bx bx-menu'></i></button></div><div class="dash-topbar-actions"><div class="topbar-profile"><img src="https://i.pravatar.cc/150?img=47" id="topAvatar" alt="Profile"><span id="topName">User</span><i class='bx bx-chevron-down'></i></div></div></header>
             <div class="dash-view" style="opacity:1;transform:translateY(0);">
-                <div class="page-title-bar"><div><h1>💼 Job Approvals</h1><p>Review job listings from alumni before admin approval.</p></div></div>
-                <div class='dash-section'><div class='dash-section-body'><p style='color:var(--text-muted);'>Job approval features are available on the dashboard overview.</p></div></div>
+                <div class="page-title-bar"><div><h1>💼 Job Board Approvals</h1><p>Review job posts from your department alumni before forwarding to Main Admin.</p></div></div>
+                
+                <div class="dash-stats-row">
+                    <div class="dash-stat-card"><div class="stat-icon amber"><i class='bx bxs-time-five'></i></div><div class="stat-info"><h3 id="statPending">0</h3><p>Needs Your Review</p></div></div>
+                    <div class="dash-stat-card"><div class="stat-icon purple"><i class='bx bxs-send'></i></div><div class="stat-info"><h3 id="statForwarded">0</h3><p>Forwarded to Admin</p></div></div>
+                    <div class="dash-stat-card"><div class="stat-icon green"><i class='bx bxs-check-circle'></i></div><div class="stat-info"><h3 id="statLive">0</h3><p>Live Jobs</p></div></div>
+                </div>
+
+                <div class="dash-section">
+                    <div class="dash-section-header"><h3>Job Approval Queue</h3></div>
+                    <div class="dash-section-body" id="jobsQueue"></div>
+                </div>
             </div>
         </main>
     </div>
@@ -45,8 +69,57 @@
         document.getElementById('logoutBtn')?.addEventListener('click', (e) => { e.preventDefault(); clearUser(); showToast('Logged out','info'); setTimeout(()=>window.location.href='../../index.html',1000); });
         document.getElementById('sidebarName').textContent = user.name;
         document.getElementById('topName').textContent = user.name;
-        
-        
+        const dept = APP_DATA.departments.find(d => d.name === user.department);
+        if(dept) { document.getElementById('sidebarAvatar').src = dept.coordinatorAvatar; document.getElementById('topAvatar').src = dept.coordinatorAvatar; }
+
+        function renderCoordJobs() {
+            const deptJobs = APP_DATA.jobApprovals.filter(j => j.department === user.department);
+            
+            document.getElementById('statPending').textContent = deptJobs.filter(j => j.status === 'pending_coordinator').length;
+            document.getElementById('statForwarded').textContent = deptJobs.filter(j => j.status === 'pending_admin').length;
+            document.getElementById('statLive').textContent = deptJobs.filter(j => j.status === 'approved').length;
+
+            document.getElementById('jobsQueue').innerHTML = deptJobs.length ? deptJobs.map(j => {
+                let badgeClass = 'status-pending'; let badgeText = 'Pending Review';
+                if(j.status === 'pending_admin') { badgeClass = 'status-forwarded'; badgeText = 'Forwarded to Admin'; }
+                else if(j.status === 'approved') { badgeClass = 'status-approved'; badgeText = 'Approved & Live'; }
+                else if(j.status === 'rejected') { badgeClass = 'status-rejected'; badgeText = 'Rejected'; }
+
+                return `
+                <div class="job-approval-card">
+                    <div class="job-approval-header">
+                        <img src="${j.postedByAvatar}" alt="${j.postedBy}">
+                        <div style="flex:1;">
+                            <h3 style="font-size:16px;font-weight:700;">${j.title}</h3>
+                            <p style="font-size:12px;color:var(--text-muted);">${j.company} · Posted by ${j.postedBy} (${j.postedDate})</p>
+                        </div>
+                        <span class="status-badge ${badgeClass}">${badgeText}</span>
+                    </div>
+                    <div class="job-approval-body">${j.description}</div>
+                    <div class="job-approval-meta">
+                        <span><i class='bx bx-map'></i> ${j.location}</span>
+                        <span><i class='bx bx-time-five'></i> ${j.type}</span>
+                        <span><i class='bx bx-briefcase'></i> ${j.experience}</span>
+                    </div>
+                    ${j.status === 'pending_coordinator' ? `
+                    <div style="display:flex;gap:8px;border-top:1px solid var(--border);padding-top:16px;margin-top:16px;">
+                        <button class="btn btn-primary btn-sm" style="background:#0d9488;border-color:#0d9488;" onclick="approveJob(${j.id})"><i class='bx bx-check'></i> Approve & Forward to Admin</button>
+                        <button class="btn btn-secondary btn-sm" style="color:#ef4444;" onclick="rejectJob(${j.id})"><i class='bx bx-x'></i> Reject</button>
+                    </div>` : ''}
+                </div>`;
+            }).join('') : '<p style="text-align:center;color:var(--text-muted);">No jobs found in your department queue.</p>';
+        }
+
+        renderCoordJobs();
+
+        window.approveJob = function(id) {
+            const job = APP_DATA.jobApprovals.find(j => j.id === id);
+            if(job) { job.status = 'pending_admin'; showToast('Job approved and forwarded to Main Admin.', 'success'); renderCoordJobs(); }
+        }
+        window.rejectJob = function(id) {
+            const job = APP_DATA.jobApprovals.find(j => j.id === id);
+            if(job) { job.status = 'rejected'; showToast('Job rejected.', 'error'); renderCoordJobs(); }
+        }
     </script>
 </body>
 </html>
