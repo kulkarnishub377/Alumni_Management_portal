@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Department Alumni | Coordinator Dashboard</title>
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    <link rel="stylesheet" href="../../assets/css/common.css">
+    <link rel="stylesheet" href="../../assets/css/dashboard.css">
+</head>
+<body>
+    <div class="dashboard-layout">
+        <aside class="dash-sidebar" id="dashSidebar">
+            <div class="dash-sidebar-header"><a href="../../index.html" style="display:flex;align-items:center;gap:12px;text-decoration:none;"><div class="logo-icon"><i class='bx bxs-graduation'></i></div><h2>AlumniPortal</h2></a></div>
+            <div class="sidebar-user"><div class="sidebar-user-card" style="border-left:3px solid #0d9488;"><img src="https://i.pravatar.cc/150?img=47" id="coordAvatar" alt="Coordinator"><div class="user-meta"><h4 id="coordName">Loading...</h4><span style="color:#0d9488;font-weight:600;">Dept. Coordinator</span></div></div></div>
+            <nav class="dash-nav">
+                <span class="nav-section-label">Department</span>
+                <a href="dashboard.html" class="dash-nav-link"><i class='bx bxs-dashboard'></i><span>Overview</span></a>
+                <a href="alumni.html" class="dash-nav-link active"><i class='bx bxs-user-detail'></i><span>Alumni</span></a>
+                <a href="mentors.html" class="dash-nav-link"><i class='bx bxs-user-voice'></i><span>Mentors</span></a>
+                <span class="nav-section-label">Actions</span>
+                <a href="jobs.html" class="dash-nav-link"><i class='bx bxs-briefcase'></i><span>Job Approvals</span></a>
+                <a href="top-alumni.html" class="dash-nav-link"><i class='bx bxs-trophy'></i><span>Suggest Top Alumni</span></a>
+                <a href="events.html" class="dash-nav-link"><i class='bx bxs-calendar-event'></i><span>Events</span></a>
+                <span class="nav-section-label">Communication</span>
+                <a href="chat.html" class="dash-nav-link"><i class='bx bxs-message-dots'></i><span>Messages</span></a>
+                <a href="notifications.html" class="dash-nav-link"><i class='bx bxs-bell-ring'></i><span>Announcements</span></a>
+                <span class="nav-section-label">Account</span>
+                <a href="settings.html" class="dash-nav-link"><i class='bx bxs-cog'></i><span>Settings</span></a>
+            </nav>
+            <div class="dash-sidebar-footer"><a href="#" class="dash-nav-link" id="logoutBtn"><i class='bx bx-log-out'></i><span>Logout</span></a></div>
+        </aside>
+        <main class="dash-main">
+            <header class="dash-topbar"><div style="display:flex;align-items:center;gap:16px;"><button class="sidebar-toggle" onclick="document.getElementById('dashSidebar').classList.toggle('open')"><i class='bx bx-menu'></i></button><div class="dash-search"><i class='bx bx-search'></i><input type="text" placeholder="Search alumni..."></div></div><div class="dash-topbar-actions"><button class="topbar-icon-btn"><i class='bx bxs-bell'></i><span class="notif-dot"></span></button><div class="topbar-profile"><img src="https://i.pravatar.cc/150?img=47" id="topAvatar" alt="Profile"><span id="topName">User</span><i class='bx bx-chevron-down'></i></div></div></header>
+            <div class="dash-view" style="opacity:1;transform:translateY(0);">
+                <div class="page-title-bar"><div><h1>🎓 Department Alumni</h1><p>Manage alumni specifically for <span id="pageDeptName" style="font-weight:700;color:var(--primary);"></span>.</p></div>
+                <button class="btn btn-secondary btn-sm" onclick="showToast('Exporting department alumni list...','info')"><i class='bx bx-download'></i> Export List</button></div>
+                <div class="filter-bar" style="margin-bottom:24px;">
+                    <div class="filter-input"><i class='bx bx-search'></i><input type="text" placeholder="Search by name, company..." id="alumniSearch" oninput="filterAlumni()"></div>
+                    <select id="batchFilterAlumni" onchange="filterAlumni()"><option value="">All Batches</option></select>
+                </div>
+                <div class="network-grid" id="alumniGrid"></div>
+            </div>
+        </main>
+    </div>
+    <script src="../../assets/js/data.js"></script>
+    <script src="../../assets/js/common.js"></script>
+    <script>
+        const user = getUser(); if (!user || user.role !== 'coordinator') window.location.href = '../auth/login.html';
+        document.getElementById('logoutBtn')?.addEventListener('click', (e) => { e.preventDefault(); clearUser(); showToast('Logged out','info'); setTimeout(()=>window.location.href='../../index.html',1000); });
+        
+        document.getElementById('coordName').textContent = user.name;
+        document.getElementById('topName').textContent = user.name;
+        document.getElementById('pageDeptName').textContent = user.department;
+        const dept = APP_DATA.departments.find(d => d.name === user.department);
+        if(dept) { document.getElementById('coordAvatar').src = dept.coordinatorAvatar; document.getElementById('topAvatar').src = dept.coordinatorAvatar; }
+
+        const deptAlumni = APP_DATA.topAlumni.filter(a => a.department === user.department);
+        const batches = [...new Set(deptAlumni.map(a => a.batch))].sort((a,b) => b-a);
+        batches.forEach(b => document.getElementById('batchFilterAlumni').innerHTML += `<option value="${b}">${b}</option>`);
+
+        function renderAlumniCards(list) {
+            document.getElementById('alumniGrid').innerHTML = list.length ? list.map(a => `
+                <div class="network-card">
+                    <img src="${a.avatar}" alt="${a.name}" style="width:48px;height:48px;border-radius:50%;">
+                    <div class="nc-info" style="flex:1;">
+                        <h4>${a.name}</h4><p>${a.role} at ${a.company}</p><span class="nc-batch">Batch ${a.batch}</span>
+                    </div>
+                    <button class="topbar-icon-btn" title="Edit details" onclick="showToast('Editing ${a.name}...','info')"><i class='bx bx-edit'></i></button>
+                </div>
+            `).join('') : '<p style="grid-column:1/-1;text-align:center;color:var(--text-muted);padding:20px;">No alumni found matching criteria.</p>';
+        }
+        renderAlumniCards(deptAlumni);
+
+        function filterAlumni() {
+            const search = (document.getElementById('alumniSearch')?.value || '').toLowerCase();
+            const batch = document.getElementById('batchFilterAlumni')?.value || '';
+            const filtered = deptAlumni.filter(a => {
+                const matchSearch = !search || a.name.toLowerCase().includes(search) || a.company.toLowerCase().includes(search);
+                const matchBatch = !batch || a.batch === batch;
+                return matchSearch && matchBatch;
+            });
+            renderAlumniCards(filtered);
+        }
+    </script>
+</body>
+</html>

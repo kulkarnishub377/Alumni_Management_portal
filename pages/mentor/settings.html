@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Settings | Mentor</title>
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    <link rel="stylesheet" href="../../assets/css/common.css">
+    <link rel="stylesheet" href="../../assets/css/dashboard.css">
+</head>
+<body>
+    <div class="dashboard-layout">
+        <aside class="dash-sidebar" id="dashSidebar">
+            <div class="dash-sidebar-header"><a href="../../index.html" style="display:flex;align-items:center;gap:12px;text-decoration:none;"><div class="logo-icon"><i class='bx bxs-graduation'></i></div><h2>AlumniPortal</h2></a></div>
+            <div class="sidebar-user"><div class="sidebar-user-card" style="border-left:3px solid #4f46e5;"><img src="https://ui-avatars.com/api/?name=PM&background=4f46e5&color=fff" id="sidebarAvatar" alt="User"><div class="user-meta"><h4 id="sidebarName">Loading...</h4><span style="color:#4f46e5;font-weight:600;">Batch Mentor</span></div></div></div>
+            <nav class="dash-nav">
+                <span class="nav-section-label">My Batches</span>
+                <a href="dashboard.html" class="dash-nav-link "><i class='bx bxs-dashboard'></i><span>Overview</span></a>
+                <a href="approvals.html" class="dash-nav-link "><i class='bx bxs-user-plus'></i><span>Approvals</span></a>
+                <a href="alumni.html" class="dash-nav-link "><i class='bx bxs-user-detail'></i><span>Batch Alumni</span></a>
+                <span class="nav-section-label">Activity</span>
+                <a href="events.html" class="dash-nav-link "><i class='bx bxs-calendar-event'></i><span>Events</span></a>
+                <a href="chat.html" class="dash-nav-link "><i class='bx bxs-message-dots'></i><span>Messages</span></a>
+                <span class="nav-section-label">Account</span>
+                <a href="settings.html" class="dash-nav-link active"><i class='bx bxs-cog'></i><span>Settings</span></a>
+            </nav>
+            <div class="dash-sidebar-footer"><a href="#" class="dash-nav-link" id="logoutBtn"><i class='bx bx-log-out'></i><span>Logout</span></a></div>
+        </aside>
+        <main class="dash-main">
+            <header class="dash-topbar"><div style="display:flex;align-items:center;gap:16px;"><button class="sidebar-toggle" onclick="document.getElementById('dashSidebar').classList.toggle('open')"><i class='bx bx-menu'></i></button></div><div class="dash-topbar-actions"><div class="topbar-profile"><img src="https://ui-avatars.com/api/?name=PM&background=4f46e5&color=fff" id="topAvatar" alt="Profile"><span id="topName">User</span><i class='bx bx-chevron-down'></i></div></div></header>
+            <div class="dash-view" style="opacity:1;transform:translateY(0);">
+                <div class="page-title-bar"><div><h1>⚙️ Settings</h1><p>Manage settings.</p></div></div>
+                <div class='dash-section'><div class='dash-section-body'><p style='color:var(--text-muted);'>Settings view coming soon.</p></div></div>
+            </div>
+        </main>
+    </div>
+    <script src="../../assets/js/data.js"></script>
+    <script src="../../assets/js/common.js"></script>
+    <script>
+        const user = getUser(); if (!user || user.role !== 'mentor') window.location.href = '../auth/login.html';
+        document.getElementById('logoutBtn')?.addEventListener('click', (e) => { e.preventDefault(); clearUser(); showToast('Logged out','info'); setTimeout(()=>window.location.href='../../index.html',1000); });
+        document.getElementById('sidebarName').textContent = user.name;
+        document.getElementById('topName').textContent = user.name;
+        
+        
+    </script>
+</body>
+</html>
