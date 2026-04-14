@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Settings | Admin Portal</title>
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    <link rel="stylesheet" href="../../assets/css/common.css">
+    <link rel="stylesheet" href="../../assets/css/dashboard.css">
+    <style>
+        .settings-container { display: grid; grid-template-columns: 250px 1fr; gap: 24px; }
+        .settings-nav { background: var(--bg-card); border-radius: var(--radius-lg); border: 1px solid var(--border); padding: 12px; height: fit-content; }
+        .settings-nav-item { display: flex; align-items: center; gap: 12px; padding: 12px 16px; width: 100%; text-align: left; background: none; border: none; font-size: 14px; font-weight: 500; color: var(--text-secondary); border-radius: var(--radius-md); cursor: pointer; transition: var(--transition-fast); }
+        .settings-nav-item:hover { background: rgba(79,70,229,0.05); color: var(--primary); }
+        .settings-nav-item.active { background: rgba(79,70,229,0.1); color: var(--primary); font-weight: 600; }
+        .settings-section { display: none; background: var(--bg-card); border-radius: var(--radius-lg); border: 1px solid var(--border); padding: 24px; animation: fadeIn 0.3s ease; }
+        .settings-section.active { display: block; }
+        .settings-section h2 { font-size: 18px; font-weight: 700; margin-bottom: 24px; padding-bottom: 12px; border-bottom: 1px solid var(--border); }
+        @media(max-width: 768px) { .settings-container { grid-template-columns: 1fr; } }
+    </style>
+</head>
+<body>
+    <div class="dashboard-layout">
+        <aside class="dash-sidebar" id="dashSidebar">
+            <div class="dash-sidebar-header"><a href="../../index.html" style="display:flex;align-items:center;gap:12px;text-decoration:none;"><div class="logo-icon"><i class='bx bxs-graduation'></i></div><h2>AlumniPortal</h2></a></div>
+            <div class="sidebar-user"><div class="sidebar-user-card"><img src="https://ui-avatars.com/api/?name=Admin&background=ef4444&color=fff" alt="Admin"><div class="user-meta"><h4>Principal Admin</h4><span>Super Administrator</span></div></div></div>
+            <nav class="dash-nav">
+                <span class="nav-section-label">Overview</span><a href="dashboard.html" class="dash-nav-link"><i class='bx bxs-dashboard'></i><span>Dashboard</span></a><a href="departments.html" class="dash-nav-link"><i class='bx bxs-building-house'></i><span>Departments</span></a>
+                <span class="nav-section-label">Management</span><a href="users.html" class="dash-nav-link"><i class='bx bxs-group'></i><span>All Users</span></a><a href="mentors.html" class="dash-nav-link"><i class='bx bxs-user-voice'></i><span>Mentors</span></a><a href="alumni.html" class="dash-nav-link"><i class='bx bxs-user-detail'></i><span>Alumni</span></a><a href="top-alumni.html" class="dash-nav-link"><i class='bx bxs-trophy'></i><span>Top Alumni</span></a>
+                <span class="nav-section-label">Content</span><a href="events.html" class="dash-nav-link"><i class='bx bxs-calendar-event'></i><span>Events</span></a><a href="jobs.html" class="dash-nav-link"><i class='bx bxs-briefcase'></i><span>Job Board</span></a>
+                <span class="nav-section-label">Communication</span><a href="chat.html" class="dash-nav-link"><i class='bx bxs-message-dots'></i><span>Messages</span></a><a href="notifications.html" class="dash-nav-link"><i class='bx bxs-bell-ring'></i><span>Notifications</span></a>
+                <span class="nav-section-label">System</span><a href="settings.html" class="dash-nav-link active"><i class='bx bxs-cog'></i><span>Settings</span></a>
+            </nav>
+            <div class="dash-sidebar-footer"><a href="#" class="dash-nav-link" id="logoutBtn"><i class='bx bx-log-out'></i><span>Logout</span></a></div>
+        </aside>
+        <main class="dash-main">
+            <header class="dash-topbar"><div style="display:flex;align-items:center;gap:16px;"><button class="sidebar-toggle" onclick="document.getElementById('dashSidebar').classList.toggle('open')"><i class='bx bx-menu'></i></button></div><div class="dash-topbar-actions"><div class="topbar-profile"><img src="https://ui-avatars.com/api/?name=Admin&background=ef4444&color=fff" alt="Admin"><span>Admin</span><i class='bx bx-chevron-down'></i></div></div></header>
+            <div class="dash-view" style="opacity:1;transform:translateY(0);">
+                <div class="page-title-bar"><div><h1>⚙️ System Settings</h1><p>Manage platform configuration, permissions, and security.</p></div>
+                    <button class="btn btn-primary btn-sm" onclick="showToast('Settings saved','success')"><i class='bx bx-save'></i> Save Changes</button></div>
+                <div class="settings-container">
+                    <div class="settings-nav">
+                        <button class="settings-nav-item active" onclick="switchSetting('general',this)"><i class='bx bx-slider'></i> General</button>
+                        <button class="settings-nav-item" onclick="switchSetting('security',this)"><i class='bx bx-shield-quarter'></i> Security</button>
+                        <button class="settings-nav-item" onclick="switchSetting('modules',this)"><i class='bx bx-layer'></i> Modules</button>
+                    </div>
+                    <div class="settings-content">
+                        <!-- General -->
+                        <div id="general" class="settings-section active">
+                            <h2>General Configuration</h2>
+                            <div class="edit-form-group" style="margin-bottom:16px;"><label>Portal Name</label><input type="text" value="Alumni Management Portal" style="padding:10px 14px;border:1px solid var(--border);border-radius:var(--radius-md);width:100%;"></div>
+                            <div class="edit-form-group" style="margin-bottom:16px;"><label>Institution Name</label><input type="text" value="Dr. V. V. Patil College of Engineering" style="padding:10px 14px;border:1px solid var(--border);border-radius:var(--radius-md);width:100%;"></div>
+                            <div class="edit-form-group" style="margin-bottom:16px;"><label>Support Email</label><input type="email" value="support@dvvpcoe.edu.in" style="padding:10px 14px;border:1px solid var(--border);border-radius:var(--radius-md);width:100%;"></div>
+                        </div>
+                        <!-- Security -->
+                        <div id="security" class="settings-section">
+                            <h2>Security & Permissions</h2>
+                            <div style="display:flex;align-items:center;justify-content:space-between;padding:12px 0;border-bottom:1px solid var(--border);">
+                                <div><h5 style="margin-bottom:4px;">Auto-approve Alumni</h5><p style="font-size:12px;color:var(--text-muted);">Bypass mentor approval for new registrations</p></div>
+                                <label class="toggle-switch"><input type="checkbox"><span class="toggle-slider"></span></label>
+                            </div>
+                            <div style="display:flex;align-items:center;justify-content:space-between;padding:12px 0;border-bottom:1px solid var(--border);">
+                                <div><h5 style="margin-bottom:4px;">Open Job Approvals</h5><p style="font-size:12px;color:var(--text-muted);">Allow jobs to be posted without admin approval</p></div>
+                                <label class="toggle-switch"><input type="checkbox"><span class="toggle-slider"></span></label>
+                            </div>
+                            <div style="margin-top:24px;">
+                                <h4>Change Admin Password</h4>
+                                <input type="password" placeholder="Current Password" style="padding:10px;border:1px solid var(--border);border-radius:var(--radius-md);width:100%;margin-top:12px;margin-bottom:12px;">
+                                <input type="password" placeholder="New Password" style="padding:10px;border:1px solid var(--border);border-radius:var(--radius-md);width:100%;margin-bottom:12px;">
+                                <button class="btn btn-secondary btn-sm" onclick="showToast('Password updated','success')">Update Password</button>
+                            </div>
+                        </div>
+                        <!-- Modules -->
+                        <div id="modules" class="settings-section">
+                            <h2>Platform Modules</h2>
+                            <div style="display:flex;align-items:center;justify-content:space-between;padding:12px 0;border-bottom:1px solid var(--border);">
+                                <div><h5 style="margin-bottom:4px;">Job Board</h5><p style="font-size:12px;color:var(--text-muted);">Enable/disable job board globally</p></div>
+                                <label class="toggle-switch"><input type="checkbox" checked><span class="toggle-slider"></span></label>
+                            </div>
+                            <div style="display:flex;align-items:center;justify-content:space-between;padding:12px 0;border-bottom:1px solid var(--border);">
+                                <div><h5 style="margin-bottom:4px;">Chat System</h5><p style="font-size:12px;color:var(--text-muted);">Enable real-time messaging</p></div>
+                                <label class="toggle-switch"><input type="checkbox" checked><span class="toggle-slider"></span></label>
+                            </div>
+                            <div style="display:flex;align-items:center;justify-content:space-between;padding:12px 0;">
+                                <div><h5 style="margin-bottom:4px;">Top Alumni Section</h5><p style="font-size:12px;color:var(--text-muted);">Display featured alumni on homepage</p></div>
+                                <label class="toggle-switch"><input type="checkbox" checked><span class="toggle-slider"></span></label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+    <script src="../../assets/js/data.js"></script>
+    <script src="../../assets/js/common.js"></script>
+    <script>
+        const user = getUser(); if (!user || !user.loggedIn || user.role !== 'admin') window.location.href = '../auth/login.html';
+        document.getElementById('logoutBtn')?.addEventListener('click', (e) => { e.preventDefault(); clearUser(); showToast('Logged out','info'); setTimeout(()=>window.location.href='../../index.html',1000); });
+        
+        function switchSetting(id, btn) {
+            document.querySelectorAll('.settings-nav-item').forEach(b => b.classList.remove('active'));
+            document.querySelectorAll('.settings-section').forEach(s => s.classList.remove('active'));
+            btn.classList.add('active');
+            document.getElementById(id).classList.add('active');
+        }
+    </script>
+</body>
+</html>
