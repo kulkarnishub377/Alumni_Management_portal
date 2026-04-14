@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Events | Admin Portal</title>
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    <link rel="stylesheet" href="../../assets/css/common.css">
+    <link rel="stylesheet" href="../../assets/css/dashboard.css">
+</head>
+<body>
+    <div class="dashboard-layout">
+        <aside class="dash-sidebar" id="dashSidebar">
+            <div class="dash-sidebar-header"><a href="../../index.html" style="display:flex;align-items:center;gap:12px;text-decoration:none;"><div class="logo-icon"><i class='bx bxs-graduation'></i></div><h2>AlumniPortal</h2></a></div>
+            <div class="sidebar-user"><div class="sidebar-user-card"><img src="https://ui-avatars.com/api/?name=Admin&background=ef4444&color=fff" alt="Admin"><div class="user-meta"><h4>Principal Admin</h4><span>Super Administrator</span></div></div></div>
+            <nav class="dash-nav">
+                <span class="nav-section-label">Overview</span><a href="dashboard.html" class="dash-nav-link"><i class='bx bxs-dashboard'></i><span>Dashboard</span></a><a href="departments.html" class="dash-nav-link"><i class='bx bxs-building-house'></i><span>Departments</span></a>
+                <span class="nav-section-label">Management</span><a href="users.html" class="dash-nav-link"><i class='bx bxs-group'></i><span>All Users</span></a><a href="mentors.html" class="dash-nav-link"><i class='bx bxs-user-voice'></i><span>Mentors</span></a><a href="alumni.html" class="dash-nav-link"><i class='bx bxs-user-detail'></i><span>Alumni</span></a><a href="top-alumni.html" class="dash-nav-link"><i class='bx bxs-trophy'></i><span>Top Alumni</span></a>
+                <span class="nav-section-label">Content</span><a href="events.html" class="dash-nav-link active"><i class='bx bxs-calendar-event'></i><span>Events</span></a><a href="jobs.html" class="dash-nav-link"><i class='bx bxs-briefcase'></i><span>Job Board</span></a>
+                <span class="nav-section-label">Communication</span><a href="chat.html" class="dash-nav-link"><i class='bx bxs-message-dots'></i><span>Messages</span></a><a href="notifications.html" class="dash-nav-link"><i class='bx bxs-bell-ring'></i><span>Notifications</span></a>
+                <span class="nav-section-label">System</span><a href="settings.html" class="dash-nav-link"><i class='bx bxs-cog'></i><span>Settings</span></a>
+            </nav>
+            <div class="dash-sidebar-footer"><a href="#" class="dash-nav-link" id="logoutBtn"><i class='bx bx-log-out'></i><span>Logout</span></a></div>
+        </aside>
+        <main class="dash-main">
+            <header class="dash-topbar"><div style="display:flex;align-items:center;gap:16px;"><button class="sidebar-toggle" onclick="document.getElementById('dashSidebar').classList.toggle('open')"><i class='bx bx-menu'></i></button><div class="dash-search"><i class='bx bx-search'></i><input type="text" placeholder="Search events..."></div></div><div class="dash-topbar-actions"><button class="topbar-icon-btn" onclick="window.location.href='notifications.html'"><i class='bx bxs-bell'></i><span class="notif-dot"></span></button><div class="topbar-profile"><img src="https://ui-avatars.com/api/?name=Admin&background=ef4444&color=fff" alt="Admin"><span>Admin</span><i class='bx bx-chevron-down'></i></div></div></header>
+            <div class="dash-view" style="opacity:1;transform:translateY(0);">
+                <div class="page-title-bar"><div><h1>📅 Event Management</h1><p>Create, approve, and manage global and department events.</p></div>
+                    <button class="btn btn-primary btn-sm" onclick="showToast('Create Event form coming soon!','info')"><i class='bx bx-plus'></i> Create Event</button></div>
+                <div class="dash-stats-row">
+                    <div class="dash-stat-card"><div class="stat-icon purple"><i class='bx bxs-calendar'></i></div><div class="stat-info"><h3>3</h3><p>Total Events</p></div></div>
+                    <div class="dash-stat-card"><div class="stat-icon green"><i class='bx bxs-calendar-check'></i></div><div class="stat-info"><h3>2</h3><p>Upcoming</p></div></div>
+                    <div class="dash-stat-card"><div class="stat-icon blue"><i class='bx bxs-user-detail'></i></div><div class="stat-info"><h3>275</h3><p>Total RSVPs</p></div></div>
+                </div>
+                <div id="eventsContainer"></div>
+            </div>
+        </main>
+    </div>
+    <script src="../../assets/js/data.js"></script>
+    <script src="../../assets/js/common.js"></script>
+    <script>
+        const user = getUser(); if (!user || !user.loggedIn || user.role !== 'admin') window.location.href = '../auth/login.html';
+        document.getElementById('logoutBtn')?.addEventListener('click', (e) => { e.preventDefault(); clearUser(); showToast('Logged out','info'); setTimeout(()=>window.location.href='../../index.html',1000); });
+        const months = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+        document.getElementById('eventsContainer').innerHTML = APP_DATA.events.map(ev => {
+            const d = new Date(ev.date); const day = d.getDate().toString().padStart(2,'0'); const month = months[d.getMonth()];
+            return `<div class="dash-section" style="margin-bottom:16px;">
+                <div class="dash-section-body" style="display:flex;align-items:center;gap:20px;flex-wrap:wrap;">
+                    <div style="min-width:65px;text-align:center;background:rgba(79,70,229,0.1);color:#4f46e5;border-radius:12px;padding:10px;"><div style="font-size:11px;font-weight:700;text-transform:uppercase;">${month}</div><div style="font-size:24px;font-weight:800;line-height:1;">${day}</div></div>
+                    <div style="flex:1;min-width:200px;"><h4 style="font-size:16px;font-weight:700;margin-bottom:4px;">${ev.title}</h4><p style="font-size:13px;color:var(--text-muted);margin-bottom:4px;"><i class='bx bx-map'></i> ${ev.location} · <i class='bx bx-time-five'></i> ${ev.time}</p><p style="font-size:13px;color:var(--text-secondary);">${ev.description}</p></div>
+                    <div style="display:flex;gap:8px;flex-wrap:wrap;">
+                        <button class="btn btn-secondary btn-sm" onclick="showToast('Editing event...','info')"><i class='bx bx-edit'></i> Edit</button>
+                        <button class="btn btn-secondary btn-sm" style="color:#ef4444;" onclick="showToast('Event deleted','error')"><i class='bx bx-trash'></i> Delete</button>
+                    </div>
+                </div>
+            </div>`;
+        }).join('');
+    </script>
+</body>
+</html>
