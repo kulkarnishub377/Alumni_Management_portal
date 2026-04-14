@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Notifications | Admin Portal</title>
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    <link rel="stylesheet" href="../../assets/css/common.css">
+    <link rel="stylesheet" href="../../assets/css/dashboard.css">
+</head>
+<body>
+    <div class="dashboard-layout">
+        <aside class="dash-sidebar" id="dashSidebar">
+            <div class="dash-sidebar-header"><a href="../../index.html" style="display:flex;align-items:center;gap:12px;text-decoration:none;"><div class="logo-icon"><i class='bx bxs-graduation'></i></div><h2>AlumniPortal</h2></a></div>
+            <div class="sidebar-user"><div class="sidebar-user-card"><img src="https://ui-avatars.com/api/?name=Admin&background=ef4444&color=fff" alt="Admin"><div class="user-meta"><h4>Principal Admin</h4><span>Super Administrator</span></div></div></div>
+            <nav class="dash-nav">
+                <span class="nav-section-label">Overview</span><a href="dashboard.html" class="dash-nav-link"><i class='bx bxs-dashboard'></i><span>Dashboard</span></a><a href="departments.html" class="dash-nav-link"><i class='bx bxs-building-house'></i><span>Departments</span></a>
+                <span class="nav-section-label">Management</span><a href="users.html" class="dash-nav-link"><i class='bx bxs-group'></i><span>All Users</span></a><a href="mentors.html" class="dash-nav-link"><i class='bx bxs-user-voice'></i><span>Mentors</span></a><a href="alumni.html" class="dash-nav-link"><i class='bx bxs-user-detail'></i><span>Alumni</span></a><a href="top-alumni.html" class="dash-nav-link"><i class='bx bxs-trophy'></i><span>Top Alumni</span></a>
+                <span class="nav-section-label">Content</span><a href="events.html" class="dash-nav-link"><i class='bx bxs-calendar-event'></i><span>Events</span></a><a href="jobs.html" class="dash-nav-link"><i class='bx bxs-briefcase'></i><span>Job Board</span></a>
+                <span class="nav-section-label">Communication</span><a href="chat.html" class="dash-nav-link"><i class='bx bxs-message-dots'></i><span>Messages</span></a><a href="notifications.html" class="dash-nav-link active"><i class='bx bxs-bell-ring'></i><span>Notifications</span></a>
+                <span class="nav-section-label">System</span><a href="settings.html" class="dash-nav-link"><i class='bx bxs-cog'></i><span>Settings</span></a>
+            </nav>
+            <div class="dash-sidebar-footer"><a href="#" class="dash-nav-link" id="logoutBtn"><i class='bx bx-log-out'></i><span>Logout</span></a></div>
+        </aside>
+        <main class="dash-main">
+            <header class="dash-topbar"><div style="display:flex;align-items:center;gap:16px;"><button class="sidebar-toggle" onclick="document.getElementById('dashSidebar').classList.toggle('open')"><i class='bx bx-menu'></i></button><div class="dash-search"><i class='bx bx-search'></i><input type="text" placeholder="Search..."></div></div><div class="dash-topbar-actions"><div class="topbar-profile"><img src="https://ui-avatars.com/api/?name=Admin&background=ef4444&color=fff" alt="Admin"><span>Admin</span><i class='bx bx-chevron-down'></i></div></div></header>
+            <div class="dash-view" style="opacity:1;transform:translateY(0);">
+                <div class="page-title-bar"><div><h1>📢 Notifications & Announcements</h1><p>Send global announcements and manage notifications.</p></div>
+                    <button class="btn btn-primary btn-sm" id="sendAnnouncementBtn"><i class='bx bx-megaphone'></i> Send Announcement</button></div>
+                <!-- Compose Section -->
+                <div class="dash-section" style="margin-bottom:24px;">
+                    <div class="dash-section-header"><h3>✍️ Compose Announcement</h3></div>
+                    <div class="dash-section-body">
+                        <div class="edit-form-group" style="margin-bottom:16px;"><label>Title</label><input type="text" id="annTitle" placeholder="Announcement title..." style="padding:10px 14px;border:1px solid var(--border);border-radius:var(--radius-md);background:var(--bg-body);font-size:14px;width:100%;"></div>
+                        <div class="edit-form-group" style="margin-bottom:16px;"><label>Message</label><textarea id="annMessage" rows="4" placeholder="Write your announcement..." style="padding:10px 14px;border:1px solid var(--border);border-radius:var(--radius-md);background:var(--bg-body);font-size:14px;width:100%;resize:vertical;font-family:inherit;"></textarea></div>
+                        <div style="display:flex;gap:12px;align-items:center;flex-wrap:wrap;">
+                            <select style="padding:10px 14px;border:1px solid var(--border);border-radius:var(--radius-md);font-size:14px;background:var(--bg-body);">
+                                <option>All Users</option><option>All Alumni</option><option>All Mentors</option><option>All Coordinators</option><option>Computer Engineering</option><option>Information Technology</option>
+                            </select>
+                            <button class="btn btn-primary btn-sm" onclick="sendAnnouncement()"><i class='bx bx-send'></i> Send Now</button>
+                            <button class="btn btn-secondary btn-sm" onclick="showToast('Email sent to all users','success')"><i class='bx bx-envelope'></i> Email All</button>
+                        </div>
+                    </div>
+                </div>
+                <!-- Recent Notifications -->
+                <div class="dash-section">
+                    <div class="dash-section-header"><h3>🔔 System Notifications</h3><button class="btn btn-ghost btn-sm" onclick="document.querySelectorAll('.notif-item').forEach(i=>i.classList.add('read')); showToast('All marked read','success')">Mark All Read</button></div>
+                    <div class="dash-section-body" style="padding:0;">
+                        <div class="notif-list" id="notifList"></div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+    <script src="../../assets/js/data.js"></script>
+    <script src="../../assets/js/common.js"></script>
+    <script>
+        const user = getUser(); if (!user || !user.loggedIn || user.role !== 'admin') window.location.href = '../auth/login.html';
+        document.getElementById('logoutBtn')?.addEventListener('click', (e) => { e.preventDefault(); clearUser(); showToast('Logged out','info'); setTimeout(()=>window.location.href='../../index.html',1000); });
+
+        const colorMap = { green: '#dcfce7;color:#16a34a', blue: '#e0f2fe;color:#0ea5e9', purple: '#eef2ff;color:#4f46e5', amber: '#fef3c7;color:#d97706', red: '#fff1f2;color:#f43f5e' };
+        document.getElementById('notifList').innerHTML = APP_DATA.systemLogs.map((l, i) => `
+            <div class="notif-item" id="notif-${i}">
+                <div class="notif-unread-dot"></div>
+                <div class="notif-icon" style="width:40px;height:40px;min-width:40px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px;background:${(colorMap[l.color]||colorMap.blue).split(';')[0]};${(colorMap[l.color]||colorMap.blue).split(';')[1]}"><i class='bx ${l.icon}'></i></div>
+                <div class="notif-content"><h4>${l.action}</h4><p>${l.user} · ${l.role}</p><span class="notif-time"><i class='bx bx-time-five'></i> ${l.time}</span></div>
+                <button class="notif-dismiss" onclick="document.getElementById('notif-${i}').style.display='none'" title="Dismiss"><i class='bx bx-x'></i></button>
+            </div>`).join('');
+
+        function sendAnnouncement() {
+            const title = document.getElementById('annTitle').value.trim();
+            const msg = document.getElementById('annMessage').value.trim();
+            if (!title || !msg) { showToast('Please fill in title and message','error'); return; }
+            showToast(`Announcement "${title}" sent to all users!`,'success');
+            document.getElementById('annTitle').value = '';
+            document.getElementById('annMessage').value = '';
+        }
+    </script>
+</body>
+</html>
