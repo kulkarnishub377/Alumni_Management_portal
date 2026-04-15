@@ -528,3 +528,19 @@
         transform: translateY(0) scale(1);
     }
 }
+
+.ai-resume-parser {
+    border: 2px dashed var(--border);
+    border-radius: var(--radius-lg);
+    padding: 30px 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 24px;
+    transition: all 0.3s ease;
+}
+.ai-resume-parser.success {
+    border-color: #10b981;
+    background: rgba(16, 185, 129, 0.05);
+}

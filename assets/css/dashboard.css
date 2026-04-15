@@ -2357,3 +2357,197 @@
         gap: 12px;
     }
 }
+
+/* ============================================
+   COORDINATOR PORTAL HERO & COMPONENTS
+   ============================================ */
+.coord-hero {
+    background: linear-gradient(135deg, #0d9488 0%, #0f766e 100%);
+    color: white;
+    padding: 32px;
+    border-radius: var(--radius-lg);
+    margin-bottom: 24px;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 10px 25px -5px rgba(13, 148, 136, 0.4);
+}
+.coord-hero::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 300px;
+    height: 100%;
+    background: url('https://www.transparenttextures.com/patterns/cubes.png');
+    opacity: 0.1;
+}
+.dept-title {
+    display: inline-block;
+    padding: 6px 14px;
+    background: rgba(255,255,255,0.15);
+    border-radius: 30px;
+    font-size: 13px;
+    font-weight: 700;
+    margin-bottom: 16px;
+    color: #fff;
+    border: 1px solid rgba(255,255,255,0.2);
+    backdrop-filter: blur(4px);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+.coord-quickaction {
+    background: rgba(255,255,255,0.15);
+    border: 1px solid rgba(255,255,255,0.2);
+    padding: 10px 20px;
+    border-radius: 8px;
+    color: white;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+}
+.coord-quickaction:hover {
+    background: rgba(255,255,255,0.25);
+    transform: translateY(-2px);
+}
+
+/* ============================================
+   MENTOR PORTAL HERO & COMPONENTS
+   ============================================ */
+.mentor-hero {
+    background: linear-gradient(135deg, #4f46e5 0%, #3730a3 100%);
+    color: white;
+    padding: 32px;
+    border-radius: var(--radius-lg);
+    margin-bottom: 24px;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 10px 25px -5px rgba(79, 70, 229, 0.4);
+}
+.mentor-hero::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 300px;
+    height: 100%;
+    background: url('https://www.transparenttextures.com/patterns/cubes.png');
+    opacity: 0.1;
+}
+
+/* ============================================
+   SHARED HERO STAT BLOCKS (Coordinator + Mentor)
+   ============================================ */
+.hero-stats {
+    display: flex;
+    gap: 24px;
+    margin-top: 24px;
+}
+.h-stat {
+    background: rgba(255,255,255,0.1);
+    padding: 16px 24px;
+    border-radius: var(--radius-md);
+    border: 1px solid rgba(255,255,255,0.2);
+    backdrop-filter: blur(4px);
+    flex: 1;
+}
+.h-stat h3 {
+    font-size: 28px;
+    font-weight: 800;
+    margin-bottom: 4px;
+}
+.h-stat p {
+    font-size: 13px;
+    opacity: 0.9;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    font-weight: 600;
+}
+
+/* ============================================
+   QUICK ACTION GRID (Mentor Dashboard)
+   ============================================ */
+.quick-action-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
+    margin-bottom: 24px;
+}
+.qa-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    padding: 20px;
+    text-align: center;
+    text-decoration: none;
+    color: var(--text-primary);
+    transition: all 0.3s;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+}
+.qa-card:hover {
+    transform: translateY(-3px);
+    border-color: #4f46e5;
+    box-shadow: var(--shadow-md);
+    color: #4f46e5;
+}
+.qa-icon {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
+}
+
+/* ============================================
+   APPROVAL ROW (Mentor Pending Queue)
+   ============================================ */
+.app-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 16px;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    margin-bottom: 12px;
+    background: var(--bg-card);
+    transition: all 0.3s;
+}
+.app-row:hover {
+    border-color: #4f46e5;
+    box-shadow: var(--shadow-sm);
+}
+.app-meta {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+.app-meta img {
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+/* Responsive overrides for portal heroes */
+@media (max-width: 768px) {
+    .hero-stats {
+        flex-direction: column;
+        gap: 12px;
+    }
+    .quick-action-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+@media (max-width: 480px) {
+    .quick-action-grid {
+        grid-template-columns: 1fr;
+    }
+}

@@ -394,5 +394,22 @@ const APP_DATA = {
         { id: 301, name: "Amit Kulkarni", role: "VP Engineering", company: "Flipkart", batch: "2012", department: "Computer Engineering", avatar: "https://i.pravatar.cc/150?img=14", suggestedBy: "Dr. Anjali Mehta", reason: "Led the engineering team that scaled Flipkart's payment gateway.", status: "pending" },
         { id: 302, name: "Deepa Joshi", role: "Chief Data Officer", company: "Reliance Jio", batch: "2010", department: "Information Technology", avatar: "https://i.pravatar.cc/150?img=25", suggestedBy: "Dr. Rajesh Patil", reason: "Pioneered data-driven telecom strategies impacting 400M+ users.", status: "pending" },
         { id: 303, name: "Rajendra Patil", role: "Founder & CTO", company: "BuildStack", batch: "2014", department: "Civil Engineering", avatar: "https://i.pravatar.cc/150?img=16", suggestedBy: "Dr. Priya Kulkarni", reason: "Founded a construction-tech startup valued at $50M.", status: "approved" }
+    ],
+
+    // Gallery Categories & Items
+    galleryCategories: ["All", "Campus", "Events", "Reunion", "Sports", "Cultural"],
+    galleryItems: [
+        { id: 1, category: "Campus", color: "#4f46e5", title: "Main Building Aerial View" },
+        { id: 2, category: "Campus", color: "#3b82f6", title: "Library & Knowledge Center" },
+        { id: 3, category: "Events", color: "#8b5cf6", title: "Tech Fest 2025 Opening" },
+        { id: 4, category: "Events", color: "#06b6d4", title: "Placement Drive Ceremony" },
+        { id: 5, category: "Reunion", color: "#10b981", title: "Batch 2015 Reunion" },
+        { id: 6, category: "Reunion", color: "#14b8a6", title: "Golden Jubilee Celebrations" },
+        { id: 7, category: "Sports", color: "#f59e0b", title: "Annual Sports Day" },
+        { id: 8, category: "Sports", color: "#ef4444", title: "Inter-College Cricket Final" },
+        { id: 9, category: "Cultural", color: "#ec4899", title: "Harmony Night 2025" },
+        { id: 10, category: "Cultural", color: "#d946ef", title: "Dance Competition Finals" },
+        { id: 11, category: "Campus", color: "#0ea5e9", title: "New Innovation Lab" },
+        { id: 12, category: "Events", color: "#7c3aed", title: "Convocation Day 2025" }
     ]
 };
