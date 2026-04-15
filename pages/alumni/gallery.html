@@ -1,19 +1,103 @@
-<!DOCTYPE html>
+ï»¿<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Gallery | Alumni Management Portal</title>
-    <meta name="description" content="Alumni Dashboard - Manage your profile, network with alumni, chat with batchmates, and explore opportunities.">
+    <meta name="description" content="Browse photos from campus events, reunions, sports, and cultural highlights.">
     <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
     <link rel="stylesheet" href="../../assets/css/common.css">
     <link rel="stylesheet" href="../../assets/css/dashboard.css">
+    <style>
+        .gal-container { padding: 10px 0 40px; max-width: 1400px; margin: 0 auto; animation: galFadeIn 0.4s ease; }
+        .gal-hero {
+            background: linear-gradient(135deg, #7c3aed 0%, #4f46e5 50%, #06b6d4 100%);
+            border-radius: 20px; padding: 35px 40px; color: #fff; position: relative; overflow: hidden;
+            box-shadow: 0 10px 30px rgba(79,70,229,0.25); margin-bottom: 28px;
+        }
+        .gal-hero h1 { font-size: 28px; font-weight: 800; margin-bottom: 8px; position: relative; z-index: 2; }
+        .gal-hero p { font-size: 15px; opacity: 0.9; max-width: 500px; line-height: 1.5; position: relative; z-index: 2; }
+        .gal-filters { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 28px; }
+        .gal-filter-btn {
+            padding: 9px 20px; border-radius: 30px; border: 1.5px solid var(--border);
+            background: var(--bg-card); color: var(--text-secondary); font-size: 13px; font-weight: 600;
+            cursor: pointer; transition: all 0.25s;
+        }
+        .gal-filter-btn:hover { border-color: #4f46e5; color: #4f46e5; }
+        .gal-filter-btn.active {
+            background: #4f46e5; color: #fff; border-color: #4f46e5;
+            box-shadow: 0 4px 12px rgba(79,70,229,0.3);
+        }
+        .gal-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 18px; }
+        .gal-card {
+            aspect-ratio: 1; border-radius: 18px; position: relative; overflow: hidden;
+            cursor: pointer; transition: all 0.35s cubic-bezier(0.16,1,0.3,1);
+            display: flex; align-items: center; justify-content: center;
+            box-shadow: 0 6px 20px rgba(0,0,0,0.08);
+        }
+        .gal-card:hover { transform: translateY(-6px) scale(1.02); box-shadow: 0 16px 40px rgba(0,0,0,0.18); }
+        .gal-card i.placeholder-icon { font-size: 56px; color: rgba(255,255,255,0.4); z-index: 1; }
+        .gal-card-overlay {
+            position: absolute; inset: 0;
+            background: linear-gradient(to top, rgba(0,0,0,0.7) 0%, transparent 60%);
+            display: flex; flex-direction: column; justify-content: flex-end; padding: 18px;
+            opacity: 0; transition: opacity 0.3s;
+        }
+        .gal-card:hover .gal-card-overlay { opacity: 1; }
+        .gal-card-overlay h4 { color: #fff; font-size: 15px; font-weight: 700; margin-bottom: 4px; }
+        .gal-card-overlay span { color: rgba(255,255,255,0.7); font-size: 12px; font-weight: 600; display: flex; align-items: center; gap: 4px; }
+        .lightbox-overlay {
+            position: fixed; inset: 0; background: rgba(0,0,0,0.92); backdrop-filter: blur(10px);
+            z-index: 2000; display: none; align-items: center; justify-content: center;
+            opacity: 0; transition: opacity 0.35s;
+        }
+        .lightbox-overlay.active { display: flex; opacity: 1; }
+        .lightbox-content {
+            width: 90%; max-width: 850px; height: 70vh; border-radius: 24px;
+            position: relative; overflow: hidden;
+            box-shadow: 0 30px 80px rgba(0,0,0,0.6);
+            display: flex; align-items: center; justify-content: center;
+            animation: lightboxIn 0.4s cubic-bezier(0.16,1,0.3,1);
+        }
+        @keyframes lightboxIn { from { transform: scale(0.9); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+        .lightbox-content i.lb-icon { font-size: 120px; color: rgba(255,255,255,0.3); }
+        .lightbox-info {
+            position: absolute; bottom: 0; left: 0; right: 0; padding: 30px 35px;
+            background: linear-gradient(to top, rgba(0,0,0,0.9) 0%, transparent 100%); color: #fff;
+        }
+        .lightbox-info h3 { font-size: 26px; font-weight: 800; text-shadow: 0 2px 8px rgba(0,0,0,0.5); margin-bottom: 6px; }
+        .lightbox-info p { font-size: 14px; opacity: 0.7; font-weight: 500; }
+        .lightbox-close {
+            position: absolute; top: 20px; right: 20px; z-index: 10;
+            background: rgba(255,255,255,0.12); backdrop-filter: blur(6px);
+            border: 1px solid rgba(255,255,255,0.2); color: #fff;
+            width: 44px; height: 44px; border-radius: 50%; font-size: 24px;
+            cursor: pointer; display: flex; align-items: center; justify-content: center;
+            transition: all 0.2s;
+        }
+        .lightbox-close:hover { background: rgba(255,255,255,0.25); transform: scale(1.1); }
+        .lightbox-nav {
+            position: absolute; top: 50%; transform: translateY(-50%); z-index: 10;
+            background: rgba(255,255,255,0.1); backdrop-filter: blur(6px);
+            border: 1px solid rgba(255,255,255,0.15); color: #fff;
+            width: 48px; height: 48px; border-radius: 50%; font-size: 22px;
+            cursor: pointer; display: flex; align-items: center; justify-content: center;
+            transition: all 0.2s;
+        }
+        .lightbox-nav:hover { background: rgba(255,255,255,0.25); }
+        .lightbox-prev { left: 20px; }
+        .lightbox-next { right: 20px; }
+        @media (max-width: 768px) {
+            .gal-grid { grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 12px; }
+            .lightbox-content { width: 95%; height: 55vh; }
+            .lightbox-nav { width: 36px; height: 36px; font-size: 18px; }
+            .gal-hero { padding: 25px 20px; }
+        }
+        @keyframes galFadeIn { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
+    </style>
 </head>
 <body>
-
     <div class="dashboard-layout">
-
-        <!-- ========== SIDEBAR ========== -->
         <aside class="dash-sidebar" id="dashSidebar">
             <div class="dash-sidebar-header">
                 <a href="../../index.html" style="display:flex;align-items:center;gap:12px;text-decoration:none;">
@@ -21,117 +105,172 @@
                     <h2>AlumniPortal</h2>
                 </a>
             </div>
-
             <div class="sidebar-user">
                 <div class="sidebar-user-card">
                     <img src="https://i.pravatar.cc/150?img=3" alt="User Avatar" id="sidebarAvatar">
                     <div class="user-meta">
                         <h4 id="sidebarUserName">Shubham K.</h4>
-                        <span id="sidebarUserRole">Alumni • Batch 2020</span>
+                        <span id="sidebarUserRole">Alumni - Batch 2020</span>
                     </div>
                 </div>
             </div>
-
             <nav class="dash-nav">
                 <span class="nav-section-label">Main</span>
-                <a href="dashboard.html" class="dash-nav-link active" data-view="overview">
-                    <i class='bx bxs-dashboard'></i>
-                    <span>Overview</span>
-                </a>
-                <a href="profile.html" class="dash-nav-link" data-view="profile">
-                    <i class='bx bxs-user-circle'></i>
-                    <span>My Profile</span>
-                </a>
-                <a href="network.html" class="dash-nav-link" data-view="network">
-                    <i class='bx bxs-contact'></i>
-                    <span>Alumni Network</span>
-                </a>
-
+                <a href="dashboard.html" class="dash-nav-link"><i class='bx bxs-dashboard'></i><span>Overview</span></a>
+                <a href="profile.html" class="dash-nav-link"><i class='bx bxs-user-circle'></i><span>My Profile</span></a>
+                <a href="network.html" class="dash-nav-link"><i class='bx bxs-contact'></i><span>Alumni Network</span></a>
                 <span class="nav-section-label">Communication</span>
-                <a href="chat.html" class="dash-nav-link" data-view="chat">
-                    <i class='bx bxs-message-dots'></i>
-                    <span>Messages</span>
-                    <span class="nav-badge">3</span>
-                </a>
-                <a href="notifications.html" class="dash-nav-link" data-view="notifications">
-                    <i class='bx bxs-bell-ring'></i>
-                    <span>Notifications</span>
-                    <span class="nav-badge">5</span>
-                </a>
-
+                <a href="chat.html" class="dash-nav-link"><i class='bx bxs-message-dots'></i><span>Messages</span><span class="nav-badge">3</span></a>
+                <a href="notifications.html" class="dash-nav-link"><i class='bx bxs-bell-ring'></i><span>Notifications</span><span class="nav-badge">5</span></a>
                 <span class="nav-section-label">Discover</span>
-                <a href="events.html" class="dash-nav-link" data-view="events">
-                    <i class='bx bxs-calendar-event'></i>
-                    <span>Events</span>
-                </a>
-                <a href="jobs.html" class="dash-nav-link" data-view="jobs">
-                    <i class='bx bxs-briefcase'></i>
-                    <span>Job Board</span>
-                </a>
-                <a href="gallery.html" class="dash-nav-link active" data-view="gallery">
-                    <i class='bx bxs-photo-album'></i>
-                    <span>Gallery</span>
-                </a>
-                <a href="mentorship.html" class="dash-nav-link" data-view="mentorship">
-                    <i class='bx bxs-user-voice'></i>
-                    <span>Mentorship</span>
-                </a>
-
+                <a href="events.html" class="dash-nav-link"><i class='bx bxs-calendar-event'></i><span>Events</span></a>
+                <a href="jobs.html" class="dash-nav-link"><i class='bx bxs-briefcase'></i><span>Job Board</span></a>
+                <a href="gallery.html" class="dash-nav-link active"><i class='bx bxs-photo-album'></i><span>Gallery</span></a>
+                <a href="mentorship.html" class="dash-nav-link"><i class='bx bxs-user-voice'></i><span>Mentorship</span></a>
                 <span class="nav-section-label">Settings</span>
-                <a href="settings.html" class="dash-nav-link" data-view="settings">
-                    <i class='bx bxs-cog'></i>
-                    <span>Settings</span>
-                </a>
+                <a href="settings.html" class="dash-nav-link"><i class='bx bxs-cog'></i><span>Settings</span></a>
             </nav>
-
             <div class="dash-sidebar-footer">
-                <a href="#" class="dash-nav-link" id="logoutBtn">
-                    <i class='bx bx-log-out'></i>
-                    <span>Logout</span>
-                </a>
+                <a href="#" class="dash-nav-link" id="logoutBtn"><i class='bx bx-log-out'></i><span>Logout</span></a>
             </div>
         </aside>
-
-        <!-- ========== MAIN CONTENT ========== -->
         <main class="dash-main">
-
-            <!-- Topbar -->
             <header class="dash-topbar">
                 <div style="display:flex;align-items:center;gap:16px;">
-                    <button class="sidebar-toggle" onclick="document.getElementById('dashSidebar').classList.toggle('open')">
-                        <i class='bx bx-menu'></i>
-                    </button>
-                    <div class="dash-search">
-                        <i class='bx bx-search'></i>
-                        <input type="text" placeholder="Search alumni, events, jobs..." id="dashSearchInput">
-                    </div>
+                    <button class="sidebar-toggle" onclick="document.getElementById('dashSidebar').classList.toggle('open')"><i class='bx bx-menu'></i></button>
+                    <div class="dash-search"><i class='bx bx-search'></i><input type="text" placeholder="Search photos..." id="dashSearchInput"></div>
                 </div>
                 <div class="dash-topbar-actions">
-                    <button class="topbar-icon-btn" title="Notifications" data-tooltip="Notifications" onclick="navigateTo('notifications')">
-                        <i class='bx bxs-bell'></i>
-                        <span class="notif-dot"></span>
-                    </button>
-                    <button class="topbar-icon-btn" title="Settings" data-tooltip="Settings" onclick="navigateTo('settings')">
-                        <i class='bx bxs-cog'></i>
-                    </button>
+                    <button class="topbar-icon-btn" title="Notifications"><i class='bx bxs-bell'></i><span class="notif-dot"></span></button>
+                    <button class="topbar-icon-btn" title="Settings"><i class='bx bxs-cog'></i></button>
                     <div class="topbar-profile" id="topbarProfile">
-                        <img src="https://i.pravatar.cc/150?img=3" alt="Profile">
-                        <span>Shubham</span>
-                        <i class='bx bx-chevron-down'></i>
+                        <img src="https://i.pravatar.cc/150?img=3" alt="Profile"><span>Shubham</span><i class='bx bx-chevron-down'></i>
                     </div>
                 </div>
             </header>
-
-            <!-- Dynamic View Container -->
-            <div class="dash-view" id="dashViewContainer" data-page="gallery">
-                <!-- Rendered by dashboard.js -->
+            <div class="dash-view" id="dashViewContainer" data-page="gallery" data-standalone="true" style="opacity:1; transform:translateY(0);">
+                <div class="gal-container">
+                    <div class="gal-hero">
+                        <h1><i class='bx bxs-photo-album'></i> Photo Gallery</h1>
+                        <p>Relive the best moments from campus events, batch reunions, sports days, and cultural festivities.</p>
+                    </div>
+                    <div class="gal-filters" id="galFilters"></div>
+                    <div class="gal-grid" id="galGrid"></div>
+                </div>
             </div>
         </main>
     </div>
-
+    <div class="lightbox-overlay" id="galleryLightbox">
+        <button class="lightbox-close" onclick="closeLightbox()"><i class='bx bx-x'></i></button>
+        <button class="lightbox-nav lightbox-prev" onclick="navLightbox(-1)"><i class='bx bx-chevron-left'></i></button>
+        <button class="lightbox-nav lightbox-next" onclick="navLightbox(1)"><i class='bx bx-chevron-right'></i></button>
+        <div class="lightbox-content" id="lightboxContent">
+            <i class='bx bxs-image lb-icon'></i>
+            <div class="lightbox-info">
+                <h3 id="lightboxTitle">Photo Title</h3>
+                <p id="lightboxCategory">Category</p>
+            </div>
+        </div>
+    </div>
     <script src="../../assets/js/data.js"></script>
     <script src="../../assets/js/common.js"></script>
-    <script src="../../assets/js/dashboard.js"></script>
+    <script>
+        var user = getUser();
+        if (!user || !user.loggedIn) window.location.href = '../auth/login.html';
+        document.getElementById('logoutBtn').addEventListener('click', function(e) {
+            e.preventDefault(); clearUser(); showToast('Logged out', 'info');
+            setTimeout(function() { window.location.href = '../../index.html'; }, 1000);
+        });
+        var sidebar = document.getElementById('dashSidebar');
+        if (!document.getElementById('sidebarBackdrop')) {
+            var bd = document.createElement('div'); bd.className = 'sidebar-backdrop'; bd.id = 'sidebarBackdrop';
+            bd.addEventListener('click', function() { sidebar.classList.remove('open'); bd.classList.remove('active'); });
+            document.body.appendChild(bd);
+            new MutationObserver(function() {
+                document.getElementById('sidebarBackdrop').classList.toggle('active', sidebar.classList.contains('open'));
+            }).observe(sidebar, { attributes: true, attributeFilter: ['class'] });
+        }
+        var currentFilter = 'All';
+        var currentLightboxIndex = 0;
+        var visibleItems = [];
+        var filtersContainer = document.getElementById('galFilters');
+        APP_DATA.galleryCategories.forEach(function(cat, i) {
+            var btn = document.createElement('button');
+            btn.className = 'gal-filter-btn' + (i === 0 ? ' active' : '');
+            btn.textContent = cat;
+            btn.onclick = function() { filterGallery(cat, btn); };
+            filtersContainer.appendChild(btn);
+        });
+        function renderGrid() {
+            var grid = document.getElementById('galGrid');
+            visibleItems = currentFilter === 'All'
+                ? APP_DATA.galleryItems.slice()
+                : APP_DATA.galleryItems.filter(function(item) { return item.category === currentFilter; });
+            var html = '';
+            for (var idx = 0; idx < visibleItems.length; idx++) {
+                var item = visibleItems[idx];
+                html += '<div class="gal-card" style="background: linear-gradient(135deg, ' + item.color + ', ' + item.color + 'cc);"'
+                    + ' onclick="openLightbox(' + idx + ')"'
+                    + ' data-category="' + item.category + '">'
+                    + '<i class="bx bxs-image placeholder-icon"></i>'
+                    + '<div class="gal-card-overlay">'
+                    + '<h4>' + item.title + '</h4>'
+                    + '<span><i class="bx bx-category"></i> ' + item.category + '</span>'
+                    + '</div></div>';
+            }
+            grid.innerHTML = html;
+            var cards = grid.querySelectorAll('.gal-card');
+            for (var i = 0; i < cards.length; i++) {
+                (function(card, delay) {
+                    card.style.opacity = '0';
+                    card.style.transform = 'translateY(20px) scale(0.95)';
+                    setTimeout(function() {
+                        card.style.transition = 'all 0.4s cubic-bezier(0.16,1,0.3,1)';
+                        card.style.opacity = '1';
+                        card.style.transform = 'translateY(0) scale(1)';
+                    }, delay);
+                })(cards[i], 60 * i);
+            }
+        }
+        renderGrid();
+        function filterGallery(cat, btn) {
+            var allBtns = document.querySelectorAll('.gal-filter-btn');
+            for (var b = 0; b < allBtns.length; b++) allBtns[b].classList.remove('active');
+            btn.classList.add('active');
+            currentFilter = cat;
+            renderGrid();
+        }
+        function openLightbox(index) {
+            currentLightboxIndex = index;
+            updateLightbox();
+            document.getElementById('galleryLightbox').classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+        function closeLightbox() {
+            document.getElementById('galleryLightbox').classList.remove('active');
+            document.body.style.overflow = '';
+        }
+        function navLightbox(dir) {
+            currentLightboxIndex = (currentLightboxIndex + dir + visibleItems.length) % visibleItems.length;
+            updateLightbox();
+        }
+        function updateLightbox() {
+            var item = visibleItems[currentLightboxIndex];
+            if (!item) return;
+            document.getElementById('lightboxContent').style.background = 'linear-gradient(135deg, ' + item.color + ', ' + item.color + 'dd)';
+            document.getElementById('lightboxTitle').textContent = item.title;
+            document.getElementById('lightboxCategory').innerHTML = '<i class="bx bx-category"></i> ' + item.category + ' - Photo ' + (currentLightboxIndex + 1) + ' of ' + visibleItems.length;
+        }
+        document.getElementById('galleryLightbox').addEventListener('click', function(e) {
+            if (e.target.id === 'galleryLightbox') closeLightbox();
+        });
+        document.addEventListener('keydown', function(e) {
+            var lb = document.getElementById('galleryLightbox');
+            if (!lb.classList.contains('active')) return;
+            if (e.key === 'Escape') closeLightbox();
+            if (e.key === 'ArrowLeft') navLightbox(-1);
+            if (e.key === 'ArrowRight') navLightbox(1);
+        });
+    </script>
 </body>
 </html>
-
