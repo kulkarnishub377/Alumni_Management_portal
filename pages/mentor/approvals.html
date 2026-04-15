@@ -3,46 +3,139 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Alumni Approvals | Mentor</title>
+    <title>Alumni Approvals | Mentor Portal</title>
     <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
     <link rel="stylesheet" href="../../assets/css/common.css">
     <link rel="stylesheet" href="../../assets/css/dashboard.css">
+    <style>
+        .approval-table { width: 100%; border-collapse: collapse; background: var(--bg-card); border-radius: var(--radius-lg); overflow: hidden; border: 1px solid var(--border); }
+        .approval-table th { background: rgba(79, 70, 229, 0.05); padding: 16px; text-align: left; font-size: 12px; font-weight: 700; text-transform: uppercase; color: var(--text-muted); letter-spacing: 1px; border-bottom: 2px solid var(--border); }
+        .approval-table td { padding: 16px; font-size: 14px; border-bottom: 1px solid var(--border); vertical-align: middle; }
+        .approval-table tbody tr:hover { background: rgba(0,0,0,0.01); }
+        .approval-table tbody tr:last-child td { border-bottom: none; }
+        
+        .verify-doc-btn { background: none; border: 1px dashed var(--primary); color: var(--primary); padding: 6px 12px; border-radius: var(--radius-sm); font-size: 12px; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 6px; transition: all 0.2s; }
+        .verify-doc-btn:hover { background: rgba(79,70,229,0.1); }
+        
+        .action-td { display: flex; gap: 8px; }
+        .action-td button { padding: 8px; border-radius: var(--radius-md); border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 18px; transition: 0.2s; }
+        .btn-approve { background: rgba(16,185,129,0.1); color: #10b981; } .btn-approve:hover { background: #10b981; color: #fff; }
+        .btn-reject { background: rgba(239,68,68,0.1); color: #ef4444; } .btn-reject:hover { background: #ef4444; color: #fff; }
+        .btn-info { background: rgba(245,158,11,0.1); color: #f59e0b; } .btn-info:hover { background: #f59e0b; color: #fff; }
+    </style>
 </head>
 <body>
     <div class="dashboard-layout">
         <aside class="dash-sidebar" id="dashSidebar">
             <div class="dash-sidebar-header"><a href="../../index.html" style="display:flex;align-items:center;gap:12px;text-decoration:none;"><div class="logo-icon"><i class='bx bxs-graduation'></i></div><h2>AlumniPortal</h2></a></div>
-            <div class="sidebar-user"><div class="sidebar-user-card" style="border-left:3px solid #4f46e5;"><img src="https://ui-avatars.com/api/?name=PM&background=4f46e5&color=fff" id="sidebarAvatar" alt="User"><div class="user-meta"><h4 id="sidebarName">Loading...</h4><span style="color:#4f46e5;font-weight:600;">Batch Mentor</span></div></div></div>
+            <div class="sidebar-user"><div class="sidebar-user-card" style="border-left:3px solid #4f46e5;"><img src="" id="sidebarAvatar" alt="User"><div class="user-meta"><h4 id="sidebarName">Loading...</h4><span style="color:#4f46e5;font-weight:600;">Batch Mentor</span></div></div></div>
             <nav class="dash-nav">
-                <span class="nav-section-label">My Batches</span>
-                <a href="dashboard.html" class="dash-nav-link "><i class='bx bxs-dashboard'></i><span>Overview</span></a>
-                <a href="approvals.html" class="dash-nav-link active"><i class='bx bxs-user-plus'></i><span>Approvals</span></a>
-                <a href="alumni.html" class="dash-nav-link "><i class='bx bxs-user-detail'></i><span>Batch Alumni</span></a>
+                <span class="nav-section-label">My Space</span>
+                <a href="dashboard.html" class="dash-nav-link"><i class='bx bxs-dashboard'></i><span>Overview</span></a>
+                <a href="approvals.html" class="dash-nav-link active"><i class='bx bxs-user-check'></i><span>Pending Approvals</span></a>
+                <a href="alumni.html" class="dash-nav-link"><i class='bx bxs-group'></i><span>My Alumni</span></a>
                 <span class="nav-section-label">Activity</span>
-                <a href="events.html" class="dash-nav-link "><i class='bx bxs-calendar-event'></i><span>Events</span></a>
-                <a href="chat.html" class="dash-nav-link "><i class='bx bxs-message-dots'></i><span>Messages</span></a>
+                <a href="events.html" class="dash-nav-link"><i class='bx bxs-calendar-event'></i><span>Events Calendar</span></a>
+                <a href="chat.html" class="dash-nav-link"><i class='bx bxs-message-dots'></i><span>Batch Comm Center</span></a>
                 <span class="nav-section-label">Account</span>
-                <a href="settings.html" class="dash-nav-link "><i class='bx bxs-cog'></i><span>Settings</span></a>
+                <a href="settings.html" class="dash-nav-link"><i class='bx bxs-cog'></i><span>Settings</span></a>
             </nav>
             <div class="dash-sidebar-footer"><a href="#" class="dash-nav-link" id="logoutBtn"><i class='bx bx-log-out'></i><span>Logout</span></a></div>
         </aside>
         <main class="dash-main">
-            <header class="dash-topbar"><div style="display:flex;align-items:center;gap:16px;"><button class="sidebar-toggle" onclick="document.getElementById('dashSidebar').classList.toggle('open')"><i class='bx bx-menu'></i></button></div><div class="dash-topbar-actions"><div class="topbar-profile"><img src="https://ui-avatars.com/api/?name=PM&background=4f46e5&color=fff" id="topAvatar" alt="Profile"><span id="topName">User</span><i class='bx bx-chevron-down'></i></div></div></header>
+            <header class="dash-topbar"><div style="display:flex;align-items:center;gap:16px;"><button class="sidebar-toggle" onclick="document.getElementById('dashSidebar').classList.toggle('open')"><i class='bx bx-menu'></i></button></div><div class="dash-topbar-actions"><div class="topbar-profile"><img src="" id="topAvatar" alt="Profile"><span id="topName">User</span><i class='bx bx-chevron-down'></i></div></div></header>
             <div class="dash-view" style="opacity:1;transform:translateY(0);">
-                <div class="page-title-bar"><div><h1>✅ Alumni Approvals</h1><p>Verify and approve newly registered alumni from your batches.</p></div></div>
-                <div class='dash-section'><div class='dash-section-body'><p style='color:var(--text-muted);'>Approvals manage section mapped to dashboard.</p></div></div>
+                <div class="page-title-bar">
+                    <div><h1>📋 Registration Approvals</h1><p>Vetting queue for new sign-ups claiming to be your former students.</p></div>
+                    <div style="display:flex;gap:12px;">
+                        <input type="text" placeholder="Search unverified PRN..." class="form-control" style="width:250px;">
+                        <select class="form-control" id="batchSelect" style="width:150px;"><option>All Batches</option></select>
+                    </div>
+                </div>
+
+                <div class="table-responsive">
+                    <table class="approval-table">
+                        <thead>
+                            <tr>
+                                <th>Applicant Details</th>
+                                <th>Academic Info</th>
+                                <th>Current Status</th>
+                                <th>Verification</th>
+                                <th style="text-align:right;">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="approvalsTableBody"></tbody>
+                    </table>
+                </div>
+
             </div>
         </main>
     </div>
+    
+    <!-- Document Review Modal Mock -->
+    <div id="mockDocModal" class="dashboard-modal" style="display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.5);z-index:9999;align-items:center;justify-content:center;">
+        <div style="background:var(--bg-card);width:100%;max-width:500px;border-radius:var(--radius-lg);padding:32px;box-shadow:var(--shadow-xl);">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:24px;">
+                <h2 style="font-size:20px;font-weight:700;">Degree Certificate Review</h2>
+                <button onclick="document.getElementById('mockDocModal').style.display='none'" style="background:none;border:none;font-size:24px;cursor:pointer;color:var(--text-muted);"><i class='bx bx-x'></i></button>
+            </div>
+            <div style="width:100%;height:250px;background:#e2e8f0;border-radius:var(--radius-md);display:flex;align-items:center;justify-content:center;margin-bottom:24px;">
+                <i class='bx bx-file-blank' style="font-size:64px;color:#94a3b8;"></i>
+            </div>
+            <div style="display:flex;gap:16px;">
+                <button class="btn btn-primary" style="flex:1;" onclick="showToast('Document matches records!','success');document.getElementById('mockDocModal').style.display='none'">Looks Good</button>
+                <button class="btn btn-secondary" style="flex:1;" onclick="showToast('Requesting resubmission...','error');document.getElementById('mockDocModal').style.display='none'">Needs Resubmission</button>
+            </div>
+        </div>
+    </div>
+
     <script src="../../assets/js/data.js"></script>
     <script src="../../assets/js/common.js"></script>
     <script>
         const user = getUser(); if (!user || user.role !== 'mentor') window.location.href = '../auth/login.html';
-        document.getElementById('logoutBtn')?.addEventListener('click', (e) => { e.preventDefault(); clearUser(); showToast('Logged out','info'); setTimeout(()=>window.location.href='../../index.html',1000); });
         document.getElementById('sidebarName').textContent = user.name;
         document.getElementById('topName').textContent = user.name;
         
+        const mentorInfo = APP_DATA.mentors.find(m => m.name === user.name);
+        if(mentorInfo) { 
+            document.getElementById('sidebarAvatar').src = mentorInfo.avatar; 
+            document.getElementById('topAvatar').src = mentorInfo.avatar; 
+            mentorInfo.batches.forEach(b => document.getElementById('batchSelect').innerHTML += `<option>Batch ${b}</option>`);
+        }
         
+        const pending = APP_DATA.pendingAlumni.filter(a => a.mentor === user.name);
+        const tBody = document.getElementById('approvalsTableBody');
+        
+        tBody.innerHTML = pending.length ? pending.map(a => `
+            <tr>
+                <td>
+                    <div style="display:flex;align-items:center;gap:12px;">
+                        <img src="${a.avatar}" style="width:40px;height:40px;border-radius:8px;">
+                        <div>
+                            <strong style="display:block;font-size:15px;">${a.name}</strong>
+                            <span style="font-size:12px;color:var(--text-muted);">${a.email}</span>
+                        </div>
+                    </div>
+                </td>
+                <td>
+                    <div style="font-weight:600;color:var(--primary);">Batch ${a.batch}</div>
+                    <div style="font-size:12px;color:var(--text-muted);">PRN: ${a.rollNo}</div>
+                </td>
+                <td>
+                    <div style="font-size:13px;"><i class='bx bx-briefcase'></i> ${a.company}</div>
+                </td>
+                <td>
+                    <button class="verify-doc-btn" onclick="document.getElementById('mockDocModal').style.display='flex'"><i class='bx bx-search-alt-2'></i> View ID Proof</button>
+                </td>
+                <td>
+                    <div class="action-td" style="justify-content:flex-end;">
+                        <button class="btn-approve" title="Approve & Validate" onclick="showToast('Validated! User migrated to Active Alumni.','success'); this.closest('tr').remove();"><i class='bx bx-check'></i></button>
+                        <button class="btn-info" title="Request More Info" onclick="showToast('Email sent requesting more info.','info')"><i class='bx bx-message-dots'></i></button>
+                        <button class="btn-reject" title="Reject Fake Profile" onclick="showToast('Application discarded.','error'); this.closest('tr').remove();"><i class='bx bx-x'></i></button>
+                    </div>
+                </td>
+            </tr>
+        `).join('') : '<tr><td colspan="5" style="text-align:center;padding:40px;color:var(--text-muted);">No pending requests. Check back later.</td></tr>';
     </script>
 </body>
 </html>

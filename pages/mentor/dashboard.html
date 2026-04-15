@@ -3,42 +3,92 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mentor Dashboard | Alumni Management Portal</title>
+    <title>Mentor Dashboard | Premium Alumni Portal</title>
     <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
     <link rel="stylesheet" href="../../assets/css/common.css">
     <link rel="stylesheet" href="../../assets/css/dashboard.css">
+    <style>
+        .mentor-hero { background: linear-gradient(135deg, #4f46e5 0%, #3730a3 100%); color: white; padding: 32px; border-radius: var(--radius-lg); margin-bottom: 24px; position: relative; overflow: hidden; box-shadow: 0 10px 25px -5px rgba(79, 70, 229, 0.4); }
+        .mentor-hero::after { content: ''; position: absolute; top: 0; right: 0; width: 300px; height: 100%; background: url('https://www.transparenttextures.com/patterns/cubes.png'); opacity: 0.1; }
+        .hero-stats { display: flex; gap: 24px; margin-top: 24px; }
+        .h-stat { background: rgba(255,255,255,0.1); padding: 16px 24px; border-radius: var(--radius-md); border: 1px solid rgba(255,255,255,0.2); backdrop-filter: blur(4px); }
+        .h-stat h3 { font-size: 28px; font-weight: 800; margin-bottom: 4px; }
+        .h-stat p { font-size: 13px; opacity: 0.9; text-transform: uppercase; letter-spacing: 1px; font-weight: 600; }
+        
+        .quick-action-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 24px; }
+        .qa-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius-md); padding: 20px; text-align: center; text-decoration: none; color: var(--text-color); transition: all 0.3s; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 12px; }
+        .qa-card:hover { transform: translateY(-3px); border-color: #4f46e5; box-shadow: var(--shadow-md); color: #4f46e5; }
+        .qa-icon { width: 48px; height: 48px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 24px; }
+        
+        .app-row { display: flex; align-items: center; justify-content: space-between; padding: 16px; border: 1px solid var(--border); border-radius: var(--radius-md); margin-bottom: 12px; background: var(--bg-card); transition: all 0.3s; }
+        .app-row:hover { border-color: #4f46e5; box-shadow: var(--shadow-sm); }
+        .app-meta { display: flex; align-items: center; gap: 16px; }
+        .app-meta img { width: 44px; height: 44px; border-radius: 50%; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
+    </style>
 </head>
 <body>
     <div class="dashboard-layout">
         <aside class="dash-sidebar" id="dashSidebar">
             <div class="dash-sidebar-header"><a href="../../index.html" style="display:flex;align-items:center;gap:12px;text-decoration:none;"><div class="logo-icon"><i class='bx bxs-graduation'></i></div><h2>AlumniPortal</h2></a></div>
-            <div class="sidebar-user"><div class="sidebar-user-card" style="border-left:3px solid #4f46e5;"><img src="https://ui-avatars.com/api/?name=PM&background=4f46e5&color=fff" id="sidebarAvatar" alt="User"><div class="user-meta"><h4 id="sidebarName">Loading...</h4><span style="color:#4f46e5;font-weight:600;">Batch Mentor</span></div></div></div>
+            <div class="sidebar-user"><div class="sidebar-user-card" style="border-left:3px solid #4f46e5;"><img src="" id="sidebarAvatar" alt="User"><div class="user-meta"><h4 id="sidebarName">Loading...</h4><span style="color:#4f46e5;font-weight:600;">Batch Mentor</span></div></div></div>
             <nav class="dash-nav">
-                <span class="nav-section-label">My Batches</span>
+                <span class="nav-section-label">My Space</span>
                 <a href="dashboard.html" class="dash-nav-link active"><i class='bx bxs-dashboard'></i><span>Overview</span></a>
-                <a href="approvals.html" class="dash-nav-link "><i class='bx bxs-user-plus'></i><span>Approvals</span></a>
-                <a href="alumni.html" class="dash-nav-link "><i class='bx bxs-user-detail'></i><span>Batch Alumni</span></a>
+                <a href="approvals.html" class="dash-nav-link"><i class='bx bxs-user-check'></i><span>Pending Approvals</span></a>
+                <a href="alumni.html" class="dash-nav-link"><i class='bx bxs-group'></i><span>My Alumni</span></a>
                 <span class="nav-section-label">Activity</span>
-                <a href="events.html" class="dash-nav-link "><i class='bx bxs-calendar-event'></i><span>Events</span></a>
-                <a href="chat.html" class="dash-nav-link "><i class='bx bxs-message-dots'></i><span>Messages</span></a>
+                <a href="events.html" class="dash-nav-link"><i class='bx bxs-calendar-event'></i><span>Events Calendar</span></a>
+                <a href="chat.html" class="dash-nav-link"><i class='bx bxs-message-dots'></i><span>Batch Comm Center</span></a>
                 <span class="nav-section-label">Account</span>
-                <a href="settings.html" class="dash-nav-link "><i class='bx bxs-cog'></i><span>Settings</span></a>
+                <a href="settings.html" class="dash-nav-link"><i class='bx bxs-cog'></i><span>Settings</span></a>
             </nav>
             <div class="dash-sidebar-footer"><a href="#" class="dash-nav-link" id="logoutBtn"><i class='bx bx-log-out'></i><span>Logout</span></a></div>
         </aside>
         <main class="dash-main">
-            <header class="dash-topbar"><div style="display:flex;align-items:center;gap:16px;"><button class="sidebar-toggle" onclick="document.getElementById('dashSidebar').classList.toggle('open')"><i class='bx bx-menu'></i></button></div><div class="dash-topbar-actions"><div class="topbar-profile"><img src="https://ui-avatars.com/api/?name=PM&background=4f46e5&color=fff" id="topAvatar" alt="Profile"><span id="topName">User</span><i class='bx bx-chevron-down'></i></div></div></header>
+            <header class="dash-topbar"><div style="display:flex;align-items:center;gap:16px;"><button class="sidebar-toggle" onclick="document.getElementById('dashSidebar').classList.toggle('open')"><i class='bx bx-menu'></i></button></div><div class="dash-topbar-actions"><button class="topbar-icon-btn"><i class='bx bxs-bell'></i><span class="notif-dot"></span></button><div class="topbar-profile"><img src="" id="topAvatar" alt="Profile"><span id="topName">User</span><i class='bx bx-chevron-down'></i></div></div></header>
             <div class="dash-view" style="opacity:1;transform:translateY(0);">
-                <div class="page-title-bar"><div><h1>👋 Welcome, Mentor</h1><p>Manage your assigned batches and approve new alumni.</p></div></div>
-                <div class="dh-stats" style="display:grid; grid-template-columns:repeat(3,1fr); gap:20px; margin-bottom:24px;">
-    <div class="dh-stat-card"><div class="dh-stat-icon" style="background:#e0e7ff;color:#4f46e5;"><i class='bx bxs-user-detail'></i></div><div class="dh-stat-info"><h3>120</h3><p>My Alumni</p></div></div>
-    <div class="dh-stat-card"><div class="dh-stat-icon" style="background:#fef3c7;color:#d97706;"><i class='bx bxs-user-plus'></i></div><div class="dh-stat-info"><h3 id="statPending">5</h3><p>Pending Approvals</p></div></div>
-    <div class="dh-stat-card"><div class="dh-stat-icon" style="background:#dcfce7;color:#16a34a;"><i class='bx bx-book-bookmark'></i></div><div class="dh-stat-info"><h3>2</h3><p>Assigned Batches</p></div></div>
-</div>
-<div class="dash-section">
-    <div class="dash-section-header"><h3>⏳ Pending Alumni Approvals</h3><a href="approvals.html" class="btn btn-ghost btn-sm">View All</a></div>
-    <div class="dash-section-body" id="pendingSection"></div>
-</div>
+                
+                <div class="mentor-hero">
+                    <div style="position:relative;z-index:2;">
+                        <span style="display:inline-block;padding:6px 12px;background:rgba(255,255,255,0.2);border-radius:20px;font-size:12px;font-weight:700;margin-bottom:16px;text-transform:uppercase;letter-spacing:1px;" id="heroDeptTag">Department</span>
+                        <h1 style="font-size:32px;font-weight:800;margin-bottom:8px;">Welcome back, <span id="welcomeName">Mentor</span>!</h1>
+                        <p style="font-size:16px;opacity:0.9;max-width:600px;">Here is what's happening with your assigned batches today. You have several pending registrations requiring verification.</p>
+                        <div class="hero-stats">
+                            <div class="h-stat"><h3 id="statTotalAlumni">0</h3><p>Verified Alumni</p></div>
+                            <div class="h-stat"><h3 id="statPendingCount">0</h3><p>Action Required</p></div>
+                            <div class="h-stat"><h3 id="statBatches">0</h3><p>Active Batches</p></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="quick-action-grid">
+                    <a href="approvals.html" class="qa-card"><div class="qa-icon" style="background:#fef3c7;color:#d97706;"><i class='bx bxs-user-plus'></i></div><h4 style="font-size:15px;font-weight:700;">Review Pending</h4></a>
+                    <a href="chat.html" class="qa-card"><div class="qa-icon" style="background:#e0e7ff;color:#4f46e5;"><i class='bx bxs-message-rounded-dots'></i></div><h4 style="font-size:15px;font-weight:700;">Message Batch</h4></a>
+                    <a href="alumni.html" class="qa-card"><div class="qa-icon" style="background:#dcfce7;color:#16a34a;"><i class='bx bxs-download'></i></div><h4 style="font-size:15px;font-weight:700;">Export Roster</h4></a>
+                    <a href="events.html" class="qa-card"><div class="qa-icon" style="background:#fce7f3;color:#db2777;"><i class='bx bxs-calendar-plus'></i></div><h4 style="font-size:15px;font-weight:700;">Plan Reunion</h4></a>
+                </div>
+
+                <div style="display:grid;grid-template-columns:2fr 1fr;gap:24px;">
+                    <div class="dash-section">
+                        <div class="dash-section-header"><h3>⏳ Priority Registration Queue</h3><a href="approvals.html" class="btn btn-ghost btn-sm">Manage All</a></div>
+                        <div class="dash-section-body" id="pendingSection" style="padding:16px;"></div>
+                    </div>
+                    
+                    <div class="dash-section">
+                        <div class="dash-section-header"><h3>🏢 Batch Placement Stats</h3></div>
+                        <div class="dash-section-body" style="padding:24px;">
+                            <div style="display:flex;justify-content:space-between;margin-bottom:8px;"><span style="font-size:14px;font-weight:600;">Employed</span><span style="font-size:14px;font-weight:700;color:#16a34a;">85%</span></div>
+                            <div style="width:100%;height:8px;background:var(--border);border-radius:4px;margin-bottom:20px;overflow:hidden;"><div style="width:85%;height:100%;background:#16a34a;border-radius:4px;"></div></div>
+
+                            <div style="display:flex;justify-content:space-between;margin-bottom:8px;"><span style="font-size:14px;font-weight:600;">Higher Studies</span><span style="font-size:14px;font-weight:700;color:#3b82f6;">10%</span></div>
+                            <div style="width:100%;height:8px;background:var(--border);border-radius:4px;margin-bottom:20px;overflow:hidden;"><div style="width:10%;height:100%;background:#3b82f6;border-radius:4px;"></div></div>
+
+                            <div style="display:flex;justify-content:space-between;margin-bottom:8px;"><span style="font-size:14px;font-weight:600;">Entrepreneurs</span><span style="font-size:14px;font-weight:700;color:#8b5cf6;">5%</span></div>
+                            <div style="width:100%;height:8px;background:var(--border);border-radius:4px;overflow:hidden;"><div style="width:5%;height:100%;background:#8b5cf6;border-radius:4px;"></div></div>
+                        </div>
+                    </div>
+                </div>
+
             </div>
         </main>
     </div>
@@ -47,24 +97,44 @@
     <script>
         const user = getUser(); if (!user || user.role !== 'mentor') window.location.href = '../auth/login.html';
         document.getElementById('logoutBtn')?.addEventListener('click', (e) => { e.preventDefault(); clearUser(); showToast('Logged out','info'); setTimeout(()=>window.location.href='../../index.html',1000); });
+        
         document.getElementById('sidebarName').textContent = user.name;
         document.getElementById('topName').textContent = user.name;
+        document.getElementById('welcomeName').textContent = user.name.split(' ')[0];
         
+        const mentorInfo = APP_DATA.mentors.find(m => m.name === user.name);
+        if(mentorInfo) { 
+            document.getElementById('sidebarAvatar').src = mentorInfo.avatar; 
+            document.getElementById('topAvatar').src = mentorInfo.avatar; 
+            document.getElementById('heroDeptTag').textContent = mentorInfo.department;
+            document.getElementById('statBatches').textContent = mentorInfo.batches.length;
+            
+            const myAlumniCount = APP_DATA.topAlumni.filter(a => mentorInfo.batches.includes(a.batch)).length * 15; // Dummy multiplier
+            document.getElementById('statTotalAlumni').textContent = myAlumniCount;
+        }
         
-const pending = APP_DATA.pendingAlumni.filter(a => a.mentor === user.name);
-document.getElementById('statPending').textContent = pending.length;
-document.getElementById('pendingSection').innerHTML = pending.length ? pending.map(a => `
-    <div style="display:flex;align-items:center;justify-content:space-between;padding:16px;border:1px solid var(--border);border-radius:var(--radius-md);margin-bottom:12px;">
-        <div style="display:flex;align-items:center;gap:12px;">
-            <img src="${a.avatar}" style="width:40px;height:40px;border-radius:50%;">
-            <div><h4 style="font-size:15px;font-weight:700;">${a.name}</h4><p style="font-size:12px;color:var(--text-muted);">Batch ${a.batch} · ${a.rollNo}</p></div>
-        </div>
-        <div style="display:flex;gap:8px;">
-            <button class="btn btn-primary btn-sm" onclick="showToast('Approved!','success');this.parentElement.parentElement.style.display='none';"><i class='bx bx-check'></i> Approve</button>
-            <button class="btn btn-secondary btn-sm" onclick="showToast('Rejected!','error');this.parentElement.parentElement.style.display='none';"><i class='bx bx-x'></i> Reject</button>
-        </div>
-    </div>
-`).join('') : '<p>No pending approvals.</p>';
+        // Render Pending Queue
+        const pending = APP_DATA.pendingAlumni.filter(a => a.mentor === user.name);
+        document.getElementById('statPendingCount').textContent = pending.length;
+        
+        const quickQueue = pending.slice(0, 3);
+        document.getElementById('pendingSection').innerHTML = quickQueue.length ? quickQueue.map(a => `
+            <div class="app-row">
+                <div class="app-meta">
+                    <img src="${a.avatar}">
+                    <div>
+                        <h4 style="font-size:15px;font-weight:700;margin-bottom:2px;">${a.name}</h4>
+                        <div style="display:flex;gap:12px;font-size:12px;color:var(--text-muted);font-weight:600;">
+                            <span>PRN: ${a.rollNo}</span>
+                            <span style="color:#4f46e5;">Batch ${a.batch}</span>
+                        </div>
+                    </div>
+                </div>
+                <div style="display:flex;gap:8px;">
+                    <button class="btn btn-primary btn-sm" style="padding:6px 16px;" onclick="showToast('Alumni Validated!','success');this.parentElement.parentElement.style.opacity='0.5';"><i class='bx bx-check'></i> Approve</button>
+                </div>
+            </div>
+        `).join('') : '<div style="text-align:center;padding:40px 20px;color:var(--text-muted);"><i class="bx bx-check-circle" style="font-size:48px;color:#10b981;margin-bottom:12px;"></i><p>All caught up! No pending registrations.</p></div>';
 
     </script>
 </body>

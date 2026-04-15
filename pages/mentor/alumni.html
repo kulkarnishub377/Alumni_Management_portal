@@ -33,10 +33,16 @@
                     <div><h1>🎓 My Batch Alumni</h1><p>View and manage the alumni assigned to your batches.</p></div>
                     <button class="btn btn-secondary btn-sm" onclick="showToast('Exporting batch roster...','info')"><i class='bx bx-download'></i> Export Roster</button>
                 </div>
+                <div class="dash-stats-row" style="margin-bottom:24px;">
+                    <div class="dash-stat-card"><div class="stat-icon purple"><i class='bx bxs-graduation'></i></div><div class="stat-info"><h3 id="statTotalStudents">0</h3><p>Total Graduates</p></div></div>
+                    <div class="dash-stat-card"><div class="stat-icon green"><i class='bx bxs-briefcase-alt-2'></i></div><div class="stat-info"><h3 id="statEmployed">0%</h3><p>Placement Rate</p></div></div>
+                    <div class="dash-stat-card"><div class="stat-icon blue"><i class='bx bxs-book-reader'></i></div><div class="stat-info"><h3 id="statHigherEd">0%</h3><p>Higher Education</p></div></div>
+                </div>
                 
                 <div class="filter-bar" style="margin-bottom:24px;">
                     <div class="filter-input"><i class='bx bx-search'></i><input type="text" placeholder="Search by name, company..." id="alumniSearch" oninput="filterAlumni()"></div>
-                    <select id="batchFilterAlumni" onchange="filterAlumni()"><option value="">All My Batches</option></select>
+                    <select class="form-control" id="batchFilterAlumni" onchange="filterAlumni()" style="width:150px;"><option value="">All My Batches</option></select>
+                    <button class="btn btn-primary" style="background:#4f46e5; border:none;" onclick="showToast('Messaging filtered group...','info')"><i class='bx bxs-paper-plane'></i> Message Group</button>
                 </div>
                 <div class="network-grid" id="alumniGrid"></div>
 
@@ -60,15 +66,25 @@
         assignedBatches.sort((a,b) => b-a).forEach(b => document.getElementById('batchFilterAlumni').innerHTML += `<option value="${b}">${b}</option>`);
 
         function renderAlumniCards(list) {
+            document.getElementById('statTotalStudents').textContent = list.length * 12; // Dummy math
+            document.getElementById('statEmployed').textContent = list.length > 0 ? '88%' : '0%';
+            document.getElementById('statHigherEd').textContent = list.length > 0 ? '12%' : '0%';
+
             document.getElementById('alumniGrid').innerHTML = list.length ? list.map(a => `
-                <div class="network-card">
-                    <img src="${a.avatar}" alt="${a.name}" style="width:48px;height:48px;border-radius:50%;">
+                <div class="network-card" style="transition:all 0.3s; border:1px solid var(--border);" onmouseover="this.style.borderColor='#4f46e5';this.style.transform='translateY(-3px)';" onmouseout="this.style.borderColor='var(--border)';this.style.transform='translateY(0)';">
+                    <img src="${a.avatar}" alt="${a.name}" style="width:64px;height:64px;border-radius:50%;border:2px solid #e2e8f0;padding:2px;">
                     <div class="nc-info" style="flex:1;">
-                        <h4>${a.name}</h4><p>${a.role} at ${a.company}</p><span class="nc-batch">Batch ${a.batch}</span>
+                        <h4 style="font-size:16px;font-weight:700;">${a.name}</h4><p style="color:var(--primary);font-weight:600;">${a.role} at ${a.company}</p>
+                        <div style="display:flex;gap:8px;margin-top:8px;">
+                            <span class="nc-batch" style="background:rgba(79,70,229,0.1);color:#4f46e5;">Batch ${a.batch}</span>
+                        </div>
                     </div>
-                    <button class="topbar-icon-btn" title="View details" onclick="showToast('Viewing ${a.name} details','info')"><i class='bx bx-id-card'></i></button>
+                    <div style="display:flex;flex-direction:column;gap:8px;">
+                        <button class="topbar-icon-btn" style="background:rgba(79,70,229,0.1);color:#4f46e5;border-radius:8px;" title="View Transcript" onclick="showToast('Loading academic record...','info')"><i class='bx bx-id-card'></i></button>
+                        <button class="topbar-icon-btn" style="border-radius:8px;" title="Message Alumni" onclick="showToast('Opening fast-chat...','info')"><i class='bx bxs-message-rounded'></i></button>
+                    </div>
                 </div>
-            `).join('') : '<p style="grid-column:1/-1;text-align:center;color:var(--text-muted);padding:20px;">No alumni found in your assigned batches.</p>';
+            `).join('') : '<p style="grid-column:1/-1;text-align:center;color:var(--text-muted);padding:40px;border:1px dashed var(--border);border-radius:var(--radius-lg);">No alumni found in your assigned batches.</p>';
         }
         renderAlumniCards(myAlumni);
 
