@@ -105,6 +105,14 @@
             <p style="color:var(--text-muted);font-size:14px;margin-bottom:24px;">Register a new faculty member as a Batch Mentor.</p>
             
             <form id="addMentorForm" onsubmit="event.preventDefault(); showToast('New Mentor successfully registered!', 'success'); this.reset(); document.getElementById('addMentorModal').style.display='none';">
+                
+                <div style="display:flex;gap:16px;margin-bottom:16px;">
+                    <div style="flex:1;">
+                        <label style="display:block;margin-bottom:8px;font-weight:600;font-size:13px;color:var(--text-secondary);">Profile Picture</label>
+                        <input type="file" accept="image/*" style="width:100%;padding:7px 14px;border-radius:var(--radius-md);border:1px solid var(--border);background:var(--bg-body);font-size:13px;color:var(--text-muted);" onchange="showToast('Picture attached','info')">
+                    </div>
+                </div>
+
                 <div class="edit-form-group" style="margin-bottom:16px;">
                     <label style="display:block;margin-bottom:8px;font-weight:600;font-size:13px;color:var(--text-secondary);">Full Name <span style="color:#ef4444">*</span></label>
                     <input type="text" required placeholder="e.g. Prof. A. B. Smith" style="width:100%;padding:10px 14px;border-radius:var(--radius-md);border:1px solid var(--border);background:var(--bg-body);font-size:14px;">
@@ -115,7 +123,7 @@
                     <input type="text" required placeholder="e.g. Artificial Intelligence" style="width:100%;padding:10px 14px;border-radius:var(--radius-md);border:1px solid var(--border);background:var(--bg-body);font-size:14px;">
                 </div>
 
-                <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:24px;">
+                <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px;">
                     <div class="edit-form-group">
                         <label style="display:block;margin-bottom:8px;font-weight:600;font-size:13px;color:var(--text-secondary);">Email</label>
                         <input type="email" required placeholder="name@college.edu" style="width:100%;padding:10px 14px;border-radius:var(--radius-md);border:1px solid var(--border);background:var(--bg-body);font-size:14px;">
@@ -124,6 +132,16 @@
                         <label style="display:block;margin-bottom:8px;font-weight:600;font-size:13px;color:var(--text-secondary);">Phone</label>
                         <input type="tel" required placeholder="+91 9999999999" style="width:100%;padding:10px 14px;border-radius:var(--radius-md);border:1px solid var(--border);background:var(--bg-body);font-size:14px;">
                     </div>
+                </div>
+
+                <div class="edit-form-group" style="margin-bottom:24px;">
+                    <label style="display:block;margin-bottom:8px;font-weight:600;font-size:13px;color:var(--text-secondary);">Initial Assigned Batches (Optional - Hold Ctrl to map multiple)</label>
+                    <select multiple style="width:100%;padding:10px 14px;border-radius:var(--radius-md);border:1px solid var(--border);background:var(--bg-body);font-size:14px;height:80px;">
+                        <option value="2026">Batch 2026</option>
+                        <option value="2025">Batch 2025</option>
+                        <option value="2024">Batch 2024</option>
+                        <option value="2023">Batch 2023</option>
+                    </select>
                 </div>
 
                 <div style="display:flex;gap:12px;">

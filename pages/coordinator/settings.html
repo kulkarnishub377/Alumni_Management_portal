@@ -3,10 +3,26 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Settings | Coordinator</title>
+    <title>Profile Settings | Coordinator</title>
     <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
     <link rel="stylesheet" href="../../assets/css/common.css">
     <link rel="stylesheet" href="../../assets/css/dashboard.css">
+    <style>
+        .settings-grid { display: grid; grid-template-columns: 280px 1fr; gap: 24px; align-items: start; }
+        @media(max-width: 768px) { .settings-grid { grid-template-columns: 1fr; } }
+        
+        .profile-picture-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 32px 24px; text-align: center; }
+        .pp-container { position: relative; width: 120px; height: 120px; margin: 0 auto 16px auto; border-radius: 50%; padding: 4px; border: 2px dashed #0d9488; }
+        .pp-container img { width: 100%; height: 100%; object-fit: cover; border-radius: 50%; }
+        .pp-overlay { position: absolute; bottom: 0; right: 0; background: #0d9488; color: white; width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; border: 2px solid var(--bg-card); font-size: 16px; transition: all 0.2s; }
+        .pp-overlay:hover { transform: scale(1.1); background: #0f766e; }
+
+        .settings-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 32px; margin-bottom: 24px; }
+        .settings-card-title { font-size: 18px; font-weight: 800; margin-bottom: 24px; display: flex; align-items: center; gap: 8px; border-bottom: 1px solid var(--border); padding-bottom: 12px; }
+        
+        .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+        @media(max-width: 600px) { .form-grid { grid-template-columns: 1fr; } }
+    </style>
 </head>
 <body>
     <div class="dashboard-layout">
@@ -30,39 +46,136 @@
             </nav>
             <div class="dash-sidebar-footer"><a href="#" class="dash-nav-link" id="logoutBtn"><i class='bx bx-log-out'></i><span>Logout</span></a></div>
         </aside>
+        
         <main class="dash-main">
-            <header class="dash-topbar"><div style="display:flex;align-items:center;gap:16px;"><button class="sidebar-toggle" onclick="document.getElementById('dashSidebar').classList.toggle('open')"><i class='bx bx-menu'></i></button></div><div class="dash-topbar-actions"><div class="topbar-profile"><img src="https://i.pravatar.cc/150?img=47" id="topAvatar" alt="Profile"><span id="topName">User</span><i class='bx bx-chevron-down'></i></div></div></header>
+            <header class="dash-topbar">
+                <div style="display:flex;align-items:center;gap:16px;">
+                    <button class="sidebar-toggle" onclick="document.getElementById('dashSidebar').classList.toggle('open')"><i class='bx bx-menu'></i></button>
+                </div>
+                <div class="dash-topbar-actions">
+                    <button class="topbar-icon-btn"><i class='bx bxs-bell'></i></button>
+                    <div class="topbar-profile"><img src="https://i.pravatar.cc/150?img=47" id="topAvatar" alt="Profile"><span id="topName">User</span><i class='bx bx-chevron-down'></i></div>
+                </div>
+            </header>
+
             <div class="dash-view" style="opacity:1;transform:translateY(0);">
-                <div class="page-title-bar"><div><h1>⚙️ Profile & Settings</h1><p>Manage your account securely.</p></div>
-                <button class="btn btn-primary btn-sm" onclick="showToast('Profile saved successfully!','success')"><i class='bx bx-save'></i> Save Profile</button></div>
+                <div class="page-title-bar">
+                    <div><h1>⚙️ Profile Settings</h1><p>Update your personal details and account preferences.</p></div>
+                </div>
                 
-                <div class="dash-section">
-                    <div class="dash-section-body" style="max-width:600px;">
-                        <h3 style="margin-bottom:20px;">Change Password</h3>
-                        <div class="edit-form-group" style="margin-bottom:16px;">
-                            <label>Current Password</label>
-                            <input type="password" placeholder="Enter current password" style="width:100%;padding:10px;border-radius:var(--radius-md);border:1px solid var(--border);background:var(--bg-body);">
+                <div class="settings-grid">
+                    <!-- Left Column: Picture -->
+                    <div class="profile-picture-card">
+                        <div class="pp-container">
+                            <img src="https://i.pravatar.cc/150?img=47" id="settingsAvatarPreview" alt="Profile Picture">
+                            <label class="pp-overlay" for="avatarUpload" title="Change Picture">
+                                <i class='bx bxs-camera'></i>
+                            </label>
+                            <input type="file" id="avatarUpload" style="display:none;" accept="image/*" onchange="showToast('Profile picture preview updated. Don\'t forget to save changes!', 'info')">
                         </div>
-                        <div class="edit-form-group" style="margin-bottom:16px;">
-                            <label>New Password</label>
-                            <input type="password" placeholder="Enter new password" style="width:100%;padding:10px;border-radius:var(--radius-md);border:1px solid var(--border);background:var(--bg-body);">
+                        <h4 id="settingsDisplayName" style="font-size:16px;font-weight:700;margin-bottom:4px;">Loading...</h4>
+                        <p style="font-size:13px;color:#0d9488;font-weight:600;margin-bottom:16px;">Department Coordinator</p>
+                        <p style="font-size:12px;color:var(--text-muted);line-height:1.5;">Allowed Formats: JPEG, PNG, GIF<br>Max size: 5MB</p>
+                    </div>
+
+                    <!-- Right Column: Details Forms -->
+                    <div>
+                        <!-- Personal Details -->
+                        <div class="settings-card">
+                            <h3 class="settings-card-title"><i class='bx bx-user' style="color:#0d9488;"></i> Personal Details</h3>
+                            <form onsubmit="event.preventDefault(); showToast('Personal details updated successfully!', 'success');">
+                                <div class="form-grid" style="margin-bottom:16px;">
+                                    <div class="edit-form-group">
+                                        <label style="display:block;margin-bottom:8px;font-weight:600;font-size:13px;color:var(--text-secondary);">Full Name</label>
+                                        <input type="text" id="inputName" required style="width:100%;padding:10px 14px;border-radius:var(--radius-md);border:1px solid var(--border);background:var(--bg-body);font-size:14px;">
+                                    </div>
+                                    <div class="edit-form-group">
+                                        <label style="display:block;margin-bottom:8px;font-weight:600;font-size:13px;color:var(--text-secondary);">Department</label>
+                                        <input type="text" id="inputDept" readonly style="width:100%;padding:10px 14px;border-radius:var(--radius-md);border:1px solid var(--border);background:var(--bg-card);font-size:14px;color:var(--text-muted);cursor:not-allowed;">
+                                        <span style="font-size:11px;color:var(--text-muted);display:block;margin-top:4px;">Contact Admin to change department.</span>
+                                    </div>
+                                </div>
+                                <div class="form-grid" style="margin-bottom:24px;">
+                                    <div class="edit-form-group">
+                                        <label style="display:block;margin-bottom:8px;font-weight:600;font-size:13px;color:var(--text-secondary);">Email Address</label>
+                                        <input type="email" id="inputEmail" required style="width:100%;padding:10px 14px;border-radius:var(--radius-md);border:1px solid var(--border);background:var(--bg-body);font-size:14px;">
+                                    </div>
+                                    <div class="edit-form-group">
+                                        <label style="display:block;margin-bottom:8px;font-weight:600;font-size:13px;color:var(--text-secondary);">Phone Number</label>
+                                        <input type="tel" id="inputPhone" style="width:100%;padding:10px 14px;border-radius:var(--radius-md);border:1px solid var(--border);background:var(--bg-body);font-size:14px;">
+                                    </div>
+                                </div>
+                                <div style="display:flex;justify-content:flex-end;">
+                                    <button type="submit" class="btn btn-primary" style="background:#0d9488;border-color:#0d9488;"><i class='bx bx-save'></i> Save Changes</button>
+                                </div>
+                            </form>
                         </div>
-                        <button class="btn btn-secondary btn-sm" style="color:#0d9488;border-color:#0d9488;" onclick="showToast('Password updated!','success')">Update Password</button>
+
+                        <!-- Change Password -->
+                        <div class="settings-card">
+                            <h3 class="settings-card-title"><i class='bx bx-lock-alt' style="color:#0d9488;"></i> Security & Password</h3>
+                            <form onsubmit="event.preventDefault(); showToast('Account password updated securely!', 'success'); this.reset();">
+                                <div class="edit-form-group" style="margin-bottom:16px;">
+                                    <label style="display:block;margin-bottom:8px;font-weight:600;font-size:13px;color:var(--text-secondary);">Current Password</label>
+                                    <input type="password" required placeholder="Enter current password" style="width:100%;padding:10px 14px;border-radius:var(--radius-md);border:1px solid var(--border);background:var(--bg-body);font-size:14px;">
+                                </div>
+                                <div class="form-grid" style="margin-bottom:24px;">
+                                    <div class="edit-form-group">
+                                        <label style="display:block;margin-bottom:8px;font-weight:600;font-size:13px;color:var(--text-secondary);">New Password</label>
+                                        <input type="password" required placeholder="New secure password" style="width:100%;padding:10px 14px;border-radius:var(--radius-md);border:1px solid var(--border);background:var(--bg-body);font-size:14px;">
+                                    </div>
+                                    <div class="edit-form-group">
+                                        <label style="display:block;margin-bottom:8px;font-weight:600;font-size:13px;color:var(--text-secondary);">Confirm New Password</label>
+                                        <input type="password" required placeholder="Confirm new password" style="width:100%;padding:10px 14px;border-radius:var(--radius-md);border:1px solid var(--border);background:var(--bg-body);font-size:14px;">
+                                    </div>
+                                </div>
+                                <div style="display:flex;justify-content:flex-end;">
+                                    <button type="submit" class="btn btn-secondary" style="color:#0d9488;border-color:#0d9488;"><i class='bx bx-shield-quarter'></i> Update Password</button>
+                                </div>
+                            </form>
+                        </div>
+
                     </div>
                 </div>
 
             </div>
         </main>
     </div>
+
     <script src="../../assets/js/data.js"></script>
     <script src="../../assets/js/common.js"></script>
     <script>
         const user = getUser(); if (!user || user.role !== 'coordinator') window.location.href = '../auth/login.html';
+        
+        // Setup initial display
         document.getElementById('logoutBtn')?.addEventListener('click', (e) => { e.preventDefault(); clearUser(); showToast('Logged out','info'); setTimeout(()=>window.location.href='../../index.html',1000); });
+        
         document.getElementById('sidebarName').textContent = user.name;
         document.getElementById('topName').textContent = user.name;
+        document.getElementById('settingsDisplayName').textContent = user.name;
+        
+        // Prefill form
+        document.getElementById('inputName').value = user.name;
+        document.getElementById('inputDept').value = user.department;
+        document.getElementById('inputEmail').value = user.name.toLowerCase().replace(' ','') + "@college.edu";
+        document.getElementById('inputPhone').value = "+91 9876543210";
+
         const dept = APP_DATA.departments.find(d => d.name === user.department);
-        if(dept) { document.getElementById('sidebarAvatar').src = dept.coordinatorAvatar; document.getElementById('topAvatar').src = dept.coordinatorAvatar; }
+        if(dept) { 
+            const avatarUrl = dept.coordinatorAvatar;
+            document.getElementById('sidebarAvatar').src = avatarUrl; 
+            document.getElementById('topAvatar').src = avatarUrl;
+            document.getElementById('settingsAvatarPreview').src = avatarUrl;
+        }
+
+        // Fake image preview
+        document.getElementById('avatarUpload').addEventListener('change', function(e) {
+            if(e.target.files && e.target.files[0]) {
+                const reader = new FileReader();
+                reader.onload = function(e) { document.getElementById('settingsAvatarPreview').src = e.target.result; }
+                reader.readAsDataURL(e.target.files[0]);
+            }
+        });
     </script>
 </body>
 </html>
