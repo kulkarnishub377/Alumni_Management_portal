@@ -36,6 +36,7 @@ const APP_DATA = {
             role: "Senior Software Engineer",
             company: "Google",
             batch: "2015",
+            department: "Computer Engineering",
             avatar: "https://i.pravatar.cc/150?img=11",
             tags: ["AI/ML", "Cloud"],
             linkedin: "#"
@@ -46,6 +47,7 @@ const APP_DATA = {
             role: "Product Manager",
             company: "Microsoft",
             batch: "2016",
+            department: "Computer Engineering",
             avatar: "https://i.pravatar.cc/150?img=5",
             tags: ["Product", "Strategy"],
             linkedin: "#"
@@ -56,6 +58,7 @@ const APP_DATA = {
             role: "Founder & CEO",
             company: "TechNova Solutions",
             batch: "2013",
+            department: "Information Technology",
             avatar: "https://i.pravatar.cc/150?img=12",
             tags: ["Startup", "Leadership"],
             linkedin: "#"
@@ -66,6 +69,7 @@ const APP_DATA = {
             role: "Data Scientist",
             company: "Netflix",
             batch: "2018",
+            department: "Computer Engineering",
             avatar: "https://i.pravatar.cc/150?img=9",
             tags: ["Data", "Analytics"],
             linkedin: "#"
@@ -76,6 +80,7 @@ const APP_DATA = {
             role: "Cloud Architect",
             company: "Amazon Web Services",
             batch: "2014",
+            department: "Information Technology",
             avatar: "https://i.pravatar.cc/150?img=8",
             tags: ["AWS", "DevOps"],
             linkedin: "#"
@@ -86,15 +91,16 @@ const APP_DATA = {
             role: "UX Lead Designer",
             company: "Adobe",
             batch: "2017",
+            department: "Computer Engineering",
             avatar: "https://i.pravatar.cc/150?img=1",
             tags: ["Design", "Research"],
             linkedin: "#"
         },
-        { id: 7, name: "Prashant Patil", role: "Software Engineer II", company: "Amazon", batch: "2019", avatar: "https://i.pravatar.cc/150?img=15", tags: ["Backend", "Java"], linkedin: "#", email: "prashant.p@example.com", phone: "+91 9876543221" },
-        { id: 8, name: "Kavita Deshmukh", role: "Data Engineer", company: "TCS", batch: "2020", avatar: "https://i.pravatar.cc/150?img=16", tags: ["Big Data", "Python"], linkedin: "#", email: "kavita.d@example.com", phone: "+91 9876543222" },
-        { id: 9, name: "Rahul Jadhav", role: "DevOps Engineer", company: "Wipro", batch: "2019", avatar: "https://i.pravatar.cc/150?img=17", tags: ["CI/CD", "AWS"], linkedin: "#", email: "rahul.j@example.com", phone: "+91 9876543223" },
-        { id: 10, name: "Anita Mane", role: "Frontend Developer", company: "Infosys", batch: "2020", avatar: "https://i.pravatar.cc/150?img=18", tags: ["React", "UI"], linkedin: "#", email: "anita.m@example.com", phone: "+91 9876543224" },
-        { id: 11, name: "Siddharth Wakchaure", role: "Security Analyst", company: "Cognizant", batch: "2020", avatar: "https://i.pravatar.cc/150?img=19", tags: ["Cybersec", "Network"], linkedin: "#", email: "sid.w@example.com", phone: "+91 9876543225" }
+        { id: 7, name: "Prashant Patil", role: "Software Engineer II", company: "Amazon", batch: "2019", department: "Computer Engineering", avatar: "https://i.pravatar.cc/150?img=15", tags: ["Backend", "Java"], linkedin: "#", email: "prashant.p@example.com", phone: "+91 9876543221" },
+        { id: 8, name: "Kavita Deshmukh", role: "Data Engineer", company: "TCS", batch: "2020", department: "Computer Engineering", avatar: "https://i.pravatar.cc/150?img=16", tags: ["Big Data", "Python"], linkedin: "#", email: "kavita.d@example.com", phone: "+91 9876543222" },
+        { id: 9, name: "Rahul Jadhav", role: "DevOps Engineer", company: "Wipro", batch: "2019", department: "Information Technology", avatar: "https://i.pravatar.cc/150?img=17", tags: ["CI/CD", "AWS"], linkedin: "#", email: "rahul.j@example.com", phone: "+91 9876543223" },
+        { id: 10, name: "Anita Mane", role: "Frontend Developer", company: "Infosys", batch: "2020", department: "Computer Engineering", avatar: "https://i.pravatar.cc/150?img=18", tags: ["React", "UI"], linkedin: "#", email: "anita.m@example.com", phone: "+91 9876543224" },
+        { id: 11, name: "Siddharth Wakchaure", role: "Security Analyst", company: "Cognizant", batch: "2020", department: "Computer Engineering", avatar: "https://i.pravatar.cc/150?img=19", tags: ["Cybersec", "Network"], linkedin: "#", email: "sid.w@example.com", phone: "+91 9876543225" }
     ],
 
     // Events

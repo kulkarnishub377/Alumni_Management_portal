@@ -31,18 +31,75 @@
             <div class="dash-sidebar-footer"><a href="#" class="dash-nav-link" id="logoutBtn"><i class='bx bx-log-out'></i><span>Logout</span></a></div>
         </aside>
         <main class="dash-main">
-            <header class="dash-topbar"><div style="display:flex;align-items:center;gap:16px;"><button class="sidebar-toggle" onclick="document.getElementById('dashSidebar').classList.toggle('open')"><i class='bx bx-menu'></i></button><div class="dash-search"><i class='bx bx-search'></i><input type="text" placeholder="Search alumni..."></div></div><div class="dash-topbar-actions"><button class="topbar-icon-btn"><i class='bx bxs-bell'></i><span class="notif-dot"></span></button><div class="topbar-profile"><img src="https://i.pravatar.cc/150?img=47" id="topAvatar" alt="Profile"><span id="topName">User</span><i class='bx bx-chevron-down'></i></div></div></header>
+            <header class="dash-topbar"><div style="display:flex;align-items:center;gap:16px;"><button class="sidebar-toggle" onclick="document.getElementById('dashSidebar').classList.toggle('open')"><i class='bx bx-menu'></i></button></div><div class="dash-topbar-actions"><button class="topbar-icon-btn"><i class='bx bxs-bell'></i><span class="notif-dot"></span></button><div class="topbar-profile"><img src="https://i.pravatar.cc/150?img=47" id="topAvatar" alt="Profile"><span id="topName">User</span><i class='bx bx-chevron-down'></i></div></div></header>
             <div class="dash-view" style="opacity:1;transform:translateY(0);">
-                <div class="page-title-bar"><div><h1>🎓 Department Alumni</h1><p>Manage alumni specifically for <span id="pageDeptName" style="font-weight:700;color:var(--primary);"></span>.</p></div>
-                <button class="btn btn-secondary btn-sm" onclick="showToast('Exporting department alumni list...','info')"><i class='bx bx-download'></i> Export List</button></div>
+                <div class="page-title-bar">
+                    <div><h1>🎓 Department Alumni</h1><p>Manage alumni specifically for <span id="pageDeptName" style="font-weight:700;color:var(--primary);"></span>.</p></div>
+                    <button class="btn btn-secondary btn-sm" onclick="showToast('Exporting department alumni list...','info')"><i class='bx bx-download'></i> Export List</button>
+                </div>
+                
+                <div class="dash-stats-row" style="margin-bottom:24px;">
+                    <div class="dash-stat-card"><div class="stat-icon purple"><i class='bx bxs-graduation'></i></div><div class="stat-info"><h3 id="statTotalStudents">0</h3><p>Total Graduates</p></div></div>
+                    <div class="dash-stat-card"><div class="stat-icon green"><i class='bx bxs-briefcase-alt-2'></i></div><div class="stat-info"><h3 id="statEmployed">0%</h3><p>Placement Rate</p></div></div>
+                    <div class="dash-stat-card"><div class="stat-icon blue"><i class='bx bxs-book-reader'></i></div><div class="stat-info"><h3 id="statHigherEd">0%</h3><p>Higher Education</p></div></div>
+                </div>
+
                 <div class="filter-bar" style="margin-bottom:24px;">
                     <div class="filter-input"><i class='bx bx-search'></i><input type="text" placeholder="Search by name, company..." id="alumniSearch" oninput="filterAlumni()"></div>
-                    <select id="batchFilterAlumni" onchange="filterAlumni()"><option value="">All Batches</option></select>
+                    <select class="form-control" id="batchFilterAlumni" onchange="filterAlumni()" style="width:150px;"><option value="">All Batches</option></select>
+                    <button class="btn btn-primary" style="background:#0d9488; border:none;" onclick="showToast('Messaging filtered group...','info')"><i class='bx bxs-paper-plane'></i> Message Group</button>
                 </div>
+                
                 <div class="network-grid" id="alumniGrid"></div>
             </div>
         </main>
     </div>
+
+    <!-- Alumni Detail Modal -->
+    <div id="alumniDetailModal" class="dashboard-modal" style="display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.5);z-index:9999;align-items:center;justify-content:center;backdrop-filter:blur(4px);">
+        <div style="background:var(--bg-card);width:100%;max-width:600px;border-radius:var(--radius-lg);padding:0;box-shadow:var(--shadow-xl);overflow:hidden;position:relative;">
+            
+            <div style="height:120px;background:linear-gradient(135deg, #0d9488 0%, #0f766e 100%);position:relative;">
+                <button onclick="document.getElementById('alumniDetailModal').style.display='none'" style="position:absolute;top:16px;right:16px;background:rgba(255,255,255,0.2);border:none;width:32px;height:32px;border-radius:50%;color:white;font-size:20px;cursor:pointer;display:flex;align-items:center;justify-content:center;"><i class='bx bx-x'></i></button>
+            </div>
+            
+            <div style="padding:0 32px 32px 32px;">
+                <div style="display:flex; justify-content:space-between; align-items:flex-end; margin-top:-50px; margin-bottom:16px; position:relative; z-index:2;">
+                    <img id="modalAvatar" src="" style="width:100px;height:100px;border-radius:50%;border:4px solid var(--bg-card);background:var(--bg-card);box-shadow:0 4px 6px -1px rgba(0,0,0,0.1);">
+                    <span id="modalBatch" style="background:rgba(13,148,136,0.1);color:#0d9488;padding:6px 12px;border-radius:20px;font-size:12px;font-weight:700;margin-bottom:8px;">Batch 0000</span>
+                </div>
+                
+                <div>
+                    <h2 id="modalName" style="font-size:24px;font-weight:800;margin-bottom:4px;color:var(--text-color);">Loading...</h2>
+                    <p id="modalRole" style="color:var(--text-muted);font-size:15px;font-weight:600;">Loading...</p>
+                </div>
+
+                <hr style="border:none;border-top:1px solid var(--border);margin:24px 0;">
+
+                <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;">
+                    <div>
+                        <p style="font-size:12px;color:var(--text-muted);text-transform:uppercase;font-weight:700;margin-bottom:8px;">Contact Info</p>
+                        <p style="font-size:14px;margin-bottom:4px;display:flex;align-items:center;gap:8px;"><i class='bx bx-envelope' style="color:var(--primary);"></i> <span id="modalEmail">Not Provided</span></p>
+                        <p style="font-size:14px;margin-bottom:4px;display:flex;align-items:center;gap:8px;"><i class='bx bx-phone' style="color:var(--primary);"></i> <span id="modalPhone">Not Provided</span></p>
+                    </div>
+                    <div>
+                        <p style="font-size:12px;color:var(--text-muted);text-transform:uppercase;font-weight:700;margin-bottom:8px;">Top Skills</p>
+                        <div id="modalSkills" style="display:flex;flex-wrap:wrap;gap:8px;">
+                            <!-- skills generated here -->
+                        </div>
+                    </div>
+                </div>
+
+                <div style="margin-top:24px;display:flex;gap:12px;">
+                    <a id="modalLinkedin" href="#" target="_blank" class="btn btn-secondary" style="flex:1;text-align:center;"><i class='bx bxl-linkedin-square' style="color:#0077b5;"></i> LinkedIn</a>
+                    <button class="btn btn-primary" style="flex:1;background:#0d9488;border-color:#0d9488;"><i class='bx bxs-message-rounded-dots'></i> Direct Message</button>
+                    <button class="btn btn-secondary" style="width:40px;padding:0;"><i class='bx bx-dots-vertical-rounded'></i></button>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
     <script src="../../assets/js/data.js"></script>
     <script src="../../assets/js/common.js"></script>
     <script>
@@ -59,16 +116,40 @@
         const batches = [...new Set(deptAlumni.map(a => a.batch))].sort((a,b) => b-a);
         batches.forEach(b => document.getElementById('batchFilterAlumni').innerHTML += `<option value="${b}">${b}</option>`);
 
+        window.viewAlumniDetails = function(id) {
+            const alumnus = deptAlumni.find(a => a.id === id);
+            if(!alumnus) return;
+            
+            document.getElementById('modalAvatar').src = alumnus.avatar;
+            document.getElementById('modalName').textContent = alumnus.name;
+            document.getElementById('modalRole').textContent = alumnus.role + ' at ' + alumnus.company;
+            document.getElementById('modalBatch').textContent = 'Batch ' + alumnus.batch;
+            document.getElementById('modalEmail').textContent = alumnus.email || 'Not Provided';
+            document.getElementById('modalPhone').textContent = alumnus.phone || 'Not Provided';
+            document.getElementById('modalLinkedin').href = alumnus.linkedin || '#';
+            
+            document.getElementById('modalSkills').innerHTML = (alumnus.tags && alumnus.tags.length) ? alumnus.tags.map(tag => `<span style="background:var(--border);padding:4px 10px;border-radius:6px;font-size:12px;font-weight:600;">${tag}</span>`).join('') : '<span style="font-size:12px;color:var(--text-muted);">No skills listed</span>';
+
+            document.getElementById('alumniDetailModal').style.display = 'flex';
+        }
+
         function renderAlumniCards(list) {
+            document.getElementById('statTotalStudents').textContent = list.length * 12; // Dummy multiplier
+            document.getElementById('statEmployed').textContent = list.length > 0 ? '92%' : '0%';
+            document.getElementById('statHigherEd').textContent = list.length > 0 ? '5%' : '0%';
+            
             document.getElementById('alumniGrid').innerHTML = list.length ? list.map(a => `
-                <div class="network-card">
-                    <img src="${a.avatar}" alt="${a.name}" style="width:48px;height:48px;border-radius:50%;">
+                <div class="network-card" style="transition:all 0.3s; border:1px solid var(--border);cursor:pointer;" onmouseover="this.style.borderColor='#0d9488';this.style.transform='translateY(-3px)';" onmouseout="this.style.borderColor='var(--border)';this.style.transform='translateY(0)';" onclick="viewAlumniDetails(${a.id})">
+                    <img src="${a.avatar}" alt="${a.name}" style="width:64px;height:64px;border-radius:50%;border:2px solid #e2e8f0;padding:2px;">
                     <div class="nc-info" style="flex:1;">
-                        <h4>${a.name}</h4><p>${a.role} at ${a.company}</p><span class="nc-batch">Batch ${a.batch}</span>
+                        <h4 style="font-size:16px;font-weight:700;">${a.name}</h4><p style="color:#0d9488;font-weight:600;">${a.role}</p>
+                        <p style="font-size:13px;color:var(--text-muted);"><i class='bx bxs-business'></i> ${a.company}</p>
+                        <div style="display:flex;gap:8px;margin-top:8px;">
+                            <span class="nc-batch" style="background:rgba(13,148,136,0.1);color:#0d9488;">Batch ${a.batch}</span>
+                        </div>
                     </div>
-                    <button class="topbar-icon-btn" title="Edit details" onclick="showToast('Editing ${a.name}...','info')"><i class='bx bx-edit'></i></button>
                 </div>
-            `).join('') : '<p style="grid-column:1/-1;text-align:center;color:var(--text-muted);padding:20px;">No alumni found matching criteria.</p>';
+            `).join('') : '<p style="grid-column:1/-1;text-align:center;color:var(--text-muted);padding:40px;border:1px dashed var(--border);border-radius:var(--radius-lg);">No alumni found matching criteria.</p>';
         }
         renderAlumniCards(deptAlumni);
 
