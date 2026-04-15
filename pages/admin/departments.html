@@ -62,7 +62,7 @@
             <div class="dash-view" style="opacity:1;transform:translateY(0);">
                 <div class="page-title-bar">
                     <div><h1>🏫 Department Management</h1><p>Create, edit, and manage all academic departments.</p></div>
-                    <button class="btn btn-primary btn-sm" onclick="const newDept = prompt('Enter new department name:'); if(newDept) showToast('Department ' + newDept + ' created successfully!', 'success');"><i class='bx bx-plus'></i> Add Department</button>
+                    <button class="btn btn-primary btn-sm" onclick="document.getElementById('addDeptModal').style.display='flex'"><i class='bx bx-plus'></i> Add Department</button>
                 </div>
                 <div class="dash-stats-row" id="deptStats"></div>
                 <div class="dept-table-card">
@@ -73,7 +73,62 @@
                         </table>
                     </div>
                 </div>
+                </div>
             </div>
+            
+            <!-- Add Department Modal -->
+            <div id="addDeptModal" class="dashboard-modal" style="display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.5);z-index:9999;align-items:center;justify-content:center;backdrop-filter:blur(4px);">
+                <div style="background:var(--bg-card);width:100%;max-width:450px;border-radius:var(--radius-lg);padding:32px;box-shadow:var(--shadow-xl);position:relative;">
+                    <button onclick="document.getElementById('addDeptModal').style.display='none'" style="position:absolute;top:20px;right:20px;background:none;border:none;font-size:24px;color:var(--text-muted);cursor:pointer;"><i class='bx bx-x'></i></button>
+                    <h2 style="font-size:20px;font-weight:800;margin-bottom:8px;color:var(--text-color);">Create New Department</h2>
+                    <p style="color:var(--text-muted);font-size:14px;margin-bottom:24px;">Initialize a new academic faculty.</p>
+                    <form onsubmit="event.preventDefault(); showToast('Department provisioned successfully', 'success'); this.reset(); document.getElementById('addDeptModal').style.display='none';">
+                        <div class="edit-form-group" style="margin-bottom:16px;">
+                            <label style="display:block;margin-bottom:8px;font-weight:600;font-size:13px;color:var(--text-secondary);">Department Name</label>
+                            <input type="text" required placeholder="e.g. Civil Engineering" style="width:100%;padding:10px 14px;border-radius:var(--radius-md);border:1px solid var(--border);background:var(--bg-body);font-size:14px;">
+                        </div>
+                        <div class="edit-form-group" style="margin-bottom:16px;">
+                            <label style="display:block;margin-bottom:8px;font-weight:600;font-size:13px;color:var(--text-secondary);">Department Code</label>
+                            <input type="text" required placeholder="e.g. CE" style="width:100%;padding:10px 14px;border-radius:var(--radius-md);border:1px solid var(--border);background:var(--bg-body);font-size:14px;">
+                        </div>
+                        <div class="edit-form-group" style="margin-bottom:24px;">
+                            <label style="display:block;margin-bottom:8px;font-weight:600;font-size:13px;color:var(--text-secondary);">Assign Initial Coordinator (Optional)</label>
+                            <select style="width:100%;padding:10px 14px;border-radius:var(--radius-md);border:1px solid var(--border);background:var(--bg-body);font-size:14px;color:var(--text-muted);">
+                                <option value="">Draft Assignment (Later)</option>
+                                <option value="new">Invite via Email</option>
+                            </select>
+                        </div>
+                        <div style="display:flex;gap:12px;">
+                            <button type="submit" class="btn btn-primary" style="flex:2;background:#ef4444;border-color:#ef4444;"><i class='bx bx-building-house'></i> Provision Faculty</button>
+                            <button type="button" class="btn btn-secondary" style="flex:1;" onclick="document.getElementById('addDeptModal').style.display='none'">Cancel</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Edit Department Modal -->
+            <div id="editDeptModal" class="dashboard-modal" style="display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.5);z-index:9999;align-items:center;justify-content:center;backdrop-filter:blur(4px);">
+                <div style="background:var(--bg-card);width:100%;max-width:450px;border-radius:var(--radius-lg);padding:32px;box-shadow:var(--shadow-xl);position:relative;">
+                    <button onclick="document.getElementById('editDeptModal').style.display='none'" style="position:absolute;top:20px;right:20px;background:none;border:none;font-size:24px;color:var(--text-muted);cursor:pointer;"><i class='bx bx-x'></i></button>
+                    <h2 style="font-size:20px;font-weight:800;margin-bottom:8px;color:var(--text-color);">Edit Department</h2>
+                    <p style="color:var(--text-muted);font-size:14px;margin-bottom:24px;">Modify faculty records.</p>
+                    <form onsubmit="event.preventDefault(); showToast('Department details updated dynamically', 'success'); document.getElementById('editDeptModal').style.display='none';">
+                        <div class="edit-form-group" style="margin-bottom:16px;">
+                            <label style="display:block;margin-bottom:8px;font-weight:600;font-size:13px;color:var(--text-secondary);">Department Name</label>
+                            <input type="text" id="editDeptName" required style="width:100%;padding:10px 14px;border-radius:var(--radius-md);border:1px solid var(--border);background:var(--bg-body);font-size:14px;">
+                        </div>
+                        <div class="edit-form-group" style="margin-bottom:24px;">
+                            <label style="display:block;margin-bottom:8px;font-weight:600;font-size:13px;color:var(--text-secondary);">Change Status</label>
+                            <select id="editDeptStatus" style="width:100%;padding:10px 14px;border-radius:var(--radius-md);border:1px solid var(--border);background:var(--bg-body);font-size:14px;">
+                                <option value="active">Active (Processing Alumni)</option>
+                                <option value="inactive">Inactive (Frozen)</option>
+                            </select>
+                        </div>
+                        <button type="submit" class="btn btn-primary" style="width:100%;background:#ef4444;border-color:#ef4444;"><i class='bx bx-save'></i> Save Changes</button>
+                    </form>
+                </div>
+            </div>
+
         </main>
     </div>
     <script src="../../assets/js/data.js"></script>
@@ -102,10 +157,16 @@
                 <td>${d.totalMentors}</td>
                 <td><span class="dept-status ${d.status}">${d.status}</span></td>
                 <td><div class="action-btns">
-                    <button title="Edit" onclick="showToast('Edit ${d.name}','info')"><i class='bx bx-edit'></i></button>
-                    <button title="Delete" class="delete" onclick="showToast('Cannot delete active department','error')"><i class='bx bx-trash'></i></button>
+                    <button title="Edit Details" onclick="window.editDepartment('${d.name}', '${d.status}')"><i class='bx bx-edit'></i></button>
+                    <button title="Archive" class="delete" onclick="showToast('Cannot delete active department with processed Alumni arrays','error')"><i class='bx bx-trash'></i></button>
                 </div></td>
             </tr>`).join('');
+            
+        window.editDepartment = function(name, status) {
+            document.getElementById('editDeptName').value = name;
+            document.getElementById('editDeptStatus').value = status;
+            document.getElementById('editDeptModal').style.display = 'flex';
+        };
     </script>
 </body>
 </html>
