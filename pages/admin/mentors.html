@@ -18,6 +18,9 @@
         .mentor-meta { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 16px; }
         .mentor-meta span { padding: 4px 10px; border-radius: 20px; font-size: 11px; font-weight: 600; background: var(--bg-body); color: var(--text-secondary); border: 1px solid var(--border); }
         .mentor-card-actions { display: flex; gap: 8px; }
+        .pipeline-tab { padding: 12px 16px; border: none; background: transparent; font-size: 13px; font-weight: 700; color: var(--text-muted); cursor: pointer; border-radius: var(--radius-md); transition: var(--transition-fast); }
+        .pipeline-tab:hover { color: var(--text-color); background: rgba(0,0,0,0.05); }
+        .pipeline-tab.active { background: var(--bg-card); color: #ef4444; box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
     </style>
 </head>
 <body>
@@ -30,7 +33,7 @@
                 <a href="dashboard.html" class="dash-nav-link"><i class='bx bxs-dashboard'></i><span>Dashboard</span></a>
                 <a href="departments.html" class="dash-nav-link"><i class='bx bxs-building-house'></i><span>Departments</span></a>
                 <span class="nav-section-label">Management</span>
-                <a href="users.html" class="dash-nav-link"><i class='bx bxs-group'></i><span>All Users</span></a>
+                
                 <a href="mentors.html" class="dash-nav-link active"><i class='bx bxs-user-voice'></i><span>Mentors</span></a>
                 <a href="alumni.html" class="dash-nav-link"><i class='bx bxs-user-detail'></i><span>Alumni</span></a>
                 <a href="top-alumni.html" class="dash-nav-link"><i class='bx bxs-trophy'></i><span>Top Alumni</span></a>
@@ -58,7 +61,7 @@
             </header>
             <div class="dash-view" style="opacity:1;transform:translateY(0);">
                 <div class="page-title-bar"><div><h1>🧑‍🏫 Mentor Management</h1><p>Assign and manage teacher mentors across departments.</p></div>
-                    <button class="btn btn-primary btn-sm" onclick="const newMentor = prompt('Enter new mentor name:'); if(newMentor) showToast('Mentor ' + newMentor + ' added successfully!', 'success')"><i class='bx bx-plus'></i> Add Mentor</button></div>
+                    <button class="btn btn-primary btn-sm" onclick="document.getElementById('addMentorModal').style.display='flex'"><i class='bx bx-plus'></i> Add Mentor</button>
                 </div>
                 <div class="filter-bar" style="margin-bottom:24px;">
                     <div class="filter-input"><i class='bx bx-search'></i><input type="text" placeholder="Search by name or specialization..." id="mentorSearchMain" oninput="filterMentors()"></div>
@@ -66,6 +69,71 @@
                 </div>
                 <div class="mentor-grid" id="mentorGrid"></div>
             </div>
+
+            <!-- Add/Edit Mentor Modals -->
+            <div id="addMentorModal" class="dashboard-modal" style="display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.5);z-index:9999;align-items:center;justify-content:center;backdrop-filter:blur(4px);">
+                <div style="background:var(--bg-card);width:100%;max-width:550px;border-radius:var(--radius-lg);padding:32px;box-shadow:var(--shadow-xl);position:relative;">
+                    <button onclick="document.getElementById('addMentorModal').style.display='none'" style="position:absolute;top:20px;right:20px;background:none;border:none;font-size:24px;color:var(--text-muted);cursor:pointer;"><i class='bx bx-x'></i></button>
+                    <h2 style="font-size:20px;font-weight:800;margin-bottom:8px;color:var(--text-color);">Enroll New Mentor</h2>
+                    <p style="color:var(--text-muted);font-size:14px;margin-bottom:24px;">Admins route Mentors to specific departments.</p>
+                    
+                    <form onsubmit="event.preventDefault(); showToast('Mentor provisioned successfully', 'success'); this.reset(); document.getElementById('addMentorModal').style.display='none';">
+                        <div class="edit-form-group" style="margin-bottom:16px;">
+                            <label style="display:block;margin-bottom:8px;font-weight:600;font-size:13px;color:var(--text-secondary);">Full Name</label>
+                            <input type="text" required placeholder="e.g. Dr. Emily Chen" style="width:100%;padding:10px 14px;border-radius:var(--radius-md);border:1px solid var(--border);background:var(--bg-body);font-size:14px;">
+                        </div>
+                        <div class="edit-form-group" style="margin-bottom:16px;">
+                            <label style="display:block;margin-bottom:8px;font-weight:600;font-size:13px;color:var(--text-secondary);">Email</label>
+                            <input type="email" required placeholder="e.g. emily.chen@university.edu" style="width:100%;padding:10px 14px;border-radius:var(--radius-md);border:1px solid var(--border);background:var(--bg-body);font-size:14px;">
+                        </div>
+                        <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:24px;">
+                            <div class="edit-form-group">
+                                <label style="display:block;margin-bottom:8px;font-weight:600;font-size:13px;color:var(--text-secondary);">Department Binding</label>
+                                <select required style="width:100%;padding:10px 14px;border-radius:var(--radius-md);border:1px solid var(--border);background:var(--bg-body);font-size:14px;" id="addMentorDeptSelect"></select>
+                            </div>
+                            <div class="edit-form-group">
+                                <label style="display:block;margin-bottom:8px;font-weight:600;font-size:13px;color:var(--text-secondary);">Primary Subject</label>
+                                <input type="text" required placeholder="e.g. Mechanics" style="width:100%;padding:10px 14px;border-radius:var(--radius-md);border:1px solid var(--border);background:var(--bg-body);font-size:14px;">
+                            </div>
+                        </div>
+                        <button type="submit" class="btn btn-primary" style="width:100%;background:#ef4444;border-color:#ef4444;"><i class='bx bx-user-plus'></i> Provision Mentor Identity</button>
+                    </form>
+                </div>
+            </div>
+
+            <div id="editMentorModal" class="dashboard-modal" style="display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.5);z-index:9999;align-items:center;justify-content:center;backdrop-filter:blur(4px);">
+                <div style="background:var(--bg-card);width:100%;max-width:550px;border-radius:var(--radius-lg);padding:32px;box-shadow:var(--shadow-xl);position:relative;">
+                    <button onclick="document.getElementById('editMentorModal').style.display='none'" style="position:absolute;top:20px;right:20px;background:none;border:none;font-size:24px;color:var(--text-muted);cursor:pointer;"><i class='bx bx-x'></i></button>
+                    <h2 style="font-size:20px;font-weight:800;margin-bottom:8px;color:var(--text-color);">Manage Mentor Payload</h2>
+                    <p style="color:var(--text-muted);font-size:14px;margin-bottom:24px;">Note: Administrators cannot manage granular batch assignments.</p>
+                    
+                    <form onsubmit="event.preventDefault(); showToast('Metadata successfully synchronized!', 'success'); document.getElementById('editMentorModal').style.display='none';">
+                        <div class="edit-form-group" style="margin-bottom:16px;">
+                            <label style="display:block;margin-bottom:8px;font-weight:600;font-size:13px;color:var(--text-secondary);">Full Name</label>
+                            <input type="text" id="editMentorName" required style="width:100%;padding:10px 14px;border-radius:var(--radius-md);border:1px solid var(--border);background:var(--bg-body);font-size:14px;">
+                        </div>
+                        <div class="edit-form-group" style="margin-bottom:16px;">
+                            <label style="display:block;margin-bottom:8px;font-weight:600;font-size:13px;color:var(--text-secondary);">Email</label>
+                            <input type="email" id="editMentorEmail" required style="width:100%;padding:10px 14px;border-radius:var(--radius-md);border:1px solid var(--border);background:var(--bg-body);font-size:14px;">
+                        </div>
+                        <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:24px;">
+                            <div class="edit-form-group">
+                                <label style="display:block;margin-bottom:8px;font-weight:600;font-size:13px;color:var(--text-secondary);">Department Binding</label>
+                                <select required style="width:100%;padding:10px 14px;border-radius:var(--radius-md);border:1px solid var(--border);background:var(--bg-body);font-size:14px;" id="editMentorDept"></select>
+                            </div>
+                            <div class="edit-form-group">
+                                <label style="display:block;margin-bottom:8px;font-weight:600;font-size:13px;color:var(--text-secondary);">Primary Subject</label>
+                                <input type="text" id="editMentorSubject" required style="width:100%;padding:10px 14px;border-radius:var(--radius-md);border:1px solid var(--border);background:var(--bg-body);font-size:14px;">
+                            </div>
+                        </div>
+                        <div style="background:rgba(245,158,11,0.1);color:#f59e0b;padding:12px;border-radius:var(--radius-md);font-size:12px;margin-bottom:24px;border:1px solid rgba(245,158,11,0.2);">
+                            <i class='bx bx-lock-alt'></i> Batch reassignment functions are isolated to exact Department Coordinators.
+                        </div>
+                        <button type="submit" class="btn btn-primary" style="width:100%;background:#ef4444;border-color:#ef4444;"><i class='bx bx-save'></i> Finalize Updates</button>
+                    </form>
+                </div>
+            </div>
+
         </main>
     </div>
     <script src="../../assets/js/data.js"></script>
@@ -100,8 +168,8 @@
                         <i class='bx bx-phone'></i> ${m.phone}
                     </div>
                     <div class="mentor-card-actions">
-                        <button class="btn btn-secondary btn-sm" onclick="showToast('Editing ${m.name}...','info')"><i class='bx bx-edit'></i> Edit</button>
-                        <button class="btn btn-secondary btn-sm" onclick="showToast('Reassigning batches...','info')"><i class='bx bx-transfer'></i> Reassign</button>
+                        <button class="btn btn-secondary btn-sm" onclick="window.editMentorAdmin('${m.name}', '${m.email}', '${m.department}', '${m.specialization}')"><i class='bx bx-edit'></i> Inspect Core Edit</button>
+                        <button class="btn btn-secondary btn-sm" style="color:var(--text-muted);cursor:not-allowed;" title="Admin Locked"><i class='bx bx-transfer'></i> Reassign Batch <i class='bx bx-lock'></i></button>
                     </div>
                 </div>
             `).join('');
@@ -117,6 +185,20 @@
                 return matchSearch && matchDept;
             });
             renderMentors(filtered);
+        }
+
+        // Initialize modal selects
+        [...new Set(APP_DATA.mentors.map(m => m.department))].sort().forEach(d => {
+            document.getElementById('addMentorDeptSelect').innerHTML += `<option value="${d}">${d}</option>`;
+            document.getElementById('editMentorDept').innerHTML += `<option value="${d}">${d}</option>`;
+        });
+
+        window.editMentorAdmin = function(name, email, dept, spec) {
+            document.getElementById('editMentorName').value = name;
+            document.getElementById('editMentorEmail').value = email;
+            document.getElementById('editMentorDept').value = dept;
+            document.getElementById('editMentorSubject').value = spec;
+            document.getElementById('editMentorModal').style.display = 'flex';
         }
     </script>
 </body>
