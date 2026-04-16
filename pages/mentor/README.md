@@ -1,19 +1,13 @@
-# 🧑‍🏫 Batch Mentor Dashboard
+# Mentor Portal `(/pages/mentor)`
 
-This directory contains the Batch Mentor (Teacher) interface for the Alumni Management Portal.
+This directory provides specialized tools for a vital subset of high-value platform users: Mentors.
 
-## 🎯 Role Overview
-The **Batch Mentor** is responsible for managing very specific graduation years/batches of students and verifying their alumni status.
+Mentors are standard Alumni who have opted-in (and been verified by Coordinators/Admins) to offer their professional bandwidth to junior alumni and current students. 
 
-## 🔑 Demo Credentials
-- **Email:** `mentor@dvvpcoe.edu.in`
-- **Password:** `password123`
-*(Available by selecting the "Mentor" tab on the login page)*
+## Specialized Tooling
 
-## 📂 File Structure
-- `dashboard.html` — Overview of assigned batches and quick access to the approval queue.
-- `approvals.html` — The core workflow: Review newly registered alumni from the assigned batches against department records and hitting Approve/Reject.
-- `alumni.html` — Detailed view of all approved alumni actively in the mentor's assigned batches.
-- `events.html` — View campus and department events.
-- `chat.html` — Provide guidance by chatting with specific batches or department coordinators.
-- `settings.html` — Account and profile configurations.
+Unlike a standard Alumni view, the Mentor portal contains specialized UX flows strictly related to bandwidth management and request approvals:
+
+- `dashboard.html`: The focal point here is incoming connection requests and active ongoing mentorship pairings instead of generalized networking. 
+- `approvals.html`: A dedicated pipeline UI (often visualized via Kanban or lists) to accept or deny mentorship connection requests from the community.
+- `chat.html`: While chat exists everywhere, the mentor's chat UI often includes built-in calendaring or priority routing depending on the implementation scope.

@@ -1,22 +1,13 @@
-# 🎓 Alumni Dashboard
+# Alumni Portal `(/pages/alumni)`
 
-This directory contains the core end-user (Alumni) interface for the Alumni Management Portal.
+This is the primary user domain for the vast majority of platform traffic. 
 
-## 🎯 Role Overview
-The **Alumni** role is the primary user of the platform. They can connect with batchmates, browse jobs, post jobs for review, RSVP to events, and donate to campaigns.
+This directory contains the views, components, and styling configurations designed specifically for general graduates looking to network, grow, and consume platform data.
 
-## 🔑 Demo Credentials
-- **Email:** `shubham@alumni.com`
-- **Password:** `password123`
-*(Available by selecting the "Alumni" tab on the login page)*
+## Core Features
 
-## 📂 File Structure
-- `dashboard.html` — The main personalized feed showing connections, jobs, and upcoming events.
-- `donations.html` — Platform for funding college initiatives and campaigns.
-- `events.html` — RSVP to upcoming events, reunions, and webinars.
-- `jobs.html` — Browse the job board or submit a new job (which goes to the Coordinator/Admin approval pipeline).
-- `mentorship.html` — Connect with senior alumni for career guidance.
-- `network.html` — Search and filter the global alumni directory.
-- `profile.html` — Personal profile view containing AI-extracted data.
-- `profile-edit.html` — Multi-step form to edit personal, academic, and professional details.
-- `chat.html` — Real-time messaging with connections and mentors.
+- `dashboard.html`: The standard user homepage upon successful authentication. Shows personalized metrics and heavily relies on rendering `data.js` metrics specific to the user's batch and department.
+- `network.html`: The directory where Alumni can discover other Alumni with powerful sorting mechanisms.
+- `jobs.html`: The central repository representing active job listings injected dynamically.
+- `events.html`: The global calendar viewer for future networking opportunities.
+- `profile.html` & `settings.html`: Pages dedicated specifically to editing user parameters, social links, and privacy states.

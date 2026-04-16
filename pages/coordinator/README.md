@@ -1,22 +1,12 @@
-# 🏫 Department Coordinator Dashboard
+# Coordinator Portal `(/pages/coordinator)`
 
-This directory contains the Department Coordinator interface for the Alumni Management Portal.
+This directory represents the mid-level management layer of the Alumni Portal, usually granted to specific verified faculty members or departmental heads.
 
-## 🎯 Role Overview
-The **Department Coordinator** manages operations, mentors, and alumni *strictly within their assigned engineering department* (e.g., Computer Engineering).
+## Capabilities
 
-## 🔑 Demo Credentials
-- **Email:** `coordinator@dvvpcoe.edu.in`
-- **Password:** `password123`
-*(Available by selecting the "Coordinator" tab on the login page)*
+Coordinators sit between the standard Alumni and the Super Admins. They possess specialized dashboards focused heavily on driving engagement and curating opportunities.
 
-## 📂 File Structure
-- `dashboard.html` — Overview of department-specific statistics and pending action items.
-- `alumni.html` — View and manage alumni belonging to this specific department.
-- `mentors.html` — View teachers/mentors assigned to this department.
-- `jobs.html` — First-tier review for job postings submitted by department alumni.
-- `top-alumni.html` — Suggest outstanding department alumni to the Admin for global featuring.
-- `events.html` — Department-specific event calendar.
-- `chat.html` — Chat with department mentors and Admin office.
-- `notifications.html` — Send announcements to department alumni.
-- `settings.html` — Account and profile configurations.
+- `dashboard.html`: Focused on operational throughput (Pending Job Approvals, Pending Event Requests).
+- `jobs.html` & `events.html`: Grants elevated privileges to approve, deny, or elevate community-submitted postings before they iterate to the global `data.js` production pipeline.
+- `alumni.html`: Directory access with limited modification capabilities. Can verify user accounts transitioning them out of an unverified onboarding state.
+- `mentors.html`: Dedicated tooling to observe and arrange complex mentorship relationships between active students and high-pedigree alumni.
