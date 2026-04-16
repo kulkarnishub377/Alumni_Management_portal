@@ -3,511 +3,317 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Alumni Management Portal | DVVPCOE Ahmednagar</title>
-    <meta name="description" content="Connect with fellow alumni, explore networking opportunities, and stay updated with events.">
-    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="assets/css/common.css">
-    <style>
-        /* ========================================================= */
-        /*  PREMIUM STANDALONE LANDING PAGE OVERRIDES (Dark Theme)   */
-        /* ========================================================= */
-        
-        :root {
-            /* Premium Overrides */
-            --brand-primary: #4f46e5;
-            --brand-secondary: #06b6d4;
-            --landing-bg: #0f172a;
-            --landing-surface: #1e293b;
-            --landing-glass: rgba(30, 41, 59, 0.75);
-            --landing-border: rgba(255, 255, 255, 0.1);
-            --text-light: #f8fafc;
-            --text-muted: #94a3b8;
-            --font-display: 'Outfit', sans-serif;
-            --font-body: 'Inter', sans-serif;
-
-            /* Override Common.css Variables for JS Compatibility */
-            --bg-body: var(--landing-bg);
-            --bg-card: var(--landing-surface);
-            --bg-secondary: var(--landing-surface);
-            --primary: #a5b4fc;
-            --primary-light: rgba(79, 70, 229, 0.2);
-            --border: var(--landing-border);
-            --text-primary: #f8fafc;
-            --text-secondary: #cbd5e1;
-            --radius-md: 12px;
-            --radius-lg: 16px;
-        }
-
-        body {
-            background-color: var(--landing-bg);
-            color: var(--text-light);
-            font-family: var(--font-body);
-            overflow-x: hidden;
-            margin: 0; padding: 0;
-        }
-
-        h1, h2, h3, h4, h5, h6 { font-family: var(--font-display); }
-
-        /* General Utilities */
-        .premium-container {
-            max-width: 1300px;
-            margin: 0 auto;
-            padding: 0 5%;
-        }
-
-        .section-badge {
-            display: inline-block;
-            padding: 8px 16px;
-            background: rgba(79, 70, 229, 0.15);
-            color: #818cf8;
-            border-radius: 30px;
-            font-weight: 600;
-            font-size: 13px;
-            margin-bottom: 15px;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            border: 1px solid rgba(79, 70, 229, 0.3);
-        }
-
-        .section-heading {
-            font-size: 42px;
-            font-weight: 800;
-            color: #fff;
-            margin-bottom: 20px;
-            line-height: 1.2;
-        }
-
-        .section-subheading {
-            font-size: 18px;
-            color: var(--text-muted);
-            max-width: 600px;
-            margin-bottom: 50px;
-            line-height: 1.6;
-        }
-
-        /* Navbar Overrides */
-        .land-navbar {
-            position: fixed; width: 100%; top: 0; z-index: 1000;
-            padding: 20px 0; transition: all 0.4s ease;
-            background: transparent;
-        }
-        .land-navbar.scrolled {
-            background: rgba(15, 23, 42, 0.85);
-            backdrop-filter: blur(16px);
-            -webkit-backdrop-filter: blur(16px);
-            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-            padding: 12px 0;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-        }
-        .land-nav-inner {
-            display: flex; justify-content: space-between; align-items: center;
-        }
-        .land-brand { display: flex; align-items: center; gap: 10px; text-decoration: none; color: #fff; transition: transform 0.3s ease;}
-        .land-brand:hover { transform: scale(1.02); }
-        .land-brand i { font-size: 30px; color: var(--brand-secondary); }
-        .land-brand h2 { font-size: 24px; font-weight: 800; letter-spacing: -0.5px; margin:0;}
-        
-        .land-menu { display: flex; gap: 15px; align-items: center; }
-        .land-menu a { color: var(--text-light); text-decoration: none; font-weight: 500; transition: all 0.3s ease; font-size: 15px; padding: 8px 16px; border-radius: 12px; }
-        .land-menu a:hover { color: #fff; background: rgba(255,255,255,0.1); transform: translateY(-2px); }
-        
-        .land-actions { display: flex; gap: 15px; align-items: center; }
-        .land-btn { padding: 10px 24px; border-radius: 12px; font-weight: 600; text-decoration: none; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); font-size: 15px; border: 1px solid transparent;}
-        .land-btn-ghost { color: #fff; background: rgba(255,255,255,0.05); border-color: rgba(255,255,255,0.1); }
-        .land-btn-ghost:hover { background: rgba(255,255,255,0.1); border-color: rgba(255,255,255,0.2); transform: translateY(-2px); }
-        .land-btn-primary { background: linear-gradient(135deg, var(--brand-primary), var(--brand-secondary)); color: #fff; box-shadow: 0 10px 20px rgba(79, 70, 229, 0.3); }
-        .land-btn-primary:hover { transform: translateY(-2px); box-shadow: 0 15px 30px rgba(79, 70, 229, 0.5); filter: brightness(1.1); }
-
-        /* Dynamic Hero Section */
-        .land-hero {
-            position: relative;
-            padding: 180px 0 100px 0;
-            min-height: 100vh;
-            display: flex;
-            align-items: center;
-            overflow: hidden;
-            background: radial-gradient(circle at center, rgba(15, 23, 42, 1) 0%, rgba(10, 15, 30, 1) 100%);
-        }
-        /* Background Glows */
-        .hero-glow-1 { position: absolute; width: 600px; height: 600px; background: radial-gradient(circle, rgba(79,70,229,0.3) 0%, transparent 60%); top: -150px; left: -100px; z-index: 1; filter: blur(60px); animation: pulseGlow 6s infinite alternate;}
-        .hero-glow-2 { position: absolute; width: 500px; height: 500px; background: radial-gradient(circle, rgba(6,182,212,0.25) 0%, transparent 60%); bottom: -50px; right: -50px; z-index: 1; filter: blur(60px); animation: pulseGlow 8s infinite alternate-reverse;}
-
-        .hero-grid {
-            display: grid;
-            grid-template-columns: 1.1fr 0.9fr;
-            gap: 60px;
-            align-items: center;
-            z-index: 2; position: relative;
-        }
-
-        .hero-text-content { animation: slideInLeft 1s cubic-bezier(0.2, 0.8, 0.2, 1) forwards; }
-        .hero-text-content h1 {
-            font-size: 68px; font-weight: 800; line-height: 1.15; margin-bottom: 25px; color: #fff; letter-spacing: -1.5px;
-        }
-        .hero-text-content h1 span {
-            background: linear-gradient(135deg, #a5b4fc 0%, #67e8f9 50%, #4f46e5 100%);
-            background-size: 200% auto;
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            animation: gradientShift 4s linear infinite;
-        }
-        .hero-text-content p { font-size: 19px; color: var(--text-muted); margin-bottom: 45px; line-height: 1.7; max-width: 550px;}
-        
-        .hero-action-group { display: flex; gap: 20px; align-items: center; margin-bottom: 50px; }
-        .btn-massive { padding: 18px 36px; border-radius: 14px; font-size: 16px; display: inline-flex; align-items: center; gap: 10px; font-weight: 600;}
-        
-        .hero-stats-row { display: flex; gap: 40px; border-top: 1px solid rgba(255,255,255,0.08); padding-top: 35px; }
-        .h-stat h4 { font-size: 34px; font-weight: 800; color: #fff; margin-bottom: 5px; letter-spacing: -0.5px;}
-        .h-stat p { font-size: 14px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1.5px; font-weight: 600;}
-
-        /* Hero Visual Glass Card */
-        .hero-visual { position: relative; animation: slideInRight 1.2s cubic-bezier(0.2, 0.8, 0.2, 1) forwards; }
-        .glass-hero-card {
-            background: rgba(30, 41, 59, 0.45);
-            backdrop-filter: blur(24px);
-            -webkit-backdrop-filter: blur(24px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-top: 1px solid rgba(255, 255, 255, 0.2);
-            border-left: 1px solid rgba(255, 255, 255, 0.2);
-            border-radius: 28px;
-            padding: 35px;
-            box-shadow: 0 35px 60px -15px rgba(0,0,0,0.6), inset 0 0 20px rgba(255,255,255,0.03);
-            position: relative;
-            z-index: 2;
-        }
-        .ghc-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; padding-bottom: 15px; border-bottom: 1px solid rgba(255,255,255,0.08);}
-        .ghc-header h3 { font-size: 19px; color: #fff; font-weight: 700;}
-        .ghc-live { display: flex; align-items: center; gap: 8px; font-size: 13px; font-weight: 700; color: #10b981; background: rgba(16,185,129,0.15); padding: 6px 14px; border-radius: 20px; border: 1px solid rgba(16,185,129,0.2);}
-        .ghc-live span { width: 8px; height: 8px; background: #10b981; border-radius: 50%; box-shadow: 0 0 10px #10b981; animation: livePulse 2s infinite;}
-        
-        /* Floating Elements */
-        .float-blob {
-            position: absolute; right: -40px; top: 120px; background: rgba(15, 23, 42, 0.7);
-            border: 1px solid rgba(6,182,212,0.3); border-radius: 20px; padding: 18px;
-            display: flex; align-items: center; gap: 15px; z-index: 3;
-            backdrop-filter: blur(16px); animation: floatUp 5s ease-in-out infinite;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.4);
-        }
-        .float-blob i { font-size: 26px; color: #06b6d4; background: rgba(6,182,212,0.15); width: 55px; height: 55px; border-radius: 14px; display: flex; align-items: center; justify-content: center;}
-
-        @keyframes floatUp { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-25px); } }
-        @keyframes livePulse { 0% { box-shadow: 0 0 0 0 rgba(16,185,129,0.6); } 70% { box-shadow: 0 0 0 12px rgba(16,185,129,0); } 100% { box-shadow: 0 0 0 0 rgba(16,185,129,0); } }
-        @keyframes pulseGlow { 0% { transform: scale(0.9); opacity: 0.7; } 100% { transform: scale(1.1); opacity: 1; } }
-        @keyframes gradientShift { to { background-position: 200% center; } }
-        @keyframes slideInLeft { from { opacity: 0; transform: translateX(-40px); } to { opacity: 1; transform: translateX(0); } }
-        @keyframes slideInRight { from { opacity: 0; transform: translateX(40px); } to { opacity: 1; transform: translateX(0); } }
-
-        /* Marquee */
-        .brand-marquee { padding: 30px 0; border-top: 1px solid var(--landing-border); border-bottom: 1px solid var(--landing-border); overflow: hidden; background: rgba(15,23,42,0.6); backdrop-filter: blur(5px); }
-        .marquee-track { display: inline-flex; white-space: nowrap; animation: scrollMarquee 30s linear infinite; padding: 0 25px; }
-        .marquee-track span { display: inline-flex; align-items: center; gap: 15px; font-size: 20px; font-weight: 700; color: var(--text-muted); opacity: 0.8; margin-right: 50px; }
-        .marquee-track span i { font-size: 24px; color: var(--brand-secondary);}
-        @keyframes scrollMarquee { from { transform: translateX(0); } to { transform: translateX(-50%); } }
-
-        /* Section Spacing */
-        .land-section { padding: 100px 0; position: relative; border-top: 1px solid var(--landing-border);}
-
-        /* Customizing the JS injected components via CSS Hooks */
-        
-        /* Why Join Grid */
-        #whyJoinGrid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 30px; }
-        #whyJoinGrid .why-card {
-            background: var(--landing-surface); border: 1px solid var(--landing-border); border-radius: 20px; padding: 35px 30px;
-            transition: all 0.3s;
-        }
-        #whyJoinGrid .why-card:hover { transform: translateY(-10px); border-color: rgba(79,70,229,0.5); box-shadow: 0 15px 30px rgba(0,0,0,0.3); }
-        #whyJoinGrid .why-card i { font-size: 40px; color: var(--brand-secondary); margin-bottom: 20px; display: block;}
-        #whyJoinGrid .why-card h3 { font-size: 20px; font-weight: 700; color: #fff; margin-bottom: 15px;}
-        #whyJoinGrid .why-card p { color: var(--text-muted); line-height: 1.6; font-size: 15px;}
-
-        /* Alumni Cards */
-        #alumniGrid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 25px; }
-        #alumniGrid .alumni-card {
-            background: var(--landing-surface)!important; border-radius: 20px; padding: 25px; text-align: center; border: 1px solid var(--landing-border)!important; box-shadow: none!important; color:var(--text-primary);
-        }
-        #alumniGrid .alumni-avatar { width: 100px; height: 100px; border-radius: 50%; border: 3px solid var(--brand-primary); margin-bottom: 15px; padding: 3px;}
-        #alumniGrid .alumni-name { font-size: 18px; font-weight: 700; color: #fff; margin-bottom: 5px;}
-        #alumniGrid .alumni-role { color: var(--text-secondary); font-size: 14px; margin-bottom: 5px; }
-        #alumniGrid .alumni-company { color: var(--brand-secondary)!important; font-size: 13px; font-weight: 600; text-transform: uppercase;}
-        #alumniGrid .tag { background: rgba(255,255,255,0.05); color: #cbd5e1; border: 1px solid rgba(255,255,255,0.1); }
-        #alumniGrid .card-actions { margin-top: 20px; display: flex; gap: 10px; justify-content: center; }
-        #alumniGrid .btn-primary { background: linear-gradient(135deg, var(--brand-primary), var(--brand-secondary)); border: none; color: white; padding: 8px 16px; border-radius: 8px; cursor: pointer; font-weight: 600; transition: 0.2s;}
-        #alumniGrid .btn-primary:hover { box-shadow: 0 5px 15px rgba(79,70,229,0.3); transform: translateY(-2px);}
-        #alumniGrid .btn-secondary { background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.1); padding: 8px 12px; border-radius: 8px; color: white; display: flex; align-items: center; justify-content: center; transition: 0.2s;}
-        #alumniGrid .btn-secondary:hover { background: rgba(255,255,255,0.2); }
-        
-        /* Jobs Grid Override for Inline CSS */
-        #jobsPreviewGrid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 25px; }
-        #jobsPreviewGrid .job-card { background: var(--landing-glass)!important; border: 1px solid var(--landing-border)!important; color:var(--text-primary); }
-        #jobsPreviewGrid .job-card:hover { border-color: var(--brand-secondary)!important; background: var(--landing-surface)!important;}
-        
-        /* Events Grid */
-        #eventsGrid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 30px; }
-        #eventsGrid .event-card {
-            display: flex; background: var(--landing-surface)!important; border: 1px solid var(--landing-border)!important; border-radius: 20px; overflow: hidden; box-shadow: none!important;
-        }
-        #eventsGrid .event-banner { padding: 30px 20px; display: flex; flex-direction: column; align-items: center; justify-content: center; min-width: 110px;}
-        #eventsGrid .event-date-badge .month { color: rgba(255,255,255,0.8); font-size: 14px; font-weight: 700; text-transform: uppercase; display:block; text-align:center;}
-        #eventsGrid .event-date-badge .day { color: #fff; font-size: 32px; font-weight: 800; display:block; text-align:center;}
-        #eventsGrid .event-body { padding: 30px; flex: 1; color:var(--text-secondary);}
-        #eventsGrid .event-body h3 { font-size: 20px; color: #fff; margin-bottom: 10px;}
-
-        /* Footer */
-        .land-footer { padding: 80px 0 40px 0; background: #0b1120; border-top: 1px solid var(--landing-border);}
-        .footer-grid { display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 40px; margin-bottom: 60px;}
-        .footer-col h4 { color: #fff; font-size: 18px; margin-bottom: 25px; font-weight: 700;}
-        .footer-col ul { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 15px;}
-        .footer-col ul li a { color: var(--text-muted); text-decoration: none; transition: color 0.2s;}
-        .footer-col ul li a:hover { color: var(--brand-secondary); }
-
-        /* Modal Overrides for Homepage JS Injections */
-        .edit-modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.6); backdrop-filter: blur(5px); display: flex; opacity: 0; pointer-events: none; transition: 0.3s; z-index: 999999 !important; }
-        .edit-modal-overlay.active { opacity: 1 !important; pointer-events: auto !important; }
-        .edit-modal { background: var(--landing-surface)!important; border: 1px solid var(--landing-border)!important; border-radius: 20px!important; width: 90%!important; max-width:450px!important; margin: auto; padding: 30px!important; transform: translateY(20px); transition: 0.3s; position: relative; box-shadow: 0 25px 50px rgba(0,0,0,0.5)!important;}
-        .edit-modal-overlay.active .edit-modal { transform: translateY(0); }
-        .edit-modal-close { position: absolute; top: 15px; right: 15px; background: rgba(255,255,255,0.1); border: none; color: #fff; width: 35px; height: 35px; border-radius: 50%; font-size: 20px; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: 0.2s;}
-        .edit-modal-close:hover { background: #ef4444; }
-
-        /* Preloader */
-        .page-preloader { position: fixed; inset: 0; background: var(--landing-bg); z-index: 9999999; display: flex; align-items: center; justify-content: center; transition: opacity 0.5s ease, visibility 0.5s; }
-        .page-preloader.hidden { opacity: 0; visibility: hidden; pointer-events: none; }
-        .loader-spin { width: 50px; height: 50px; border: 4px solid rgba(255,255,255,0.1); border-top-color: var(--brand-secondary); border-radius: 50%; animation: loaderSpin 1s linear infinite; }
-        @keyframes loaderSpin { to { transform: rotate(360deg); } }
-
-        /* Responsive */
-        .mobile-toggle { display: none; background: transparent; border: none; font-size: 32px; color: #fff; cursor: pointer; }
-        @media(max-width: 1024px) {
-            .hero-grid { grid-template-columns: 1fr; text-align: center; gap: 60px;}
-            .hero-text-content h1 { font-size: 50px; }
-            .hero-text-content p { margin: 0 auto 40px auto; }
-            .hero-action-group { justify-content: center; }
-            .hero-stats-row { justify-content: center; }
-            #whyJoinGrid, #alumniGrid, #jobsPreviewGrid { grid-template-columns: repeat(2, 1fr); }
-            #eventsGrid { grid-template-columns: 1fr; }
-            .footer-grid { grid-template-columns: 1fr 1fr; }
-        }
-        @media(max-width: 768px) {
-            .mobile-toggle { display: block; }
-            .land-nav-inner { position: relative; }
-            .land-menu { display: flex; position: absolute; top: 60px; left: -100%; width: 100%; background: rgba(15, 23, 42, 0.98); backdrop-filter: blur(15px); flex-direction: column; align-items: center; padding: 30px 0; gap: 20px; transition: all 0.3s ease; border-bottom: 1px solid var(--landing-border); box-shadow: 0 10px 30px rgba(0,0,0,0.5); opacity:0;}
-            .land-menu.active { left: 0; opacity: 1;}
-            .land-actions { display: none; }
-            .hero-text-content h1 { font-size: 40px; }
-            #whyJoinGrid, #alumniGrid, #jobsPreviewGrid { grid-template-columns: 1fr; }
-            .footer-grid { grid-template-columns: 1fr; text-align: center; }
-        }
-
-    </style>
+    <title>AlumniPortal | DVVPCOE Ahmednagar - Connect. Grow. Inspire.</title>
+    <meta name="description" content="The official alumni network of Dr. Vithalrao Vikhe Patil College of Engineering. Connect with 12,500+ alumni, explore jobs, attend events, and find mentors.">
+    <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="assets/css/homepage.css">
 </head>
 <body>
 
-    <!-- Preloader -->
-    <div class="page-preloader" id="preloader"><div class="loader-spin"></div></div>
+<!-- Scroll-to-top -->
+<button id="hpScrollTop" onclick="window.scrollTo({top:0,behavior:'smooth'})"><i class="bx bx-chevron-up"></i></button>
 
-    <!-- Transparent Fixed Header -->
-    <nav class="land-navbar" id="navbar">
-        <div class="premium-container land-nav-inner">
-            <a href="#" class="land-brand">
-                <i class='bx bxs-graduation'></i>
-                <h2>AlumniPortal</h2>
-            </a>
-            <div class="land-menu" id="navMenu">
-                <a href="#about" onclick="document.getElementById('navMenu').classList.remove('active')">About</a>
-                <a href="#network" onclick="document.getElementById('navMenu').classList.remove('active')">Network</a>
-                <a href="#jobs" onclick="document.getElementById('navMenu').classList.remove('active')">Job Board</a>
-                <a href="#events" onclick="document.getElementById('navMenu').classList.remove('active')">Events</a>
-            </div>
-            <div class="land-actions">
-                <a href="pages/auth/login.html" class="land-btn land-btn-ghost">Log In</a>
-                <a href="pages/auth/register.html" class="land-btn land-btn-primary">Register Now</a>
-            </div>
-            <button class="mobile-toggle" onclick="document.getElementById('navMenu').classList.toggle('active')">
-                <i class='bx bx-menu-alt-right'></i>
-            </button>
+<!-- Search Overlay -->
+<div class="hp-search-overlay" id="hpSearchOverlay" onclick="closeHpSearchBg(event)">
+    <div class="hp-search-box">
+        <div class="hp-search-input-wrap">
+            <i class="bx bx-search"></i>
+            <input type="text" id="hpSearchInput" placeholder="Search alumni, jobs, events...">
+            <kbd onclick="closeHpSearch()" style="cursor:pointer;">Esc</kbd>
         </div>
-    </nav>
-
-    <!-- Ultra Premium Hero Section -->
-    <section class="land-hero">
-        <div class="hero-glow-1"></div>
-        <div class="hero-glow-2"></div>
-        
-        <div class="premium-container hero-grid">
-            <div class="hero-text-content">
-                <div class="section-badge">DVVPCOE Official Network</div>
-                <h1>Connect, Inspire &<br><span>Elevate Your Career.</span></h1>
-                <p>Join an exclusive global network of highly successful engineering graduates. Unlock premium job referrals, seek world-class mentorship, and build lifelong professional relationships today.</p>
-                
-                <div class="hero-action-group">
-                    <a href="pages/auth/register.html" class="land-btn-primary btn-massive">
-                        Get Started <i class='bx bx-right-arrow-alt'></i>
-                    </a>
-                    <a href="#network" class="land-btn-ghost btn-massive" style="border:none; color:var(--text-muted);">
-                        <i class='bx bx-play-circle' style="font-size:24px;"></i> See How It Works
-                    </a>
-                </div>
-
-                <div class="hero-stats-row">
-                    <div class="h-stat">
-                        <h4 class="stat-number">12,000+</h4>
-                        <p>Global Alumni</p>
-                    </div>
-                    <div class="h-stat">
-                        <h4 class="stat-number">350+</h4>
-                        <p>Partner Firms</p>
-                    </div>
-                    <div class="h-stat">
-                        <h4 class="stat-number">200+</h4>
-                        <p>Alumni Startups</p>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Glass Visual Mockup -->
-            <div class="hero-visual">
-                <div class="glass-hero-card">
-                    <div class="ghc-header">
-                        <h3>Live Network Activity</h3>
-                        <div class="ghc-live"><span></span> Active Now</div>
-                    </div>
-                    
-                    <!-- Native DOM structured feed items matching aesthetic -->
-                    <div style="display:flex; gap:15px; margin-bottom:20px; align-items:center;">
-                        <img src="https://i.pravatar.cc/150?img=12" style="width:50px; height:50px; border-radius:50%; border:2px solid var(--brand-secondary);" alt="User">
-                        <div>
-                            <p style="margin:0; font-weight:600; font-size:15px; color:#fff;">Rahul Verma <span style="color:var(--text-muted); font-size:13px; font-weight:400;">just joined.</span></p>
-                            <p style="margin:0; color:var(--brand-secondary); font-size:13px;">Class of 2021</p>
-                        </div>
-                    </div>
-                    <div style="display:flex; gap:15px; margin-bottom:20px; align-items:center;">
-                        <img src="https://i.pravatar.cc/150?img=33" style="width:50px; height:50px; border-radius:50%; border:2px solid var(--brand-primary);" alt="User">
-                        <div>
-                            <p style="margin:0; font-weight:600; font-size:15px; color:#fff;">Sneha Patil <span style="color:var(--text-muted); font-size:13px; font-weight:400;">posted a job.</span></p>
-                            <p style="margin:0; color:var(--text-muted); font-size:13px;">Software Engineer at Google</p>
-                        </div>
-                    </div>
-
-                </div>
-
-                <div class="float-blob">
-                    <i class='bx bxs-briefcase'></i>
-                    <div>
-                        <p style="margin:0; font-size:13px; font-weight:700; color:#fff;">New Job Alert</p>
-                        <p style="margin:0; font-size:11px; color:#06b6d4;">Frontend Developer</p>
-                    </div>
-                </div>
-            </div>
+        <div class="hp-search-results" id="hpSearchResults"></div>
+        <div class="hp-search-footer">
+            <span><kbd>Enter</kbd> to select</span>
+            <span><kbd>Esc</kbd> to close</span>
+            <span><kbd>Ctrl K</kbd> to open</span>
         </div>
-    </section>
-
-    <!-- Companies Marquee -->
-    <div class="brand-marquee">
-        <div class="marquee-track" id="marqueeContent"></div>
     </div>
+</div>
 
-    <!-- Why Join -->
-    <section class="land-section" id="about">
-        <div class="premium-container">
-            <div style="text-align: center;">
-                <div class="section-badge">Benefits</div>
-                <h2 class="section-heading">Why Choose The Network?</h2>
-                <p class="section-subheading" style="margin:0 auto 50px auto;">A highly curated environment tailored specially for the professional advancement of our esteemed graduates.</p>
-            </div>
-            
-            <!-- Injected by JS (Common format used to match CSS) -->
-            <div id="whyJoinGrid"></div>
+<!-- Alumni Modal -->
+<div class="hp-modal-overlay" id="hpAlumniModal">
+    <div class="hp-modal-box">
+        <button class="hp-modal-close" onclick="closeHpAlumniModal()"><i class="bx bx-x"></i></button>
+        <div id="hpModalContent" style="text-align:center;"></div>
+    </div>
+</div>
+
+<!-- ========== NAVBAR ========== -->
+<nav class="hp-navbar" id="hpNavbar">
+    <div class="hp-container hp-nav-inner">
+        <a href="#" class="hp-nav-brand">
+            <div class="logo-mark"><i class="bx bxs-graduation"></i></div>
+            <h2>Alumni<em>Portal</em></h2>
+        </a>
+        <div class="hp-nav-menu">
+            <a href="#about">About</a>
+            <a href="#network">Network</a>
+            <a href="#jobs">Careers</a>
+            <a href="#events">Events</a>
         </div>
-    </section>
+        <div class="hp-nav-actions">
+            <button class="hp-search-trigger" onclick="openHpSearch()">
+                <i class="bx bx-search" style="font-size:16px;"></i> Search <kbd>Ctrl K</kbd>
+            </button>
+            <a href="pages/auth/login.html" class="hp-nav-login">Log In</a>
+            <a href="pages/auth/register.html" class="hp-btn hp-btn-primary hp-btn-sm">Join Free</a>
+        </div>
+        <button class="hp-mobile-toggle" id="hpMobileToggle" onclick="toggleHpMobile()"><i class="bx bx-menu"></i></button>
+    </div>
+    <div class="hp-mobile-menu" id="hpMobileMenu">
+        <a href="#about" onclick="toggleHpMobile()">About</a>
+        <a href="#network" onclick="toggleHpMobile()">Network</a>
+        <a href="#jobs" onclick="toggleHpMobile()">Careers</a>
+        <a href="#events" onclick="toggleHpMobile()">Events</a>
+        <div class="hp-mobile-cta">
+            <a href="pages/auth/login.html" class="hp-btn hp-btn-outline" style="width:100%;justify-content:center;">Log In</a>
+            <a href="pages/auth/register.html" class="hp-btn hp-btn-primary" style="width:100%;justify-content:center;">Join Free</a>
+        </div>
+    </div>
+</nav>
 
-    <!-- Top Alumni Network -->
-    <section class="land-section" style="background: rgba(15, 23, 42, 0.5);" id="network">
-        <div class="premium-container">
-            <div class="section-badge">Spotlight</div>
-            <h2 class="section-heading">Illustrious Alumni</h2>
-            <p class="section-subheading">Connect directly with distinguished leaders making an impact across top-tier multinational corporations.</p>
-            
-            <div id="alumniGrid"></div>
-            
-            <div style="text-align:center; margin-top: 50px;">
-                <a href="pages/auth/register.html" class="land-btn-ghost btn-massive" style="display:inline-flex;">View Full Directory <i class='bx bx-right-arrow-alt'></i></a>
+<!-- ========== HERO ========== -->
+<section class="hp-hero" id="home">
+    <div class="hp-container hp-hero-grid">
+        <div class="hp-hero-text">
+            <div class="hp-hero-eyebrow fade-up">
+                <span class="eyebrow-dot">New</span>
+                12,500+ Alumni Strong Network
+            </div>
+            <h1 class="fade-up fade-up-d1">
+                Your Alumni<br>Network<br><span class="gradient-text">Reimagined.</span>
+            </h1>
+            <p class="hp-hero-desc fade-up fade-up-d2">
+                Connect with distinguished DVVPCOE graduates, unlock exclusive job opportunities, find mentors who inspire, and stay connected with events that matter.
+            </p>
+            <div class="hp-hero-actions fade-up fade-up-d3">
+                <a href="pages/auth/register.html" class="hp-btn hp-btn-primary hp-btn-lg">
+                    <i class="bx bxs-rocket"></i> Get Started Free
+                </a>
+                <a href="#about" class="hp-btn hp-btn-outline hp-btn-lg">
+                    <i class="bx bx-play-circle"></i> Explore Features
+                </a>
+            </div>
+            <div class="hp-hero-stats fade-up">
+                <div class="hp-stat-mini">
+                    <span class="stat-num stat-number">12,500+</span>
+                    <span class="stat-lbl">Alumni Members</span>
+                </div>
+                <div class="hp-stat-mini">
+                    <span class="stat-num stat-number">350+</span>
+                    <span class="stat-lbl">Partner Companies</span>
+                </div>
+                <div class="hp-stat-mini">
+                    <span class="stat-num stat-number">84</span>
+                    <span class="stat-lbl">Active Mentors</span>
+                </div>
             </div>
         </div>
-    </section>
 
-    <!-- Job Board Snippet -->
-    <section class="land-section" id="jobs">
-        <div class="premium-container">
-            <div style="display:flex; justify-content:space-between; align-items:flex-end; margin-bottom:50px;">
+        <div class="hp-hero-visual fade-up fade-up-d2">
+            <div class="hp-float-card fc-1">
+                <div class="hp-float-icon" style="background:rgba(16,185,129,0.1);color:#10b981;"><i class="bx bxs-check-circle"></i></div>
                 <div>
-                    <div class="section-badge">Opportunities</div>
-                    <h2 class="section-heading" style="margin-bottom:0;">Exclusive Job Board</h2>
-                </div>
-                <a href="pages/auth/register.html" class="land-btn-primary" style="padding:12px 24px; border-radius:10px; text-decoration:none; display:inline-flex; align-items:center; gap:8px;">Unlock All Jobs <i class='bx bx-lock-open'></i></a>
-            </div>
-            
-            <div id="jobsPreviewGrid"></div>
-        </div>
-    </section>
-
-    <!-- Events -->
-    <section class="land-section" style="background: rgba(15, 23, 42, 0.5);" id="events">
-        <div class="premium-container">
-            <div class="section-badge">Upcoming</div>
-            <h2 class="section-heading">Gatherings & Summits</h2>
-            
-            <div id="eventsGrid"></div>
-        </div>
-    </section>
-
-    <!-- Footer -->
-    <footer class="land-footer">
-        <div class="premium-container">
-            <div class="footer-grid">
-                <div class="footer-col" style="grid-column: span 2;">
-                    <a href="#" class="land-brand" style="margin-bottom: 20px; display:inline-flex;">
-                        <i class='bx bxs-graduation' style="font-size:32px;"></i>
-                        <h2 style="font-size:26px;">AlumniPortal</h2>
-                    </a>
-                    <p style="color:var(--text-muted); max-width:80%; line-height:1.7; margin-bottom:25px;">The premiere ecosystem for building advanced careers, fostering life-long mentorship, and cementing the legacy of engineering graduates.</p>
-                    <div style="display:flex; gap:15px;">
-                        <a href="#" style="width:40px; height:40px; background:rgba(255,255,255,0.05); border-radius:50%; display:flex; align-items:center; justify-content:center; color:#fff; transition:all 0.3s;"><i class='bx bxl-linkedin'></i></a>
-                        <a href="#" style="width:40px; height:40px; background:rgba(255,255,255,0.05); border-radius:50%; display:flex; align-items:center; justify-content:center; color:#fff; transition:all 0.3s;"><i class='bx bxl-twitter'></i></a>
-                        <a href="#" style="width:40px; height:40px; background:rgba(255,255,255,0.05); border-radius:50%; display:flex; align-items:center; justify-content:center; color:#fff; transition:all 0.3s;"><i class='bx bxl-instagram'></i></a>
-                    </div>
-                </div>
-                <div class="footer-col">
-                    <h4>Ecosystem</h4>
-                    <ul>
-                        <li><a href="#about">About Us</a></li>
-                        <li><a href="#network">Network Directory</a></li>
-                        <li><a href="#jobs">Careers & Jobs</a></li>
-                        <li><a href="#events">Upcoming Events</a></li>
-                    </ul>
-                </div>
-                <div class="footer-col">
-                    <h4>Support</h4>
-                    <ul>
-                        <li><a href="pages/auth/login.html">Member Login</a></li>
-                        <li><a href="#">Contact Administration</a></li>
-                        <li><a href="#">Privacy Policy</a></li>
-                        <li><a href="#">Terms of Service</a></li>
-                    </ul>
+                    <div class="fc-label">New Alumni Verified</div>
+                    <div class="fc-sub">Aarav Patel - Google</div>
                 </div>
             </div>
-            <div style="text-align:center; padding-top: 30px; border-top:1px solid var(--landing-border); color:var(--text-muted); font-size:14px;">
-                &copy; 2026 DVVPCOE Alumni Management Portal. Developed securely.
+            <div class="hp-float-card fc-2">
+                <div class="hp-float-icon" style="background:rgba(245,158,11,0.1);color:#f59e0b;"><i class="bx bxs-briefcase"></i></div>
+                <div>
+                    <div class="fc-label">24 New Jobs Today</div>
+                    <div class="fc-sub">Multiple companies</div>
+                </div>
+            </div>
+            <div class="hp-visual-card">
+                <div class="hp-vc-header">
+                    <h3>Live Network Activity</h3>
+                    <div class="hp-live-dot"><span></span> Active Now</div>
+                </div>
+                <div class="hp-vc-feed" id="hpHeroFeed"></div>
+                <a href="pages/auth/register.html" class="hp-vc-cta" style="text-decoration:none;">
+                    <div><p>Join 12,500+ Alumni</p><small>Completely free membership</small></div>
+                    <i class="bx bx-right-arrow-alt"></i>
+                </a>
             </div>
         </div>
-    </footer>
+    </div>
+</section>
 
-    <!-- JS Hooks -->
-    <script src="assets/js/data.js"></script>
-    <script src="assets/js/common.js"></script>
-    <script src="assets/js/homepage.js"></script>
+<!-- ========== MARQUEE ========== -->
+<div class="hp-marquee">
+    <div class="hp-marquee-track" id="hpMarqueeTrack"></div>
+</div>
 
-    <script>
-        // Inline script cleaned up. Scroll event moved entirely to homepage.js
-    </script>
+<!-- ========== WHY JOIN ========== -->
+<section class="hp-section" id="about">
+    <div class="hp-container">
+        <div style="text-align:center; margin-bottom:56px;">
+            <div class="hp-section-label fade-up"><i class="bx bx-star"></i> Why Join</div>
+            <h2 class="hp-section-title fade-up">Everything You Need to <span>Thrive</span></h2>
+            <p class="hp-section-sub fade-up" style="margin:0 auto;">A curated ecosystem built around your professional advancement, with tools designed for the modern graduate.</p>
+        </div>
+        <div class="hp-why-grid" id="hpWhyGrid"></div>
+    </div>
+</section>
+
+<!-- ========== STATS BANNER ========== -->
+<div class="hp-stats-banner">
+    <div class="hp-container">
+        <div class="hp-stats-grid">
+            <div class="hp-stat-item fade-up">
+                <span class="stat-emoji">&#127891;</span>
+                <span class="stat-number">12,500+</span>
+                <span class="stat-label">Total Alumni</span>
+            </div>
+            <div class="hp-stat-item fade-up fade-up-d1">
+                <span class="stat-emoji">&#127970;</span>
+                <span class="stat-number">350+</span>
+                <span class="stat-label">Hiring Companies</span>
+            </div>
+            <div class="hp-stat-item fade-up fade-up-d2">
+                <span class="stat-emoji">&#128188;</span>
+                <span class="stat-number">8,700+</span>
+                <span class="stat-label">Students Placed</span>
+            </div>
+            <div class="hp-stat-item fade-up fade-up-d3">
+                <span class="stat-emoji">&#127914;</span>
+                <span class="stat-number">120+</span>
+                <span class="stat-label">Events Conducted</span>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ========== ALUMNI NETWORK ========== -->
+<section class="hp-section hp-section-alt" id="network">
+    <div class="hp-container">
+        <div class="hp-section-header">
+            <div>
+                <div class="hp-section-label fade-up"><i class="bx bx-group"></i> Spotlight</div>
+                <h2 class="hp-section-title fade-up">Illustrious <span>Alumni</span></h2>
+                <p class="hp-section-sub fade-up">Connect with distinguished leaders shaping the future across top-tier organizations.</p>
+            </div>
+            <a href="pages/auth/register.html" class="hp-btn hp-btn-primary fade-up" style="white-space:nowrap;">View All Alumni <i class="bx bx-right-arrow-alt"></i></a>
+        </div>
+        <div class="hp-alumni-grid" id="hpAlumniGrid"></div>
+    </div>
+</section>
+
+<!-- ========== JOB BOARD ========== -->
+<section class="hp-section" id="jobs">
+    <div class="hp-container">
+        <div class="hp-section-header">
+            <div>
+                <div class="hp-section-label fade-up"><i class="bx bx-briefcase"></i> Opportunities</div>
+                <h2 class="hp-section-title fade-up">Exclusive <span>Job Board</span></h2>
+                <p class="hp-section-sub fade-up">100% alumni-sourced opportunities from your own network - trusted, verified, and exclusive.</p>
+            </div>
+            <a href="pages/auth/register.html" class="hp-btn hp-btn-outline fade-up" style="white-space:nowrap;"><i class="bx bx-lock-open"></i> Unlock All Jobs</a>
+        </div>
+        <div class="hp-jobs-grid" id="hpJobsGrid"></div>
+    </div>
+</section>
+
+<!-- ========== EVENTS ========== -->
+<section class="hp-section hp-section-alt" id="events">
+    <div class="hp-container">
+        <div class="hp-section-header">
+            <div>
+                <div class="hp-section-label fade-up"><i class="bx bx-calendar-event"></i> Upcoming</div>
+                <h2 class="hp-section-title fade-up">Events & <span>Summits</span></h2>
+                <p class="hp-section-sub fade-up">Reunions, placement drives, tech talks, and more. Stay plugged in to the community.</p>
+            </div>
+            <a href="pages/auth/register.html" class="hp-btn hp-btn-primary fade-up" style="white-space:nowrap;">Register for Events <i class="bx bx-right-arrow-alt"></i></a>
+        </div>
+        <div class="hp-events-grid" id="hpEventsGrid"></div>
+    </div>
+</section>
+
+<!-- ========== TESTIMONIALS ========== -->
+<section class="hp-section">
+    <div class="hp-container">
+        <div class="hp-section-header">
+            <div>
+                <div class="hp-section-label fade-up"><i class="bx bx-heart"></i> Alumni Stories</div>
+                <h2 class="hp-section-title fade-up">What Our <span>Network Says</span></h2>
+            </div>
+            <div class="hp-track-controls fade-up">
+                <button class="hp-track-btn" onclick="scrollHpTestimonials(-1)"><i class="bx bx-chevron-left"></i></button>
+                <button class="hp-track-btn" onclick="scrollHpTestimonials(1)"><i class="bx bx-chevron-right"></i></button>
+            </div>
+        </div>
+        <div class="hp-test-track" id="hpTestTrack"></div>
+    </div>
+</section>
+
+<!-- ========== CTA BANNER ========== -->
+<div class="hp-container">
+    <div class="hp-cta-banner fade-up">
+        <h2>Ready to Join the Legacy?</h2>
+        <p>Thousands of DVVPCOE graduates are already building careers, finding mentors, and making connections. Your journey starts here.</p>
+        <div class="hp-cta-actions">
+            <a href="pages/auth/register.html" class="hp-btn hp-btn-white hp-btn-lg"><i class="bx bxs-rocket"></i> Register as Alumni</a>
+            <a href="pages/auth/login.html" class="hp-btn hp-btn-lg" style="background:rgba(255,255,255,0.15);color:#fff;border:2px solid rgba(255,255,255,0.3);">
+                <i class="bx bx-log-in"></i> Log In to Portal
+            </a>
+        </div>
+    </div>
+</div>
+
+<!-- ========== FOOTER ========== -->
+<footer class="hp-footer">
+    <div class="hp-container">
+        <div class="hp-footer-grid">
+            <div class="hp-footer-brand">
+                <h2><i class="bx bxs-graduation"></i> AlumniPortal</h2>
+                <p>The official digital ecosystem for Dr. Vithalrao Vikhe Patil College of Engineering graduates. Connect, grow, and inspire the next generation.</p>
+                <div class="hp-social-links">
+                    <a href="#" class="hp-social-link"><i class="bx bxl-linkedin"></i></a>
+                    <a href="#" class="hp-social-link"><i class="bx bxl-twitter"></i></a>
+                    <a href="#" class="hp-social-link"><i class="bx bxl-instagram"></i></a>
+                    <a href="#" class="hp-social-link"><i class="bx bxl-youtube"></i></a>
+                </div>
+            </div>
+            <div class="hp-footer-col">
+                <h4>Explore</h4>
+                <ul>
+                    <li><a href="#about">About Us</a></li>
+                    <li><a href="#network">Alumni Directory</a></li>
+                    <li><a href="#jobs">Job Board</a></li>
+                    <li><a href="#events">Events Calendar</a></li>
+                </ul>
+            </div>
+            <div class="hp-footer-col">
+                <h4>Portals</h4>
+                <ul>
+                    <li><a href="pages/auth/login.html">Alumni Login</a></li>
+                    <li><a href="pages/auth/login.html">Mentor Portal</a></li>
+                    <li><a href="pages/auth/login.html">Coordinator Portal</a></li>
+                    <li><a href="pages/auth/login.html">Admin Panel</a></li>
+                </ul>
+            </div>
+            <div class="hp-footer-col">
+                <h4>Contact</h4>
+                <ul>
+                    <li><a href="mailto:alumni@dvvpcoe.edu.in"><i class="bx bx-envelope"></i> alumni@dvvpcoe.edu.in</a></li>
+                    <li><a href="tel:+910241277866"><i class="bx bx-phone"></i> +91 0241-2778669</a></li>
+                    <li><a href="#"><i class="bx bx-map"></i> Vilad Ghat, Ahmednagar</a></li>
+                    <li><a href="#"><i class="bx bx-help-circle"></i> Help & Support</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="hp-footer-bottom">
+            <p>&copy; 2026 DVVPCOE Alumni Management Portal. All rights reserved.</p>
+            <div class="hp-footer-badge"><span></span> System Operational</div>
+        </div>
+    </div>
+</footer>
+
+<!-- JS -->
+<script src="assets/js/data.js"></script>
+<script src="assets/js/homepage.js"></script>
+
 </body>
 </html>

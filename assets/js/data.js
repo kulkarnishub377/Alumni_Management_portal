@@ -155,20 +155,8 @@ const APP_DATA = {
         }
     ],
 
-    // Gallery Categories
-    galleryCategories: ["All", "Campus", "Alumni Meet", "Achievements", "Events"],
 
-    // Gallery Items
-    galleryItems: [
-        { id: 1, category: "Campus", color: "#4f46e5" },
-        { id: 2, category: "Alumni Meet", color: "#7c3aed" },
-        { id: 3, category: "Achievements", color: "#0ea5e9" },
-        { id: 4, category: "Events", color: "#10b981" },
-        { id: 5, category: "Campus", color: "#f43f5e" },
-        { id: 6, category: "Alumni Meet", color: "#d97706" },
-        { id: 7, category: "Events", color: "#6366f1" },
-        { id: 8, category: "Achievements", color: "#0d9488" }
-    ],
+
 
     // Jobs data
     jobs: [
