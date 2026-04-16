@@ -1,14 +1,16 @@
 <div align="center">
-  <img src="https://ui-avatars.com/api/?name=Alumni+Portal&background=4f46e5&color=fff&size=150" alt="Alumni Portal Logo" width="120" style="border-radius:20px;"/>
 
-  # 🎓 Comprehensive Alumni Management Portal
+# 🎓 ALUMNI MANAGEMENT PORTAL
 
-  **A modern, high-performance, role-based platform designed to connect graduates, build networks, and foster career growth.**
+**A modern, high-performance, role-based platform designed to connect graduates, build networks, and foster career growth.**
 
-  [![Status](https://img.shields.io/badge/Status-Active-success.svg)]()
-  [![Frontend](https://img.shields.io/badge/Frontend-HTML5%20%7C%20CSS3%20%7C%20JS-blue)]()
-  [![Architecture](https://img.shields.io/badge/Architecture-Role--Based%20Decoupled-orange)]()
-  [![Design](https://img.shields.io/badge/Design-Glassmorphism%20%7C%20Responsive-purple)]()
+[![Status](https://img.shields.io/badge/Status-Active-success.svg)]()
+[![Frontend](https://img.shields.io/badge/Frontend-HTML5%20%7C%20CSS3%20%7C%20JS-blue)]()
+[![Architecture](https://img.shields.io/badge/Architecture-Role--Based%20Decoupled-orange)]()
+[![Design](https://img.shields.io/badge/Design-Glassmorphism%20%7C%20Responsive-purple)]()
+
+**[⭐ View Repository](https://github.com/kulkarnishub377/Alumni_Management_portal)** &nbsp;&bull;&nbsp; **[🚀 Open Live Demo](https://kulkarnishub377.github.io/Alumni_Management_portal/)**
+
 </div>
 
 ---
@@ -26,6 +28,13 @@ Whether a user is a new graduate seeking mentorship, or a faculty administrator 
 - 🎨 **Premium UI/UX System**: Features glassmorphism, responsive grid layouts, automated scroll intersection animations, and carefully curated typography.
 - 💾 **Centralized Ground-Truth Data**: A unified `assets/js/data.js` file simulates a NoSQL backend state. Updating an avatar here instantly propagates everywhere (landing pages, admin dashboards, alumni grids).
 - 📱 **Mobile-First Responsive**: All components, from complex masonry galleries to dense administrative data tables, degrade flawlessly to mobile views.
+- 💬 **Interactive Capabilities**: Built-in frameworks for Messaging, Event Ticketing, Job Boards, Mentorship Kanban boards, and more.
+
+---
+
+## 🔗 Quick Links
+- **Live Demo**: [https://kulkarnishub377.github.io/Alumni_Management_portal/](https://kulkarnishub377.github.io/Alumni_Management_portal/)
+- **Repository**: [https://github.com/kulkarnishub377/Alumni_Management_portal](https://github.com/kulkarnishub377/Alumni_Management_portal)
 
 ---
 
@@ -39,7 +48,7 @@ Whether a user is a new graduate seeking mentorship, or a faculty administrator 
  ┃ ┣ 📂 css
  ┃ ┃ ┣ 📜 homepage.css            # Styles scoped to Landing Route
  ┃ ┃ ┣ 📜 dashboard.css           # Core Dashboard Styling (Admin/Alumni)
- ┃ ┃ ┗ 📜 ...                     # Secondary utility stylesheets
+ ┃ ┃ ┗ ...
  ┃ ┣ 📂 js
  ┃ ┃ ┣ 📜 data.js                 # 🧠 Core Mock Database Object
  ┃ ┃ ┣ 📜 homepage.js             # IntersectionObservers & Landing Interactions
@@ -98,8 +107,8 @@ Getting the platform running locally requires virtually no setup process since i
 ### 2. Execution
 Clone the repository:
 ```bash
-git clone https://github.com/your-org/alumni-portal.git
-cd alumni-portal
+git clone https://github.com/kulkarnishub377/Alumni_Management_portal.git
+cd Alumni_Management_portal
 ```
 
 Launch the environment:
@@ -109,13 +118,20 @@ npx serve .
 ```
 
 ### 3. Modifying Data
-To observe the power of the decoupled architecture, simply open `assets/js/data.js` in your editor and modify variables inside the `APP_DATA.stats` object. Reload the landing page or an admin dashboard, and observe the values adapt instantly across isolated file domains.
+To observe the power of the decoupled architecture, simply open `assets/js/data.js` in your editor and modify variables inside the `APP_DATA` object. Reload the landing page or an admin dashboard, and observe the values adapt instantly across isolated file domains.
+
+---
+
+## 🗺️ Future Roadmap
+- **Phase 1**: Integrate Node.js Backend with MongoDB.
+- **Phase 2**: Transition authentication from static UI states to secure JWT Passport sessions.
+- **Phase 3**: Global Dark Mode implementation utilizing existing CSS variable scopes.
 
 ---
 
 ## 🔒 Security Architecture Philosophy
 
-By strictly enforcing routing via subdirectories (e.g., `/admin`, `/alumni`), we ensure that standard users never inadvertently execute JavaScript explicitly built to render moderation tools. When backend integration commences, server-middleware (such as Node.js Express w/ JWT verification) simply needs to lock down directory ingress paths to secure the UI state natively.
+By strictly enforcing routing via subdirectories (e.g., `/admin`, `/alumni`), we ensure that standard users never inadvertently execute JavaScript explicitly built to render moderation tools. When backend integration commences, server-middleware simply needs to lock down directory ingress paths to secure the UI state natively.
 
 ---
 
