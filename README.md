@@ -1,8 +1,8 @@
 <div align="center">
 
-# 🎓 ALUMNI MANAGEMENT PORTAL [FULL-STACK EDITION]
+# 🎓 ALUMNI MANAGEMENT PORTAL [v2.0.0]
 
-**An enterprise-grade, glassmorphic full-stack ecosystem engineered for role-based academic networking, mentorship, and career growth.**
+**An enterprise-grade, full-stack ecosystem engineered for role-based academic networking, mentorship, and career growth.**
 
 [![Status](https://img.shields.io/badge/Status-Active-success.svg)]()
 [![Frontend](https://img.shields.io/badge/Frontend-Vanilla%20JS%20%7C%20Glassmorphism-blue)]()

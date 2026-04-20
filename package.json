@@ -1,7 +1,7 @@
 {
   "name": "alumni-management-portal",
-  "version": "1.0.0",
-  "description": "A modern, high-performance, role-based platform designed to connect graduates.",
+  "version": "2.0.0",
+  "description": "A modern, full-stack, distributed platform designed to connect graduates.",
   "main": "index.html",
   "scripts": {
     "start": "npx serve .",
@@ -18,9 +18,13 @@
     "html",
     "css",
     "vanilla-js",
-    "frontend"
+    "frontend",
+    "django",
+    "python",
+    "postgresql",
+    "fullstack"
   ],
-  "author": "Yadnesh, Aniket & Team",
+  "author": "Shubham, Yadnesh, Aniket, ",
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/kulkarnishub377/Alumni_Management_portal/issues"
