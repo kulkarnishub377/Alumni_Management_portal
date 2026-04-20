@@ -73,9 +73,29 @@ Designed specifically to prevent the frontend from executing heavy Promise.all w
 **`POST /api/feed/{id}/like/`**
 - **Toggle Endpoint:** Liking an unliked post adds a like. Liking an already liked post removes the like.
 
+## 💬 Chat & Direct Messaging (`chat.html`)
+The frontend messaging system features standalone filtering (All, Groups, Unread).
+**`GET /api/messages/`**
+- **Query Params:** `?filter=unread` or `?filter=groups`
+- **Purpose:** Hydrates the `chatData` object responsible for rendering the `sc-sidebar` contacts list.
+
+**`PATCH /api/messages/{id}/read/`**
+- **Purpose:** Whenever a user clicks an active contact in `chat.html`, this clears the `sc-unread` badge natively in Django.
+
+## 🪪 Profile Subsystems (`profile.html`)
+The Profile relies heavily on a `modal-overlay` subsystem (Personal Info, Social Links, Skills, Experience) rather than generic tabs.
+
+**`PATCH /api/users/me/`**
+- **Purpose:** Save structural details (Name, DOB, Gender, Bio Summary).
+
+**`POST /api/experiences/`**
+- **Purpose:** Ties directly into `#experienceModal` adding chronological ticks to the `exp-timeline`.
+
+**`POST /api/social-links/`**
+- **Purpose:** Dynamically saves the looping input fields generated inside `#contactModal` (LinkedIn, GitHub).
+
 ## Modifying Existing Objects
 Standard CRUD Rest interfaces are exposed for data modification via standard HTTP Verbs (GET, POST, PATCH, DELETE) at the following routings:
-- `/api/users/me/`
-- `/api/profiles/alumni/`
+- `/api/profiles/alumni/` (Managing dynamic skills arrays & Max Mentees)
 - `/api/events/`
 - `/api/jobs/`
