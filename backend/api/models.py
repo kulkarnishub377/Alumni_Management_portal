@@ -62,7 +62,7 @@ class User(AbstractUser):
         return f"{self.first_name} {self.last_name} ({self.email})"
 
 # ============================================
-# 3. PROFILES
+# 3. PROFILES & MENTORSHIP
 # ============================================
 
 class AlumniProfile(models.Model):
@@ -85,7 +85,7 @@ class AlumniProfile(models.Model):
     resume_last_updated = models.DateTimeField(null=True, blank=True)
 
     def __str__(self):
-        return f"Profile of {self.user.email}"
+        return f"ALUMNI: {self.user.email}"
 
 class MentorProfile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='mentor_profile')
@@ -94,7 +94,17 @@ class MentorProfile(models.Model):
     active_mentees = models.IntegerField(default=0)
 
     def __str__(self):
-        return f"Mentor Profile - {self.user.email}"
+        return f"MENTOR: {self.user.email}"
+
+class MentorshipRequest(models.Model):
+    mentee = models.ForeignKey(User, on_delete=models.CASCADE, related_name='mentorship_requests_sent')
+    mentor = models.ForeignKey(User, on_delete=models.CASCADE, related_name='mentorship_requests_received')
+    message = models.TextField()
+    status = models.CharField(max_length=20, default='pending') # pending, approved, rejected
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        unique_together = ('mentee', 'mentor')
 
 class UserSocialLink(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='social_links')
@@ -115,8 +125,14 @@ class UserExperience(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
 
 # ============================================
-# 4. NETWORK FEED
+# 4. NETWORK FEED & ANNOUNCEMENTS
 # ============================================
+
+class Announcement(models.Model):
+    title = models.CharField(max_length=255)
+    message = models.TextField()
+    type_code = models.CharField(max_length=50, default='news') # important, news, event
+    created_at = models.DateTimeField(auto_now_add=True)
 
 class Post(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='posts')
@@ -140,7 +156,7 @@ class PostComment(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
 
 # ============================================
-# 5. JOBS & EVENTS
+# 5. JOBS & APPLICATIONS
 # ============================================
 
 class Job(models.Model):
@@ -153,6 +169,20 @@ class Job(models.Model):
     posted_by = models.ForeignKey(User, on_delete=models.CASCADE, related_name='jobs_posted')
     status = models.CharField(max_length=20, default='pending_coordinator')
     created_at = models.DateTimeField(auto_now_add=True)
+
+class JobApplication(models.Model):
+    job = models.ForeignKey(Job, on_delete=models.CASCADE, related_name='applications')
+    applicant = models.ForeignKey(User, on_delete=models.CASCADE, related_name='job_applications')
+    cover_letter = models.TextField(blank=True)
+    status = models.CharField(max_length=20, default='submitted') # submitted, interviewed, rejected, accepted
+    applied_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        unique_together = ('job', 'applicant')
+
+# ============================================
+# 6. EVENTS
+# ============================================
 
 class Event(models.Model):
     title = models.CharField(max_length=255)
@@ -173,7 +203,24 @@ class EventAttendee(models.Model):
         unique_together = ('event', 'user')
 
 # ============================================
-# 6. COMMUNICATION & GALLERY
+# 7. HOMEPAGE STATIC COMPONENTS
+# ============================================
+
+class Testimonial(models.Model):
+    name = models.CharField(max_length=100)
+    role = models.CharField(max_length=100)
+    avatar_url = models.TextField()
+    text = models.TextField()
+    rating = models.IntegerField(default=5)
+    is_active = models.BooleanField(default=True)
+
+class WhyJoin(models.Model):
+    title = models.CharField(max_length=100)
+    desc = models.TextField()
+    icon = models.CharField(max_length=50)
+
+# ============================================
+# 8. COMMUNICATION & GALLERY
 # ============================================
 
 class Message(models.Model):
