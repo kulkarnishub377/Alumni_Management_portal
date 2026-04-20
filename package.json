@@ -1,15 +1,25 @@
 {
   "name": "alumni-management-portal-v2",
-  "version": "2.0.0",
-  "description": "An enterprise-grade, glassmorphic full-stack ecosystem engineered for role-based academic networking, mentorship, and career growth.",
+  "version": "2.1.0",
+  "private": true,
+  "description": "Full-stack alumni platform with improved dev workflow",
   "main": "index.html",
   "scripts": {
-    "start:frontend": "npx serve . -p 3000",
-    "start:backend": "cd backend && python manage.py runserver",
+    "frontend": "npx serve . -p 3000",
+    "backend": "cd backend && python manage.py runserver",
+    "dev": "concurrently \"npm run frontend\" \"npm run backend\"",
+    "setup": "npm install && npm run setup:backend",
     "setup:backend": "cd backend && python -m venv venv && pip install -r requirements.txt",
     "db:migrate": "cd backend && python manage.py makemigrations && python manage.py migrate",
     "db:admin": "cd backend && python manage.py createsuperuser",
-    "dev": "echo \"Please run 'npm run start:frontend' and 'npm run start:backend' in separate terminals.\""
+    "db:flush": "cd backend && python manage.py flush",
+    "format": "npx prettier --write .",
+    "lint": "npx eslint .",
+    "lint:fix": "npx eslint . --fix",
+    "test": "echo \"No tests yet\"",
+    "clean": "rm -rf node_modules",
+    "reset": "npm run clean && npm install",
+    "start": "npm run dev"
   },
   "repository": {
     "type": "git",
@@ -49,10 +59,18 @@
     "email": "kulkarnishub377@gmail.com"
   },
   "homepage": "https://kulkarnishub377.github.io/Alumni_Management_portal/",
+  "devDependencies": {
+    "concurrently": "^9.0.0",
+    "eslint": "^9.0.0",
+    "nodemon": "^3.0.0",
+    "prettier": "^3.0.0"
+  },
+  "dependencies": {
+    "dotenv": "^16.0.0"
+  },
   "engines": {
     "node": ">=18.0.0",
     "npm": ">=8.0.0",
     "python": ">=3.11"
-  },
-  "private": true
+  }
 }
