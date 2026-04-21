@@ -9,15 +9,16 @@
     "backend": "cd backend && python manage.py runserver",
     "dev": "concurrently \"npm run frontend\" \"npm run backend\"",
     "setup": "npm install && npm run setup:backend",
-    "setup:backend": "cd backend && python -m venv venv && pip install -r requirements.txt",
+    "setup:backend": "cd backend && python -m venv venv && python -m pip install -r requirements.txt",
     "db:migrate": "cd backend && python manage.py makemigrations && python manage.py migrate",
     "db:admin": "cd backend && python manage.py createsuperuser",
     "db:flush": "cd backend && python manage.py flush",
     "format": "npx prettier --write .",
     "lint": "npx eslint .",
     "lint:fix": "npx eslint . --fix",
-    "test": "echo \"No tests yet\"",
-    "clean": "rm -rf node_modules",
+    "test": "echo \"No frontend tests yet\"",
+    "test:backend": "cd backend && python manage.py test api --verbosity=2",
+    "clean": "npx rimraf node_modules",
     "reset": "npm run clean && npm install",
     "start": "npm run dev"
   },
@@ -65,9 +66,7 @@
     "nodemon": "^3.0.0",
     "prettier": "^3.0.0"
   },
-  "dependencies": {
-    "dotenv": "^16.0.0"
-  },
+  "dependencies": {},
   "engines": {
     "node": ">=18.0.0",
     "npm": ">=8.0.0",
