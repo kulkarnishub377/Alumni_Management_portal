@@ -91,3 +91,18 @@ function initPreloader() {
         setTimeout(() => p.classList.add('hidden'), 2500);
     }
 }
+
+// ===== XSS SANITIZATION HELPER =====
+// Use this to wrap any user-provided string variables in template literals
+window.escapeHTML = function(str) {
+    if (str === null || str === undefined) return '';
+    return String(str).replace(/[&<>'"]/g, 
+        tag => ({
+            '&': '&amp;',
+            '<': '&lt;',
+            '>': '&gt;',
+            "'": '&#39;',
+            '"': '&quot;'
+        }[tag])
+    );
+};
