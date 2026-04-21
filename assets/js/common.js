@@ -3,7 +3,7 @@
 // ============================================
 
 // ===== TOAST NOTIFICATION =====
-function showToast(message, type = 'info') {
+window.showToast = function(message, type = 'info') {
     const existing = document.querySelector('.toast-notification');
     if (existing) existing.remove();
 
@@ -30,24 +30,24 @@ function showToast(message, type = 'info') {
 }
 
 // ===== MODAL =====
-function openModal(id) {
+window.openModal = function(id) {
     const m = document.getElementById(id);
     if (m) { m.classList.add('active'); m.style.display = 'flex'; }
 }
-function closeModal(id) {
+window.closeModal = function(id) {
     const m = document.getElementById(id);
     if (m) { m.classList.remove('active'); setTimeout(() => m.style.display = 'none', 300); }
 }
 
 // ===== FORMAT DATE =====
-function formatDate(dateStr) {
+window.formatDate = function(dateStr) {
     const months = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
     const d = new Date(dateStr);
     return { day: String(d.getDate()).padStart(2,'0'), month: months[d.getMonth()], year: d.getFullYear(), full: d };
 }
 
 // ===== ANIMATE COUNTER =====
-function animateCounter(el, target, suffix = '') {
+window.animateCounter = function(el, target, suffix = '') {
     let current = 0;
     const increment = target / 60;
     const timer = setInterval(() => {
@@ -58,12 +58,21 @@ function animateCounter(el, target, suffix = '') {
 }
 
 // ===== LOCAL STORAGE HELPERS =====
-function getUser() {
-    try { return JSON.parse(localStorage.getItem('alumni_portal_user')) || null; }
+window.getUser = function() {
+    try { 
+        let user = JSON.parse(localStorage.getItem('user_info'));
+        if (user) return { ...user, loggedIn: true };
+        return JSON.parse(localStorage.getItem('alumni_portal_user')) || null;
+    }
     catch { return null; }
 }
-function setUser(data) { localStorage.setItem('alumni_portal_user', JSON.stringify(data)); }
-function clearUser() { localStorage.removeItem('alumni_portal_user'); }
+window.setUser = function(data) { localStorage.setItem('alumni_portal_user', JSON.stringify(data)); }
+window.clearUser = function() { 
+    localStorage.removeItem('alumni_portal_user'); 
+    localStorage.removeItem('user_info');
+    localStorage.removeItem('access_token');
+    localStorage.removeItem('refresh_token');
+}
 
 // ===== SCROLL TO TOP =====
 function initScrollTop() {
