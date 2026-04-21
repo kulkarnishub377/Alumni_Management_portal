@@ -8,8 +8,13 @@ from .views import (
     MessageViewSet, NotificationViewSet, GalleryItemViewSet,
     JobApplicationViewSet, MentorshipRequestViewSet, AnnouncementViewSet,
     TestimonialViewSet, WhyJoinViewSet, EventAttendeeViewSet,
-    HomepageAPIView, AlumniDashboardAPIView, MentorDashboardAPIView
+    HomepageAPIView, AlumniDashboardAPIView, MentorDashboardAPIView,
+    CoordinatorDashboardAPIView, AdminDashboardAPIView
 )
+
+# =============================================================================
+# REST ROUTER — Auto-generates CRUD endpoints for all ViewSets
+# =============================================================================
 
 router = DefaultRouter()
 router.register(r'users', UserViewSet)
@@ -25,23 +30,29 @@ router.register(r'job-applications', JobApplicationViewSet)
 router.register(r'events', EventViewSet)
 router.register(r'event-attendees', EventAttendeeViewSet)
 router.register(r'mentorship-requests', MentorshipRequestViewSet)
-router.register(r'messages', MessageViewSet)
-router.register(r'notifications', NotificationViewSet)
+router.register(r'messages', MessageViewSet, basename='message')
+router.register(r'notifications', NotificationViewSet, basename='notification')
 router.register(r'gallery', GalleryItemViewSet)
 router.register(r'announcements', AnnouncementViewSet)
 router.register(r'testimonials', TestimonialViewSet)
 router.register(r'why-join', WhyJoinViewSet)
 
+# =============================================================================
+# URL PATTERNS
+# =============================================================================
+
 urlpatterns = [
-    # Page-Wise Custom Aggregate APIs
+    # ---- Page-Wise Aggregate APIs ----
     path('pages/homepage/', HomepageAPIView.as_view(), name='page-homepage'),
     path('pages/dashboard/alumni/', AlumniDashboardAPIView.as_view(), name='page-alumni-dash'),
     path('pages/dashboard/mentor/', MentorDashboardAPIView.as_view(), name='page-mentor-dash'),
+    path('pages/dashboard/coordinator/', CoordinatorDashboardAPIView.as_view(), name='page-coordinator-dash'),
+    path('pages/dashboard/admin/', AdminDashboardAPIView.as_view(), name='page-admin-dash'),
 
-    # REST Router APIs
+    # ---- REST Router APIs ----
     path('', include(router.urls)),
 
-    # JWT Authentication Endpoints
+    # ---- JWT Authentication ----
     path('auth/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
     path('auth/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
 ]
