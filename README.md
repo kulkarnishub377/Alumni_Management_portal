@@ -1,6 +1,6 @@
 <div align="center">
 
-# 🎓 Alumni Management Portal
+# 🎓 Alumni Management Portal 🎓
 
 **A full-stack, role-based alumni networking platform built for academic institutions.**
 *Connect graduates, coordinate mentorship, manage placements, and build lasting professional communities.*
