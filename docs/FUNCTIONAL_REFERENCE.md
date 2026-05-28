@@ -7,7 +7,7 @@ This document serves as a comprehensive feature and capabilities specification f
 ## 1. Role Access Permissions Matrix
 
 | Feature | Alumni | Mentor | Coordinator | Admin |
-|---------|:------:|:------:|:-----------:|:-----:|
+|---|:---:|:---:|:---:|:---:|
 | View Public Landing Page | ✅ | ✅ | ✅ | ✅ |
 | Manage Personal Account & Profile | ✅ | ✅ | ✅ | ✅ |
 | Browse Alumni Directory | ✅ | ✅ | ✅ | ✅ |
@@ -31,65 +31,94 @@ This document serves as a comprehensive feature and capabilities specification f
 
 ---
 
-## 2. Detailed Alumni View Module (`pages/alumni/`)
+## 2. Registration Wizard Forms & Fields
 
-Alumni users have access to 10 key page views inside their dashboard system:
+The registration interface (`pages/auth/register.html`) is a multi-step registration wizard. The client enforces field validations prior to allowing transitions.
 
-- **Dashboard (`dashboard.html`):** Personalized landing page. Displays stats (total alumni, active mentors, events, jobs), cards for upcoming events, recent activity alerts (notifications), and quick-view job postings.
-- **My Profile (`profile.html`):** Profile details page. Supports full CRUD. Contains:
-  - *Personal Info:* Email, phone, location, DOB.
-  - *Academic Details:* Department, batch year, roll number, assigned batch mentor.
-  - *Professional Details:* Job title, company, experience years, skills.
-  - *Resume Manager:* Displays uploaded PDF details.
-  - *AI Resume Parser:* Drag-and-drop box. Dropping a resume triggers a mock parser that auto-populates input fields automatically using simulated NLP extraction.
-- **Alumni Network (`network.html`):** Searchable directory. Offers filters by name, role, graduation batch, and company. Includes a bookmarking toggle and a "Connect" request handler.
-- **Group & Private Chat (`chat.html`):** Full messaging center. Supports 1:1 direct threads and auto-joined batch group chats (e.g., "Batch 2020 Group"). Features interactive typing indicators and simulated reply delays.
-- **Job Board (`jobs.html`):** Lists career postings. Filterable by job type (Full-time, Internship) and experience level. Includes application forms (requires cover letters) and a job posting sub-panel.
-- **Mentorship (`mentorship.html`):** Shows assigned batch mentors, lets alumni request new mentors, view session schedules, and browse shared resources.
-- **Events (`events.html`):** List of reunions, guest talks, and campus placements. Allows users to click "Register Now" to RSVP.
-- **Gallery (`gallery.html`):** Image grid showcasing campus memories and reunions. Filterable by category (Campus, Events, Reunion, Sports, Cultural) with an interactive Lightbox popup viewer (supports arrow navigation and escape close).
-- **Notifications (`notifications.html`):** Lists all alerts. Divided into Social, Events, and System streams with "Mark All Read" and individual item dismissal functions.
-- **Settings (`settings.html`):** Security and account management. Enforces password changes (checks current password and validates new password length), toggles email notifications, and controls profile search visibility.
+### Step 1: Personal Details
+- **First Name** (`input[type="text"]`): Required.
+- **Last Name** (`input[type="text"]`): Required.
+- **Email Address** (`input[type="email"]`): Required. Validates email structure.
+- **Phone Number** (`input[type="tel"]`): Required.
+- **Date of Birth** (`input[type="date"]`): Required.
+- **Profile Photo** (`input[type="file"]`): Optional. Restricts uploads to files under 2MB (verified on client side).
 
----
+### Step 2: Academic Credentials
+- **Department** (`select`): Required. Options:
+  - Computer Engineering
+  - Information Technology
+  - Mechanical Engineering
+  - Civil Engineering
+  - Electronics & Telecom
+  - Electrical Engineering
+- **Graduation Batch** (`select`): Required. Year range (1983 - Current).
+- **Role Type** (`select`): Required. Options: `alumni`, `mentor`.
+- **Roll Number** (`input[type="text"]`): Required. Used for academic verification checks.
 
-## 3. Detailed Mentor View Module (`pages/mentor/`)
-
-Mentors guide students and approve registrations of graduates in their department:
-
-- **Dashboard (`dashboard.html`):** Shows counts of active mentees and pending requests, lists recent system-wide announcements, and displays notifications.
-- **Approvals Panel (`approvals.html`):** A dual-pane panel:
-  - *Mentee Requests:* List of mentorship applications. Mentors approve or reject requests within their maximum capability limit (`max_mentees`).
-  - *Registration Approvals:* Pending alumni registrations requiring academic detail checks (Roll Number, Batch) before gaining access.
-- **Active Mentees (`alumni.html`):** Lists approved mentees with quick contact buttons (email, chat thread), academic profiles, and progress reports.
-- **Mentorship Chat (`chat.html`):** Dedicated chat interface connecting mentors with their mentees and coordinator groups.
-- **Events (`events.html`):** Lists college and department events; allows mentors to request guest lecture slots.
-- **Settings (`settings.html`):** Includes standard account settings plus profile configurations for defining specialized skills, office hours, and maximum mentee capacities.
-
----
-
-## 4. Detailed Coordinator View Module (`pages/coordinator/`)
-
-Coordinators supervise placements and track graduates at a department level:
-
-- **Dashboard (`dashboard.html`):** Analytics-heavy. Shows charts of placement rates by department, counts of pending job posts, and active mentors.
-- **Alumni Management (`alumni.html`):** Searchable list of department graduates. Allows coordinators to view detailed career histories and export reports.
-- **Jobs Verification Panel (`jobs.html`):** Moderation queue for job posts submitted by alumni. Coordinators review descriptions and approve them (passing them to Admin review) or reject them to prevent spam.
-- **Mentors Management (`mentors.html`):** Department directory of faculty mentors. Coordinates batch mentor assignments and tracks capacity.
-- **Top Alumni Nominations (`top-alumni.html`):** Form to nominate distinguished alumni for the college "Hall of Fame" marquee based on professional milestones.
-- **Chat, Events, Notifications, and Settings:** Shared views scoped to the coordinator's department.
+### Step 3: Professional Info & Socials
+- **Job Title** (`input[type="text"]`): Optional.
+- **Company** (`input[type="text"]`): Optional.
+- **Key Skills** (`input[type="text"]`): Optional. Comma-separated list.
+- **Location & State** (`input[type="text"]`): Optional.
+- **Years of Experience** (`select`): Optional. Options: `Fresher`, `1-2 years`, `2-5 years`, `5-10 years`, `10+ years`.
+- **LinkedIn URL** (`input[type="url"]`): Optional. Validates URL format.
+- **GitHub URL** (`input[type="url"]`): Optional. Validates URL format.
+- **Password** (`input[type="password"]`): Required. Enforces a minimum length of 8 characters. Evaluated by a password strength meter (Very Weak to Very Strong).
 
 ---
 
-## 5. Detailed Admin View Module (`pages/admin/`)
+## 3. Simulated AI Resume Parser NLP Data Mapping
 
-Administrators have global system administration rights:
+The registration form and edit profile modal contain an **AI Resume Auto-Filler Box**. When a user uploads or drops a resume PDF, the parser simulates text extraction to auto-fill the forms:
 
-- **Dashboard (`dashboard.html`):** Global metrics board monitoring total users, system health, database load, and platform engagement indices.
-- **Departments Editor (`departments.html`):** Full CRUD editor to add new departments (e.g., Computer Engineering), modify course codes (COMP), and toggle active/inactive status.
-- **User Moderation Panel (`alumni.html` / `mentors.html`):** Direct overrides on all user accounts. Admins can manually modify roles, override status codes, or suspend/delete users.
-- **Global Job Board Control (`jobs.html`):** Direct moderation on all jobs. Admins bypass the coordinator step, directly approve jobs to the board, or edit/delete any posting.
-- **Global Events Planner (`events.html`):** Create and schedule college-wide events, specify category metadata, and manage RSVPs.
-- **Public Content Manager (`settings.html`):** Editor to manage dynamic landing page features:
-  - *Testimonial CRUD:* Edit or add graduate cards.
-  - *Why Join CRUD:* Customize landing page icon grids and benefit descriptions.
+| Target Field | Mock Extracted Value | Field ID / Selector |
+|---|---|---|
+| First Name | Alexander | `#step1` Text Input 1 |
+| Last Name | Innovator | `#step1` Text Input 2 |
+| Phone Number | +91 9876543210 | `#step1` Tel Input |
+| Department | Computer Engineering | `#step2` Select Input 1 |
+| Batch Year | 2022 | `#step2` Select Input 2 |
+| Job Title | Senior Machine Learning Engineer | `#step3` Text Input 1 |
+| Company | Amazon Web Services | `#step3` Text Input 2 |
+| Key Skills | Python, TensorFlow, System Design, React | `#step3` Text Input 3 |
+| Location City | Bangalore | `#step3` Text Input 4 |
+| Location State| Karnataka | `#step3` Text Input 5 |
+| Experience | 2-5 years | `#step3` Select Input |
+
+---
+
+## 4. Chat & Messaging Center Capabilities
+
+The chat view (`pages/alumni/chat.html`) acts as an interactive messaging client:
+
+### A. Conversation Filtering
+- **All:** Lists all active direct messages and batch group conversations.
+- **Groups:** Filters conversations to show only batch groups. Groups are named using the convention `Batch <Year> Group` (e.g. "Batch 2020 Group").
+- **Direct:** Filters to show only 1:1 chat threads with mentors or other alumni.
+
+### B. Chat Functionalities
+- **Live Typing Indicator:** When User A sends a message, a typing bubble is displayed for 2 seconds to simulate a response from User B.
+- **Auto-Replies:** The mock service responds to messages with randomly selected replies to simulate a live chat experience.
+- **Attachments Menu (Mock):** Clicking the attachment clip or emoji icons triggers a toast notification stating that the features are coming soon.
+- **Voice/Video Calls (Mock):** Displays call icons. Clicking them displays a connection notice to simulate a call.
+
+---
+
+## 5. Administrative Configuration Utilities
+
+The Admin Dashboard (`pages/admin/dashboard.html`) provides global configuration options:
+
+### A. Department Configuration CRUD (`departments.html`)
+- **Add Department:** Opens a modal. Requires a department name (e.g. Electrical Engineering) and a unique department code (e.g. ELEC).
+- **Edit Department:** Allows updating the department name or code.
+- **Toggle Status:** Allows set status to `active` or `inactive` via a toggle switch. Inactive departments are hidden from the registration forms.
+
+### B. User Registration Management (`alumni.html` / `mentors.html`)
+- **Search Filters:** Filters user accounts by name, email, roll number, and registration status.
+- **Action Overrides:** Admins can manually click "Approve" or "Reject" on any pending profile.
+- **Delete User:** Deletes user accounts from the database.
+
+### C. Homepage Content Managers (`settings.html`)
+- **Testimonial Editor:** Admins can add, edit, or delete alumni testimonials.
+- **Why Join Cards Editor:** Admins can update the landing page feature cards by selecting icons and modifying the description text.
+- **Nominate Top Alumni:** Form to nominate alumni to the homepage showcase marquee.
