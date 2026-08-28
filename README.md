@@ -133,7 +133,7 @@ To observe the power of the decoupled architecture, simply open `assets/js/data.
 
 By strictly enforcing routing via subdirectories (e.g., `/admin`, `/alumni`), we ensure that standard users never inadvertently execute JavaScript explicitly built to render moderation tools. When backend integration commences, server-middleware simply needs to lock down directory ingress paths to secure the UI state natively.
 
----
+----
 
 ## 🤝 Contribution Best Practices
 
