@@ -248,7 +248,7 @@ For a full directory tree breakdown, refer to the [System Architecture Guide](do
 | View system analytics | — | — | Dept-scoped | ✅ |
 | Post announcements | — | — | ✅ | ✅ |
 
----
+----
 
 ## 🤝 Contributing
 
