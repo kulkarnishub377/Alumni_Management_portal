@@ -1,0 +1,75 @@
+{
+  "name": "alumni-management-portal-v2",
+  "version": "2.2.0",
+  "private": true,
+  "description": "Full-stack alumni platform with improved dev workflow",
+  "main": "index.html",
+  "scripts": {
+    "frontend": "npx serve . -p 3000",
+    "backend": "cd backend && python manage.py runserver",
+    "dev": "concurrently \"npm run frontend\" \"npm run backend\"",
+    "setup": "npm install && npm run setup:backend",
+    "setup:backend": "cd backend && python -m venv venv && python -m pip install -r requirements.txt",
+    "db:migrate": "cd backend && python manage.py makemigrations && python manage.py migrate",
+    "db:admin": "cd backend && python manage.py createsuperuser",
+    "db:flush": "cd backend && python manage.py flush",
+    "format": "npx prettier --write .",
+    "lint": "npx eslint .",
+    "lint:fix": "npx eslint . --fix",
+    "test": "echo \"No frontend tests yet\"",
+    "test:backend": "cd backend && python manage.py test api --verbosity=2",
+    "clean": "npx rimraf node_modules",
+    "reset": "npm run clean && npm install",
+    "start": "npm run dev"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kulkarnishub377/Alumni_Management_portal.git"
+  },
+  "keywords": [
+    "alumni",
+    "portal",
+    "management",
+    "university",
+    "networking",
+    "mentorship",
+    "html5",
+    "css3",
+    "glassmorphism",
+    "vanilla-js",
+    "frontend",
+    "django",
+    "python",
+    "postgresql",
+    "drf",
+    "jwt",
+    "fullstack"
+  ],
+  "author": {
+    "name": "Shubham Kulkarni",
+    "email": "kulkarnishub377@gmail.com",
+    "url": "https://github.com/kulkarnishub377"
+  },
+  "contributors": [
+    "Yadnynesh Dhangar <yadnyneshdhangar@gmail.com>",
+    "Aniket Gudgal <aniketgudgal5867@gmail.com>"
+  ],
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/kulkarnishub377/Alumni_Management_portal/issues",
+    "email": "kulkarnishub377@gmail.com"
+  },
+  "homepage": "https://kulkarnishub377.github.io/Alumni_Management_portal/",
+  "devDependencies": {
+    "concurrently": "^9.0.0",
+    "eslint": "^9.0.0",
+    "nodemon": "^3.0.0",
+    "prettier": "^3.0.0"
+  },
+  "dependencies": {},
+  "engines": {
+    "node": ">=18.0.0",
+    "npm": ">=8.0.0",
+    "python": ">=3.11"
+  }
+}

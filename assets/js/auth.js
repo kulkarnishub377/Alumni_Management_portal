@@ -2,6 +2,8 @@
 // MODULE 2 & 3: AUTH LOGIC (Login & Registration)
 // ============================================
 
+import { login, register } from './modules/api.js';
+
 // ===== ROLE TAB SWITCHING =====
 document.querySelectorAll('.role-tab').forEach(tab => {
     tab.addEventListener('click', () => {
@@ -11,7 +13,7 @@ document.querySelectorAll('.role-tab').forEach(tab => {
 });
 
 // ===== PASSWORD TOGGLE =====
-function togglePassword(inputId, btn) {
+window.togglePassword = function(inputId, btn) {
     const input = document.getElementById(inputId);
     const icon = btn.querySelector('i');
     if (input.type === 'password') {
@@ -24,7 +26,7 @@ function togglePassword(inputId, btn) {
 }
 
 // ===== PASSWORD STRENGTH METER =====
-function checkPasswordStrength(password) {
+window.checkPasswordStrength = function(password) {
     let strength = 0;
     if (password.length >= 8) strength++;
     if (/[A-Z]/.test(password)) strength++;
@@ -34,7 +36,7 @@ function checkPasswordStrength(password) {
     return strength; // 0-5
 }
 
-function updateStrengthMeter(inputId) {
+window.updateStrengthMeter = function(inputId) {
     const input = document.getElementById(inputId);
     if (!input) return;
     const meter = document.getElementById('strengthMeter');
@@ -52,80 +54,65 @@ function updateStrengthMeter(inputId) {
     label.style.color = colors[strength - 1] || '#94a3b8';
 }
 
-// ===== LOGIN HANDLER =====
-function handleLogin(e) {
+window.handleLogin = async function(e) {
     e.preventDefault();
     const email = document.getElementById('loginEmail').value;
     const password = document.getElementById('loginPassword').value;
-    const activeRole = document.querySelector('.role-tab.active');
-    const role = activeRole ? activeRole.dataset.role : 'alumni';
 
     if (!email || !password) {
-        showToast('Please fill in all fields', 'error');
+        if(window.showToast) window.showToast('Please fill in all fields', 'error');
         return;
     }
 
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-        showToast('Please enter a valid email address', 'error');
+        if(window.showToast) window.showToast('Please enter a valid email address', 'error');
         return;
     }
 
-    // Role-based credential validation
-    const credentials = {
-        alumni:      { email: 'shubham@alumni.com',          password: 'password123' },
-        mentor:      { email: 'mentor@dvvpcoe.edu.in',       password: 'password123' },
-        coordinator: { email: 'coordinator@dvvpcoe.edu.in',  password: 'password123' },
-        admin:       { email: 'admin@dvvpcoe.edu.in',        password: 'password123' }
-    };
-
-    const cred = credentials[role] || credentials.alumni;
-    if (email !== cred.email || password !== cred.password) {
-        showToast(`Invalid credentials. Use ${cred.email} / ${cred.password}`, 'error');
-        return;
+    const btn = e.target.querySelector('.btn-submit') || e.submitter;
+    const originalBtnContent = btn ? btn.innerHTML : 'Sign In';
+    if(btn) {
+        btn.innerHTML = '<i class="bx bx-loader-alt bx-spin"></i> Signing in...';
+        btn.disabled = true;
     }
 
-    const btn = e.target.querySelector('.btn-submit');
-    btn.innerHTML = '<i class="bx bx-loader-alt bx-spin"></i> Signing in...';
-    btn.disabled = true;
+    // Call actual backend API
+    const response = await login(email, password);
 
-    // Role-based user profiles
-    const userProfiles = {
-        alumni:      { name: 'Shubham Kulkarni', batch: '2020', department: 'Computer Engineering' },
-        mentor:      { name: 'Prof. R. D. More', batch: '', department: 'Computer Engineering' },
-        coordinator: { name: 'Dr. Anjali Mehta', batch: '', department: 'Computer Engineering' },
-        admin:       { name: 'Principal Admin', batch: '', department: 'All Departments' }
-    };
+    if (response.ok) {
+        if(window.showToast) window.showToast('Login successful! Redirecting...', 'success');
+        
+        // Determine dashboard route from user role
+        const user = response.data || JSON.parse(localStorage.getItem('user_info') || '{}');
+        const role = user.role || 'alumni';
+        
+        const dashboardRoutes = {
+            alumni:      '../alumni/dashboard.html',
+            mentor:      '../mentor/dashboard.html',
+            coordinator: '../coordinator/dashboard.html',
+            admin:       '../admin/dashboard.html'
+        };
 
-    // Role-based dashboard routing
-    const dashboardRoutes = {
-        alumni:      '../alumni/dashboard.html',
-        mentor:      '../mentor/dashboard.html',
-        coordinator: '../coordinator/dashboard.html',
-        admin:       '../admin/dashboard.html'
-    };
-
-    setTimeout(() => {
-        const profile = userProfiles[role] || userProfiles.alumni;
-        setUser({
-            email: email,
-            role: role,
-            name: profile.name,
-            batch: profile.batch,
-            department: profile.department,
-            loggedIn: true
-        });
-
-        showToast('Login successful! Redirecting...', 'success');
         setTimeout(() => {
             window.location.href = dashboardRoutes[role] || dashboardRoutes.alumni;
         }, 1000);
-    }, 1500);
+    } else {
+        if(btn) {
+            btn.innerHTML = originalBtnContent;
+            btn.disabled = false;
+        }
+        let errorMsg = 'Login failed. Invalid credentials.';
+        if(response.data && response.data.detail) {
+            errorMsg = response.data.detail;
+        }
+        if(window.showToast) window.showToast(errorMsg, 'error');
+    }
 }
 
 // ===== MULTI-STEP REGISTRATION =====
 let currentStep = 1;
 
-function nextStep(step) {
+window.nextStep = function(step) {
     // Basic validation before proceeding
     if (!validateStep(currentStep)) return;
 
@@ -136,7 +123,7 @@ function nextStep(step) {
     document.querySelector('.auth-form-panel').scrollTop = 0;
 }
 
-function prevStep(step) {
+window.prevStep = function(step) {
     document.getElementById(`step${currentStep}`).style.display = 'none';
     document.getElementById(`step${step}`).style.display = 'block';
     updateProgress(step);
@@ -144,7 +131,7 @@ function prevStep(step) {
     document.querySelector('.auth-form-panel').scrollTop = 0;
 }
 
-function validateStep(step) {
+window.validateStep = function(step) {
     const stepEl = document.getElementById(`step${step}`);
     const requiredInputs = stepEl.querySelectorAll('input[required], select[required]');
     let valid = true;
@@ -157,7 +144,7 @@ function validateStep(step) {
         }
     });
 
-    if (!valid) showToast('Please fill in all required fields', 'error');
+    if (!valid && window.showToast) window.showToast('Please fill in all required fields', 'error');
     return valid;
 }
 
@@ -186,41 +173,100 @@ function updateProgress(activeStep) {
 }
 
 // ===== REGISTRATION HANDLER =====
-function handleRegistration(e) {
+window.handleRegistration = async function(e) {
     e.preventDefault();
 
     const password = document.getElementById('regPassword');
     const confirmPassword = document.getElementById('regConfirmPassword');
 
     if (password && confirmPassword && password.value !== confirmPassword.value) {
-        showToast('Passwords do not match!', 'error');
+        if(window.showToast) window.showToast('Passwords do not match!', 'error');
         return;
     }
 
     if (password && password.value.length < 8) {
-        showToast('Password must be at least 8 characters', 'error');
+        if(window.showToast) window.showToast('Password must be at least 8 characters', 'error');
         return;
     }
 
-    const btn = e.target.querySelector('button[type="submit"]');
-    btn.innerHTML = '<i class="bx bx-loader-alt bx-spin"></i> Creating Account...';
-    btn.disabled = true;
+    const btn = e.target.querySelector('button[type="submit"]') || e.submitter;
+    const originalBtnText = btn ? btn.innerHTML : 'Submit';
+    if(btn) {
+        btn.innerHTML = '<i class="bx bx-loader-alt bx-spin"></i> Creating Account...';
+        btn.disabled = true;
+    }
 
-    setTimeout(() => {
-        showToast('Registration successful! Redirecting to login...', 'success');
+    // Capture FULL registration data from all 3 steps using strict indexing
+    const inputs_step1 = document.querySelectorAll('#step1 input[type="text"]');
+    const first_name = inputs_step1[0]?.value || 'User';
+    const last_name = inputs_step1[1]?.value || 'Test';
+    const email = document.querySelector('#step1 input[type="email"]')?.value || '';
+    const phone = document.querySelector('#step1 input[type="tel"]')?.value || '';
+    const dob = document.querySelector('#step1 input[type="date"]')?.value || null;
+    
+    // Step 2 Academic
+    const selects_step2 = document.querySelectorAll('#step2 select');
+    const department = selects_step2[0]?.value || '';
+    const batch_year = selects_step2[1]?.value || null;
+    const role_type = selects_step2[2]?.value || 'alumni';
+    const roll_number = document.querySelector('#step2 input[type="text"]')?.value || '';
+
+    // Step 3 Professional
+    const inputs_step3 = document.querySelectorAll('#step3 input[type="text"]');
+    const current_job_title = inputs_step3[0]?.value || '';
+    const company = inputs_step3[1]?.value || '';
+    const skills = inputs_step3[2]?.value || '';
+    const location = `${inputs_step3[3]?.value || ''}, ${inputs_step3[4]?.value || ''}`;
+    const experience_years = document.querySelector('#step3 select')?.value || '';
+    
+    const links_step3 = document.querySelectorAll('#step3 input[type="url"]');
+    const linkedin_url = links_step3[0]?.value || '';
+    const github_url = links_step3[1]?.value || '';
+    const portfolio_url = links_step3[2]?.value || '';
+
+    const passValue = password.value || '';
+    
+    // Construct massive payload ensuring no data loss
+    const userData = {
+        first_name, last_name, email, phone, date_of_birth: dob,
+        department, batch_year, roll_number,
+        role: role_type,
+        current_job_title, company, skills, location, experience_years,
+        linkedin_url, github_url, portfolio_url,
+        password: passValue
+    };
+
+    const response = await register(userData);
+
+    if (response.ok) {
+        if(window.showToast) window.showToast('Registration successful! Redirecting to login...', 'success');
         setTimeout(() => {
             window.location.href = 'login.html';
         }, 1500);
-    }, 2000);
+    } else {
+        if(btn) {
+            btn.innerHTML = originalBtnText;
+            btn.disabled = false;
+        }
+        let errorMsg = 'Registration failed.';
+        if(response.data) {
+            if(typeof response.data === 'object') {
+                errorMsg = Object.values(response.data).flat().join(' ');
+            } else {
+                errorMsg = String(response.data);
+            }
+        }
+        if(window.showToast) window.showToast(errorMsg, 'error');
+    }
 }
 
 // ===== PHOTO PREVIEW =====
-function previewPhoto(input) {
+window.previewPhoto = function(input) {
     const preview = document.getElementById('photoPreview');
     if (input.files && input.files[0]) {
         // Validate file size (max 2MB)
         if (input.files[0].size > 2 * 1024 * 1024) {
-            showToast('Photo must be less than 2MB', 'error');
+            if(window.showToast) window.showToast('Photo must be less than 2MB', 'error');
             return;
         }
         const reader = new FileReader();
@@ -232,7 +278,7 @@ function previewPhoto(input) {
 }
 
 // ===== AI RESUME PARSER (MOCK) =====
-function handleResumeDrop(e) {
+window.handleResumeDrop = function(e) {
     e.preventDefault();
     const box = document.getElementById('aiResumeBox');
     const loader = document.getElementById('aiResumeLoader');
@@ -242,7 +288,7 @@ function handleResumeDrop(e) {
     const file = e.dataTransfer ? e.dataTransfer.files[0] : e.target.files[0];
     if(!file) return;
     if(file.type !== 'application/pdf') {
-        showToast('Please upload a PDF document for best AI parsing.', 'error');
+        if(window.showToast) window.showToast('Please upload a PDF document for best AI parsing.', 'error');
         box.style.borderColor = 'var(--border)';
         return;
     }
@@ -280,6 +326,6 @@ function handleResumeDrop(e) {
         const prof_selects = document.querySelectorAll('#step3 select');
         if(prof_selects[0]) prof_selects[0].value = '2-5 years';
         
-        showToast('AI successfully populated your profile details!', 'success');
+        if(window.showToast) window.showToast('AI successfully populated your profile details!', 'success');
     }, 2000);
 }
